@@ -24,7 +24,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ.get('MXV_SECRET_KEY', '&0+9q8c$q46+bslj=g#!i9@u#j@3#p=#k12je47wj%fj24q%=*')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('MXV_DEBUG', True)
+DEBUG = True if os.environ.get('MXV_DEBUG', 'True') == 'True' else False
 
 # Application definition
 
