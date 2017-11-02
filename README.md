@@ -1,4 +1,4 @@
-# MxV - Momentum's new digital democracy platform
+# MxV - Momentum's new digital democracy platform
 
 ## Developer setup
 
