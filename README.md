@@ -1,53 +1,39 @@
-# Heroku Django Starter Template
+# MxV - Momentum's new digital democracy platform
 
-An utterly fantastic project starter template for Django 1.11.
+## Developer setup
 
-## Features
+### Prerequisites
 
-- Production-ready configuration for Static Files, Database Settings, Gunicorn, etc.
-- Enhancements to Django's static file serving functionality via WhiteNoise.
-- Latest Python 3.6 runtime environment. 
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [GitHub account](https://github.com/join)
+- [Heroku](https://devcenter.heroku.com/articles/heroku-cli)
+- [Heroku account](https://signup.heroku.com/signup/dc) (it's easiest to use the same credentials as your GitHub account)
+- Python 3.6 ([Os X](http://docs.python-guide.org/en/latest/starting/install3/osx/), [Windows](http://docs.python-guide.org/en/latest/starting/install3/win/) or [Linux](http://docs.python-guide.org/en/latest/starting/install3/linux/))
+- [Pipenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
+- [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup)
+- [Django](https://docs.djangoproject.com/en/1.11/topics/install/)
 
-## How to Use
+### Setup
+1. `heroku login` using the email and password for your Heroku/GitHub accounts.
+2. `git clone https://github.com/PeoplesMomentum/mxv.git` to get the code.
+3. `cd mxv`, `pipenv --three` and `pipenv install` to configure a virtual environment.
+4. `pipenv shell` to start the virtual environment (you'll want to do this whenever working on the app).
+5. `python manage.py collectstatic` to complete local Django setup.
+6. `heroku local` to run the application locally (accessible at [http://localhost:5000](http://localhost:5000)).
 
-To use this project, follow these steps:
+### Useful tools
 
-1. Create your working environment.
-2. Install Django (`$ pip install django`)
-3. Create a new project using this template
+- [LiClipse](http://www.liclipse.com/download.html) (Python/Django version of Eclipse)
 
-## Creating Your Project
+### Workflow
+This is based on the WaffleBot [workflow](https://help.waffle.io/wafflebot-basics/getting-started-with-the-wafflebot/how-to-use-wafflebot).
 
-Using this template to create a new Django app is easy::
+- Choose a task from the 'To Do' column on the Waffle board and create a branch with a name that starts with the task number (e.g. `git branch 12-AddUserView`), this will assign the task to you and move the task into the 'In Progress' column.
+- Make changes in the branch and test locally.
+- Commit the changes and create a pull request on GitHub that uses a [GitHub closing keyword](https://help.github.com/articles/closing-issues-via-commit-messages/) in the description referencing the task number (e.g. `closes #12`).
+- Momentum will review the pull request, merge the changes back into master and push the changes to the live application on Heroku.
 
-    $ django-admin.py startproject --template=https://github.com/heroku/heroku-django-template/archive/master.zip --name=Procfile helloworld
+### Bookmarks
 
-(If this doesn't work on windows, replace `django-admin.py` with `django-admin`)
-
-You can replace ``helloworld`` with your desired project name.
-
-## Deployment to Heroku
-
-    $ git init
-    $ git add -A
-    $ git commit -m "Initial commit"
-
-    $ heroku create
-    $ git push heroku master
-
-    $ heroku run python manage.py migrate
-
-See also, a [ready-made application](https://github.com/heroku/python-getting-started), ready to deploy.
-
-## Using Python 2.7?
-
-Just update `runtime.txt` to `python-2.7.13` (no trailing spaces or newlines!).
-
-
-## License: MIT
-
-## Further Reading
-
-- [Gunicorn](https://warehouse.python.org/project/gunicorn/)
-- [WhiteNoise](https://warehouse.python.org/project/whitenoise/)
-- [dj-database-url](https://warehouse.python.org/project/dj-database-url/)
+- [GitHub repository](https://github.com/PeoplesMomentum/mxv)
+- [Waffle board](https://waffle.io/PeoplesMomentum/mxv)
