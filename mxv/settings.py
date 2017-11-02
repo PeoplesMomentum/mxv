@@ -21,10 +21,10 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('MXV_SECRET_KEY') or "&0+9q8c$q46+bslj=g#!i9@u#j@3#p=#k12je47wj%fj24q%=*"
+SECRET_KEY = os.environ.get('MXV_SECRET_KEY', '&0+9q8c$q46+bslj=g#!i9@u#j@3#p=#k12je47wj%fj24q%=*')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('MXV_DEBUG') or True
+DEBUG = os.environ.get('MXV_DEBUG', True)
 
 # Application definition
 
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'mxv.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('MXV_DATABASE_HOST') or '',
-        'PORT': os.environ.get('MXV_DATABASE_PORT') or '',
-        'NAME': os.environ.get('MXV_DATABASE_NAME') or 'mxv',
-        'USER': os.environ.get('MXV_DATABASE_USER') or 'mxv',
-        'PASSWORD': os.environ.get('MXV_DATABASE_PASSWORD') or 'mxv'
+        'HOST': os.environ.get('MXV_DATABASE_HOST', ''),
+        'PORT': os.environ.get('MXV_DATABASE_PORT', ''),
+        'NAME': os.environ.get('MXV_DATABASE_NAME', 'mxv'),
+        'USER': os.environ.get('MXV_DATABASE_USER', 'mxv'),
+        'PASSWORD': os.environ.get('MXV_DATABASE_PASSWORD', 'mxv')
     }
 }
 
