@@ -19,7 +19,12 @@
 3. `cd mxv`, `pipenv --three` and `pipenv install` to configure a virtual environment.
 4. `pipenv shell` to start the virtual environment (you'll want to do this whenever working on the app).
 5. `python manage.py collectstatic` to complete local Django setup.
-6. `heroku local` to run the application locally (accessible at [http://localhost:5000](http://localhost:5000)).
+6. Create a Prostgres database called 'mxv' and a Postgres user called 'mxv' with a password of 'mxv' and grant all permissions to that user in the new database (these settings are only for the local database so don't worry about the obvious password!).  Here are the commands to use in `psql`:
+	- `create database mxv;`
+	- `create user mxv with password ‘mxv’;`
+	- `grant all privileges on database mxv to mxv;`
+	- `alter user mxv createdb;`
+7. `heroku local` to run the application locally (accessible at [http://localhost:5000](http://localhost:5000)).
 
 ### Useful tools
 
@@ -28,11 +33,11 @@
 ### Workflow
 This is based on the WaffleBot [workflow](https://help.waffle.io/wafflebot-basics/getting-started-with-the-wafflebot/how-to-use-wafflebot).
 
-- Choose a task from the 'To Do' column on the Waffle board and create a branch with a name that starts with the task number (e.g. `git branch 12-AddUserView`), then push the branch to origin; the task will be assigned to you and moved into the 'In Progress' column on the Waffle board.
-- Discuss the task in the #digitaldemocracy Slack channel if it's not absolutely clear what needs to be done.
-- Make changes in the branch and test locally.
-- Commit the changes on the branch, push the branch to origin and create a pull request on GitHub that uses a [GitHub closing keyword](https://help.github.com/articles/closing-issues-via-commit-messages/) in the description referencing the task number (e.g. `closes #12`), this will move the task into the 'Needs Review' column.
-- Momentum will review the pull request, merge the changes back into master and push the changes to the live application on Heroku and mark the task as 'Done' on Waffle.
+1. Choose a task from the 'To Do' column on the Waffle board and create a branch with a name that starts with the task number (e.g. `git branch 12-AddUserView`), then push the branch to origin; the task will be assigned to you and moved into the 'In Progress' column on the Waffle board.
+2. Discuss the task in the #digitaldemocracy Slack channel if it's not absolutely clear what needs to be done.
+3. Make changes in the branch and test locally.
+4. Commit the changes on the branch, push the branch to origin and create a pull request on GitHub that uses a [GitHub closing keyword](https://help.github.com/articles/closing-issues-via-commit-messages/) in the description referencing the task number (e.g. `closes #12`), this will move the task into the 'Needs Review' column.
+5. Momentum will review the pull request, merge the changes back into master and push the changes to the live application on Heroku and mark the task as 'Done' on Waffle.
 
 ### Bookmarks
 
