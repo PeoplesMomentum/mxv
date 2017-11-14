@@ -33,7 +33,11 @@
 ### Workflow
 This is based on the WaffleBot [workflow](https://help.waffle.io/wafflebot-basics/getting-started-with-the-wafflebot/how-to-use-wafflebot).
 
-1. Choose a task from the 'To Do' column on the Waffle board and create a branch with a name that starts with the task number (e.g. `git branch 12-AddUserView`), then push the branch to origin; the task will be assigned to you and moved into the 'In Progress' column on the Waffle board.
+1. Choose a task from the 'To Do' column on the Waffle board and create a branch with a name that starts with the task number, then push the branch to origin; the task will be assigned to you and moved into the 'In Progress' column on the Waffle board.
+	- `git branch 12-AddUserView`
+	- `git checkout 12-AddUserView`
+	- `git commit --allow-empty -m "Started work on 12-AddUserView."`
+	- `git push origin 12-AddUserView`
 2. Discuss the task in the #digitaldemocracy Slack channel if it's not absolutely clear what needs to be done.
 3. Make changes in the branch and test locally.
 4. Commit the changes on the branch, push the branch to origin and create a pull request on GitHub that uses a [GitHub closing keyword](https://help.github.com/articles/closing-issues-via-commit-messages/) in the description referencing the task number (e.g. `closes #12`), this will move the task into the 'Needs Review' column.
