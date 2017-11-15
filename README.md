@@ -21,10 +21,14 @@
 5. `python manage.py collectstatic` to complete local Django setup.
 6. Create a Prostgres database called 'mxv' and a Postgres user called 'mxv' with a password of 'mxv' and grant all permissions to that user in the new database (these settings are only for the local database so don't worry about the obvious password!).  Here are the commands to use in `psql`:
 	- `create database mxv;`
-	- `create user mxv with password ‘mxv’;`
+	- `create user mxv with password 'mxv';`
 	- `grant all privileges on database mxv to mxv;`
 	- `alter user mxv createdb;`
-7. `heroku local` to run the application locally (accessible at [http://localhost:5000](http://localhost:5000)).
+7. `python manage.py migrate` to populate the database with tables by running the migrations.
+8. `python manage.py createsuperuser` to add yourself as an admin.
+9. `heroku local` to run the application locally.
+	- Site accessible at [http://localhost:8000](http://localhost:8000).
+	- Admin site accessible at [http://localhost:8000/admin](http://localhost:8000/admin).
 
 ### Useful tools
 
