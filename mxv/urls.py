@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # landing page and login
+    url(r'^$', views.index, name='index'),
     url(r'^members/', include('django.contrib.auth.urls')),
+    # admin
+    url(r'^admin/', admin.site.urls),
+    # democracy review
+    url(r'^democracyreview/', include('review.urls')),
 ]

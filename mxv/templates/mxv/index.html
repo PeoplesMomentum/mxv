@@ -1,0 +1,40 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+{% block title %}MxV{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" src="{% static "mxv/images/logo.png" %}" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Labour's Democracy Review</h4>
+                    <p class="card-text">Help us draft proposals for the Labour Party's Democracy Review.</p>
+                    <a href="#" class="btn btn-primary">Get involved</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" src="{% static "mxv/images/logo.png" %}" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Momentum's Constitutional Amendments</h4>
+                    <p class="card-text">Want to change how Momentum functions?  Here's your chance.</p>
+                    <a href="#" class="btn btn-primary disabled">Coming soon...</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" src="{% static "mxv/images/logo.png" %}" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Momentum's Campaign Priorities</h4>
+                    <p class="card-text">How shall we annoy the Tories next?</p>
+                    <a href="#" class="btn btn-primary disabled">Coming soon...</a>
+                </div>
+            </div>
+        </div>
+    </row>
+</div>
+{% endblock %}
