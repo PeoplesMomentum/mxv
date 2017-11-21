@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <img src="{% static "mxv/images/logo.png" %}" alt="Logo" />
+        {% block content %}{% endblock %}
+    </body>
+</html>

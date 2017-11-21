@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from django.template import loader
 
 def index(request):
-    return HttpResponse("Main index.")
+    template = loader.get_template('mxv/index.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
