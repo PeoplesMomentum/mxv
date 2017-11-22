@@ -18,9 +18,11 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    # landing page and login
+    # landing page
     url(r'^$', views.index, name='index'),
+    # authentication and users
     url(r'^members/', include('django.contrib.auth.urls')),
+    url(r'^users/', include('users.urls')),
     # admin
     url(r'^admin/', admin.site.urls),
     # democracy review
