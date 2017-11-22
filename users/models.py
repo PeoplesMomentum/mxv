@@ -12,11 +12,17 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
 
+        if not name:
+            raise ValueError('Users must have a name')
+
         user = self.model(
             email = self.normalize_email(email),
             name = name
         )
         user.set_password(password)
+        
+        # generate an activation key
+        user.activation_key = User.objects.make_random_password(length = 20)
         
         user.save(using=self._db)
         return user
@@ -31,6 +37,7 @@ class UserManager(BaseUserManager):
         )
         user.is_superuser = True
         user.is_admin = True
+        user.is_active = True
         
         user.save(using=self._db)
         return user
@@ -39,9 +46,9 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    has_set_own_password = models.BooleanField(default=False)
+    activation_key = models.CharField(max_length=255, default='')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
@@ -51,8 +58,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     # identify the user publicly by their name
     def get_full_name(self):
         return self.name
-
-    # identify the user publicly by their name
     def get_short_name(self):
         return self.name
 

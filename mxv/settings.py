@@ -141,3 +141,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # extend the base user model
 AUTH_USER_MODEL = 'users.User'
 
+# get the secret used by the join page to create inactive users
+CREATE_INACTIVE_USER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_USER_SECRET', 'mxv')
+
