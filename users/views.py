@@ -2,6 +2,9 @@ from django.http.response import HttpResponse, HttpResponseForbidden
 from users.models import User
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+
 
 # creates an inactive user for the email and name
 @csrf_exempt
@@ -14,4 +17,7 @@ def create_inactive_user(request):
             return HttpResponseForbidden()
     except (KeyError):
         return HttpResponseForbidden()
-    
+
+@staff_member_required
+def member_activation(request):
+    return render(request, 'users/member_activation.html', { })
