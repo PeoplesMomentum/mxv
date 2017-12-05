@@ -19,10 +19,10 @@
 <form action="{% url 'member_activation' %}" method="post">
     {% csrf_token %}
     <label for="subject">Subject</label><br />
-    <input name="subject" id="subject" value="{{ member_activation_email.subject }}" />
+    <input size="60" name="subject" id="subject" value="{{ member_activation_email.subject }}" />
     <br /><br />
     <label for="contet">Content</label><br />
-    <input name="content" id="content" value="{{ member_activation_email.content }}" />
+    <textarea rows="10" cols="60" name="content" id="content">{{ member_activation_email.content }}</textarea>
     <br /><br />
     <input type="submit" value="Save" />
 </form>

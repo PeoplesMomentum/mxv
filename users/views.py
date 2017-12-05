@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse, HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from users.models import User, MemberActivationEmail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -25,4 +25,5 @@ def member_activation(request):
         member_activation_email.subject = request.POST['subject']
         member_activation_email.content = request.POST['content']
         member_activation_email.save()
+        return HttpResponseRedirect('/admin/member_activation')
     return render(request, 'users/member_activation.html', site.each_context(request))
