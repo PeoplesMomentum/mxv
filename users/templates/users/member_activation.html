@@ -1,13 +1,30 @@
 <!-- admin site theme -->
 {% extends 'admin/base_site.html' %}
 
+<!-- singletons -->
+{% load solo_tags %}
+
 <!-- internationalisation -->
 {% load i18n static %}
 
 <!-- breadcrumbs -->
-{% block breadcrumbs %}<div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Member activation</div>{% endblock %}
+{% block breadcrumbs %}
+    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Member activation</div>
+{% endblock %}
 
 <!-- test content -->
 {% block content %}
-Test.
+{% get_solo 'users.MemberActivationEmail' as member_activation_email %}
+
+<form action="{% url 'member_activation' %}" method="post">
+    {% csrf_token %}
+    <label for="subject">Subject</label><br />
+    <input name="subject" id="subject" value="{{ member_activation_email.subject }}" />
+    <br /><br />
+    <label for="contet">Content</label><br />
+    <input name="content" id="content" value="{{ member_activation_email.content }}" />
+    <br /><br />
+    <input type="submit" value="Save" />
+</form>
+
 {% endblock %}

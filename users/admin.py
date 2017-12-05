@@ -2,7 +2,9 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from users.models import User
+from users.models import User, MemberActivationEmail
+from solo.admin import SingletonModelAdmin
+
 
 ## based mostly on https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#extending-the-existing-user-model
 
@@ -76,5 +78,12 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-# register the new UserAdmin...
+class MemberActivationEmailModelAdmin(SingletonModelAdmin):
+    # hide from the app list as it's linked separately
+    def get_model_perms(self, request):
+        return {}
+
+    
+# register the new admin classes
 admin.site.register(User, UserAdmin)
+admin.site.register(MemberActivationEmail, MemberActivationEmailModelAdmin)

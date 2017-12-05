@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from solo.models import SingletonModel
 
 # based mostly on https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#extending-the-existing-user-model
 
@@ -69,4 +70,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+# member activation email
+class MemberActivationEmail(SingletonModel):
+    subject = models.CharField(max_length = 255)
+    content = models.TextField()
+    
+    def __unicode__(self):
+        return u"Member Activation Email"
 
+    class Meta:
+        verbose_name = "Member Activation Email"
