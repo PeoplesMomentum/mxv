@@ -17,6 +17,10 @@
 <!-- content -->
 {% block content %}
 
+<p>Use [name] and [link] placeholders to insert the members' names and activation links.</p>
+<p>Use '/static/mxv/images/logo.png' as the URL of an image to insert the Momentum logo.</p>
+<br />
+
 <form action="{% url 'member_activation_email' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
