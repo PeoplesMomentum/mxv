@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'solo'
+    'solo',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,9 @@ AUTH_USER_MODEL = 'users.User'
 # get the secret used by the join page to create inactive users
 CREATE_INACTIVE_USER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_USER_SECRET', 'mxv')
 
+# set up HTML editor
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': "advanced",
+    'width' : 600,
+    'height' : 400,
+}

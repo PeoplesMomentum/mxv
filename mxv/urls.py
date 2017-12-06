@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     # admin
     url(r'^admin/member_activation_email/$', member_activation_email, name = 'member_activation_email'),
+    url(r'^tinymce/', include('tinymce.urls')),
     url(r'^admin/', admin.site.urls),
     # democracy review
     url(r'^democracy_review/', include('review.urls')),
