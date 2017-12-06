@@ -24,8 +24,8 @@
 <form action="{% url 'edit_member_activation_email' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="cancel" value="Cancel" />
     <input type="submit" name="save" value="Save" />
+    <input type="submit" name="cancel" value="Cancel" />
 </form>
 
 {% endblock %}

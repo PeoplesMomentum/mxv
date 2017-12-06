@@ -20,7 +20,8 @@
 <form action="{% url 'send_member_activation_emails' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="send_test" value="Send test email (and save test email address)" disabled />
+    <input type="submit" name="send_test" value="Send test email (and save test email address)" />
+    <input type="submit" name="cancel" value="Cancel" />
     <br />
     <input type="submit" name="send" value="Send email to all inactive members" disabled />
 </form>
