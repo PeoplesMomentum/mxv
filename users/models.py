@@ -75,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class MemberActivationEmail(SingletonModel):
     subject = models.CharField(max_length = 255)
     content = HTMLField()
+    test_email_address = models.EmailField(default = '')
     
     def __unicode__(self):
         return u"Member Activation Email"

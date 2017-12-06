@@ -27,29 +27,30 @@ def create_inactive_user(request):
 @staff_member_required
 def member_activation_email(request):
     
-    # get the singleton activation email
+    # include the django admin context for the user links
+    context = site.each_context(request)
+
+    # populate the form with the singleton activation email in case this is a GET
     member_activation_email = MemberActivationEmail.get_solo()
+    form = MemberActivationEmailForm(instance = member_activation_email)
     
-    # if a post and save was clicked...
+    # if a POST and save was clicked...
     if request.method == 'POST' and 'save' in request.POST:
         
-        # .. and the form is valid...
+        # .. and the posted form is valid...
         form = MemberActivationEmailForm(request.POST)
         if form.is_valid():
             
             # update the member email
             member_activation_email.subject = form.cleaned_data['subject']
             member_activation_email.content = form.cleaned_data['content']
+            member_activation_email.test_email_address = form.cleaned_data['test_email_address']
             member_activation_email.save()
             
-        # redirect
-        return HttpResponseRedirect('/admin/member_activation_email')
-    else:
-        # it's a get so populate the form with the current activation email
-        form = MemberActivationEmailForm(instance = member_activation_email)
+            # redirect
+            return HttpResponseRedirect('/admin/member_activation_email')      
         
-    # add the form to the django admin context
-    context = site.each_context(request)
+    # add the form to the context
     context['form'] = form
     
     # render the page
