@@ -30,8 +30,8 @@ def member_activation_email(request):
     # get the singleton activation email
     member_activation_email = MemberActivationEmail.get_solo()
     
-    # if a post...
-    if request.method == 'POST':
+    # if a post and save was clicked...
+    if request.method == 'POST' and 'save' in request.POST:
         
         # .. and the form is valid...
         form = MemberActivationEmailForm(request.POST)
