@@ -11,7 +11,7 @@
 
 <!-- breadcrumbs -->
 {% block breadcrumbs %}
-    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Member activation email</div>
+    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Edit member activation email</div>
 {% endblock %}
 
 <!-- content -->
@@ -21,16 +21,11 @@
 <p>Use '/static/mxv/images/logo.png' as the URL of an image to insert the Momentum logo.</p>
 <br />
 
-<form action="{% url 'member_activation_email' %}" method="post">
+<form action="{% url 'edit_member_activation_email' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="cancel" value="Cancel" />
     <input type="submit" name="save" value="Save" />
-    <br />
-    <input type="submit" name="import" value="Import names and email addresses" disabled />
-    <br />
-    <input type="submit" name="send_test" value="Send test email" disabled />
-    <input type="submit" name="send" value="Send to all inactive members" disabled />
 </form>
 
 {% endblock %}

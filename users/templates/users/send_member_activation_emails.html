@@ -1,0 +1,28 @@
+<!-- admin site theme -->
+{% extends 'admin/base_site.html' %}
+
+<!-- widgets' media -->
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
+<!-- internationalisation -->
+{% load i18n static %}
+
+<!-- breadcrumbs -->
+{% block breadcrumbs %}
+    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Send member activation emails</div>
+{% endblock %}
+
+<!-- content -->
+{% block content %}
+
+<form action="{% url 'send_member_activation_emails' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="send_test" value="Send test email (and save test email address)" disabled />
+    <br />
+    <input type="submit" name="send" value="Send email to all inactive members" disabled />
+</form>
+
+{% endblock %}

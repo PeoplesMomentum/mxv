@@ -1,0 +1,26 @@
+<!-- admin site theme -->
+{% extends 'admin/base_site.html' %}
+
+<!-- widgets' media -->
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
+<!-- internationalisation -->
+{% load i18n static %}
+
+<!-- breadcrumbs -->
+{% block breadcrumbs %}
+    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Import member names and email addresses</div>
+{% endblock %}
+
+<!-- content -->
+{% block content %}
+
+<form action="{% url 'import_member_names_and_email_addresses' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="import" value="Import member names and email addresses" disabled />
+</form>
+
+{% endblock %}

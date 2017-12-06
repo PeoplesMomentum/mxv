@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.contrib.admin import site
-from .forms import MemberActivationEmailForm
+from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
 
 # creates an inactive user for the email and name
 @csrf_exempt
@@ -25,34 +25,92 @@ def create_inactive_user(request):
 
 # returns the member activation email view
 @staff_member_required
-def member_activation_email(request):
+def edit_member_activation_email(request):
     
     # include the django admin context for the user links
     context = site.each_context(request)
 
     # populate the form with the singleton activation email in case this is a GET
     member_activation_email = MemberActivationEmail.get_solo()
-    form = MemberActivationEmailForm(instance = member_activation_email)
+    form = EditMemberActivationEmailForm(instance = member_activation_email)
     
     # if a POST and save was clicked...
     if request.method == 'POST' and 'save' in request.POST:
         
         # .. and the posted form is valid...
-        form = MemberActivationEmailForm(request.POST)
+        form = EditMemberActivationEmailForm(request.POST)
         if form.is_valid():
             
             # update the member email
             member_activation_email.subject = form.cleaned_data['subject']
             member_activation_email.content = form.cleaned_data['content']
-            member_activation_email.test_email_address = form.cleaned_data['test_email_address']
             member_activation_email.save()
             
             # redirect
-            return HttpResponseRedirect('/admin/member_activation_email')      
+            return HttpResponseRedirect('/admin/edit_member_activation_email')      
         
     # add the form to the context
     context['form'] = form
     
     # render the page
-    return render(request, 'users/member_activation_email.html', context)
+    return render(request, 'users/edit_member_activation_email.html', context)
+
+# returns the member activation email view
+@staff_member_required
+def send_member_activation_emails(request):
+    
+    # include the django admin context for the user links
+    context = site.each_context(request)
+
+    # populate the form with the singleton activation email in case this is a GET
+    member_activation_email = MemberActivationEmail.get_solo()
+    form = SendMemberActivationEmailsForm(instance = member_activation_email)
+    
+    # if a POST and send test was clicked...
+    if request.method == 'POST' and 'send_test' in request.POST:
+        
+        # .. and the posted form is valid...
+        form = SendMemberActivationEmailsForm(request.POST)
+        if form.is_valid():
+            
+            # update the member email
+            member_activation_email.test_email_address = form.cleaned_data['test_email_address']
+            member_activation_email.save()
+            
+            # redirect
+            return HttpResponseRedirect('/admin/send_member_activation_emails')      
+        
+    # add the form to the context
+    context['form'] = form
+    
+    # render the page
+    return render(request, 'users/send_member_activation_emails.html', context)
+
+# returns the member activation email view
+@staff_member_required
+def import_member_names_and_email_addresses(request):
+    
+    # include the django admin context for the user links
+    context = site.each_context(request)
+
+    # create am empty form in case this is a GET
+    form = ImportMemberNamesAndEmailAddressesForm()
+    
+    # if a POST and import was clicked...
+    if request.method == 'POST' and 'import' in request.POST:
+        
+        # .. and the posted form is valid...
+        form = ImportMemberNamesAndEmailAddressesForm(request.POST)
+        if form.is_valid():
+            
+            # import the member names and email addresses
+            
+            # redirect
+            return HttpResponseRedirect('/admin/import_member_names_and_email_addresses')      
+        
+    # add the form to the context
+    context['form'] = form
+    
+    # render the page
+    return render(request, 'users/import_member_names_and_email_addresses.html', context)
 
