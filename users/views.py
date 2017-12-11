@@ -80,6 +80,15 @@ def send_member_activation_emails(request):
             member_activation_email.test_email_address = form.cleaned_data['test_email_address']
             member_activation_email.save()
             
+            try:
+                
+                # send the activation email to the test address
+                sent = member_activation_email.send_test()
+                messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            
+            except Exception as e:
+                messages.error(request, repr(e))
+
             # redirect
             return HttpResponseRedirect('/admin/send_member_activation_emails')      
         
@@ -149,3 +158,7 @@ def import_member_names_and_email_addresses(request):
     # render the page
     return render(request, 'users/import_member_names_and_email_addresses.html', context)
 
+# activates the member
+@staff_member_required
+def activate(request, activation_key):
+    pass

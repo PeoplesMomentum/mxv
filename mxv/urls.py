@@ -3,6 +3,11 @@ from django.contrib import admin
 from . import views
 from users import views as users_views
 
+# this all needs tidying up: 
+#  - admin urls (edit, send and import) should be in an urls.py
+#  - users and members should all be under /members/
+
+
 urlpatterns = [
     # landing page
     url(r'^$', views.index, name='index'),

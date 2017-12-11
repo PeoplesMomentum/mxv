@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'solo',
-    'tinymce'
+    'tinymce',
+    'anymail'
 ]
 
 MIDDLEWARE = [
@@ -150,5 +151,14 @@ CREATE_INACTIVE_USER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_USER_SECRET', 
 TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
     'width' : 600,
-    'height' : 400,
+    'height' : 300,
 }
+
+# Mailgun
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get('MXV_MAILGUN_API_KEY', "mxv"),
+    'MAILGUN_SENDER_DOMAIN': os.environ.get('MXV_MAILGUN_SENDER_DOMAIN', "mxv")
+}
+DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
+

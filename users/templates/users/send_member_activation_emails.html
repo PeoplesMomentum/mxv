@@ -7,6 +7,8 @@
 <!-- content -->
 {% block content %}
 
+<p>The test email addresses has to be an MxV member for this to work.</p>
+
 <form action="{% url 'send_member_activation_emails' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
