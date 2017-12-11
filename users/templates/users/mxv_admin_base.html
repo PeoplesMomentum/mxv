@@ -1,0 +1,16 @@
+<!-- admin site theme -->
+{% extends 'admin/base_site.html' %}
+
+<!-- widgets' media -->
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
+<!-- internationalisation -->
+{% load i18n static %}
+
+<!-- breadcrumbs -->
+{% block breadcrumbs %}
+    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >{% block breadcrumb_name %}{% endblock %}</div>
+{% endblock %}
+

@@ -1,18 +1,8 @@
-<!-- admin site theme -->
-{% extends 'admin/base_site.html' %}
+<!-- admin base -->
+{% extends './mxv_admin_base.html' %}
 
-<!-- widgets' media -->
-{% block extrahead %}
-    {{ form.media }}
-{% endblock %}
-
-<!-- internationalisation -->
-{% load i18n static %}
-
-<!-- breadcrumbs -->
-{% block breadcrumbs %}
-    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Edit member activation email</div>
-{% endblock %}
+<!-- breadcrumb name -->
+{% block breadcrumb_name %}Edit member activation email{% endblock %}
 
 <!-- content -->
 {% block content %}

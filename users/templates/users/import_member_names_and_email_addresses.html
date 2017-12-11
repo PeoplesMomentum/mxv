@@ -1,26 +1,16 @@
-<!-- admin site theme -->
-{% extends 'admin/base_site.html' %}
+<!-- admin base -->
+{% extends './mxv_admin_base.html' %}
 
-<!-- widgets' media -->
-{% block extrahead %}
-    {{ form.media }}
-{% endblock %}
-
-<!-- internationalisation -->
-{% load i18n static %}
-
-<!-- breadcrumbs -->
-{% block breadcrumbs %}
-    <div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> >Import member names and email addresses</div>
-{% endblock %}
+<!-- breadcrumb name -->
+{% block breadcrumb_name %}Import member names and email addresses{% endblock %}
 
 <!-- content -->
 {% block content %}
 
-<form action="{% url 'import_member_names_and_email_addresses' %}" method="post">
+<form action="{% url 'import_member_names_and_email_addresses' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="import" value="Import member names and email addresses" disabled />
+    <input type="submit" name="import" value="Import member names and email addresses" />
 </form>
 
 {% endblock %}

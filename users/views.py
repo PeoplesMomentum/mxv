@@ -6,6 +6,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.contrib.admin import site
 from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
+from django.contrib import messages
+from django.db import IntegrityError
 
 # creates an inactive user for the email and name
 @csrf_exempt
@@ -90,24 +92,56 @@ def send_member_activation_emails(request):
 @staff_member_required
 def import_member_names_and_email_addresses(request):
     
+    # track users
+    users_created = 0
+    users_already_existing = 0
+
     # include the django admin context for the user links
     context = site.each_context(request)
 
+    # logs the users created and already existing
+    def log_users():
+        messages.info(request, "%d users created (%d already existed)" % (users_created, users_already_existing))
+    
     # create am empty form in case this is a GET
     form = ImportMemberNamesAndEmailAddressesForm()
     
     # if a POST and import was clicked...
     if request.method == 'POST' and 'import' in request.POST:
         
-        # .. and the posted form is valid...
-        form = ImportMemberNamesAndEmailAddressesForm(request.POST)
-        if form.is_valid():
+        try:
+            # get the uploaded file
+            csv = request.FILES['csv']
             
-            # import the member names and email addresses
+            # reject multi-chunk files
+            if csv.multiple_chunks():
+                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv.size / (1000000)))
+            else:                    
+                # for each line in the file...                    
+                lines = csv.read().decode("utf-8").split("\n")
+                for line in lines: 
+                    
+                    # create a user from the name and email address                       
+                    fields = line.split(",")                    
+                    try:
+                        name = fields[0].replace('"', '')
+                        email = fields[1].replace('"', '')
+                        User.objects.create_user(name = name, email = email)
+                        users_created += 1
+                    except (IntegrityError):
+                        users_already_existing += 1
             
-            # redirect
-            return HttpResponseRedirect('/admin/import_member_names_and_email_addresses')      
+                # log number of users created and existing
+                log_users()
+            
+                # redirect
+                return HttpResponseRedirect('/admin/import_member_names_and_email_addresses')
         
+        # add exceptions to errors and log number of users created and existing
+        except Exception as e:
+            messages.error(request, repr(e))
+            log_users()
+                        
     # add the form to the context
     context['form'] = form
     

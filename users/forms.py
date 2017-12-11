@@ -17,4 +17,4 @@ class SendMemberActivationEmailsForm(forms.ModelForm):
 
 # form for importing member names and email addresses
 class ImportMemberNamesAndEmailAddressesForm(forms.Form):
-    import_file = forms.FileField()
+    csv = forms.FileField()
