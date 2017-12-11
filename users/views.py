@@ -45,7 +45,8 @@ def edit_member_activation_email(request):
             
             # update the member email
             member_activation_email.subject = form.cleaned_data['subject']
-            member_activation_email.content = form.cleaned_data['content']
+            member_activation_email.html_content = form.cleaned_data['html_content']
+            member_activation_email.text_content = form.cleaned_data['text_content']
             member_activation_email.save()
             
             # redirect
