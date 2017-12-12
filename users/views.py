@@ -69,7 +69,7 @@ def send_member_activation_emails(request):
     member_activation_email = MemberActivationEmail.get_solo()
     form = SendMemberActivationEmailsForm(instance = member_activation_email)
     
-    # if a POST and send test was clicked...
+    # if sending a test email...
     if request.method == 'POST' and 'send_test' in request.POST:
         
         # .. and the posted form is valid...
@@ -80,8 +80,7 @@ def send_member_activation_emails(request):
             member_activation_email.test_email_address = form.cleaned_data['test_email_address']
             member_activation_email.save()
             
-            try:
-                
+            try:                
                 # send the activation email to the test address
                 sent = member_activation_email.send_test(request)
                 messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
@@ -91,6 +90,20 @@ def send_member_activation_emails(request):
 
             # redirect
             return HttpResponseRedirect('/admin/send_member_activation_emails')      
+        
+    # if sending to inactive users...
+    if request.method == 'POST' and 'send' in request.POST:
+        
+        try:            
+            # send the activation email to inactive users
+            sent = member_activation_email.send_to_inactive_users(request)
+            messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+        
+        except Exception as e:
+            messages.error(request, repr(e))
+
+        # redirect
+        return HttpResponseRedirect('/admin/send_member_activation_emails')      
         
     # add the form to the context
     context['form'] = form

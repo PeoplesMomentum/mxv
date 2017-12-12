@@ -89,7 +89,14 @@ class MemberActivationEmail(SingletonModel):
         return self.send_to(request, [self.test_email_address])
 
     # sends the activation email to all inactive members
-    def send(self, request):
+    def send_to_inactive_users(self, request):
+        
+        # get the inactive users
+        inactive_users = User.objects.filter(is_active = False)
+        
+        # send the emails
+        return self.send_to(request, { user.email for user in inactive_users })
+        
         pass
 
     # sends the activation email to the specified addresses

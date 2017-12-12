@@ -13,9 +13,9 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="send_test" value="Send test email (and save test email address)" />
-    <input type="submit" name="cancel" value="Cancel" />
+    <input type="submit" name="cancel" value="Cancel changes to test email address" />
     <br />
-    <input type="submit" name="send" value="Send email to all inactive members" disabled />
+    <input type="submit" name="send" value="Send email to all inactive members" />
 </form>
 
 {% endblock %}
