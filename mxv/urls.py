@@ -1,21 +1,12 @@
-"""mxv URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import include, url
 from django.contrib import admin
 from . import views
+from users import views as users_views
+
+# this all needs tidying up: 
+#  - admin urls (edit, send and import) should be in an urls.py
+#  - users and members should all be under /members/
+
 
 urlpatterns = [
     # landing page
@@ -24,7 +15,11 @@ urlpatterns = [
     url(r'^members/', include('django.contrib.auth.urls')),
     url(r'^users/', include('users.urls')),
     # admin
+    url(r'^admin/edit_member_activation_email/$', users_views.edit_member_activation_email, name = 'edit_member_activation_email'),
+    url(r'^admin/send_member_activation_emails/$', users_views.send_member_activation_emails, name = 'send_member_activation_emails'),
+    url(r'^admin/import_member_names_and_email_addresses/$', users_views.import_member_names_and_email_addresses, name = 'import_member_names_and_email_addresses'),
+    url(r'^tinymce/', include('tinymce.urls')),
     url(r'^admin/', admin.site.urls),
     # democracy review
-    url(r'^democracyreview/', include('review.urls')),
+    url(r'^democracy_review/', include('review.urls')),
 ]

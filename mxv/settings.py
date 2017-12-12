@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     # greater consistency between gunicorn and `./manage.py runserver`. See:
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
+    'solo',
+    'tinymce',
+    'anymail'
 ]
 
 MIDDLEWARE = [
@@ -143,4 +146,19 @@ AUTH_USER_MODEL = 'users.User'
 
 # get the secret used by the join page to create inactive users
 CREATE_INACTIVE_USER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_USER_SECRET', 'mxv')
+
+# set up HTML editor
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': "advanced",
+    'width' : 600,
+    'height' : 300,
+}
+
+# Mailgun
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get('MXV_MAILGUN_API_KEY', "mxv"),
+    'MAILGUN_SENDER_DOMAIN': os.environ.get('MXV_MAILGUN_SENDER_DOMAIN', "mxv")
+}
+DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
 

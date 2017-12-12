@@ -1,0 +1,21 @@
+<!-- admin base -->
+{% extends './mxv_admin_base.html' %}
+
+<!-- breadcrumb name -->
+{% block breadcrumb_name %}Send member activation emails{% endblock %}
+
+<!-- content -->
+{% block content %}
+
+<p>The test email addresses has to be an MxV member for this to work.</p>
+
+<form action="{% url 'send_member_activation_emails' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="send_test" value="Send test email (and save test email address)" />
+    <input type="submit" name="cancel" value="Cancel changes to test email address" />
+    <br />
+    <input type="submit" name="send" value="Send email to all inactive members" />
+</form>
+
+{% endblock %}
