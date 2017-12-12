@@ -11,7 +11,7 @@
 <p>Use '/static/mxv/images/logo.png' as the URL of an image to insert the Momentum logo (just in the HTML content).</p>
 <br />
 
-<form action="{% url 'edit_member_activation_email' %}" method="post">
+<form action="{% url 'usersadmin:edit_member_activation_email' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="save" value="Save" />

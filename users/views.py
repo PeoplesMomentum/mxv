@@ -8,6 +8,7 @@ from django.contrib.admin import site
 from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
 from django.contrib import messages
 from django.db import IntegrityError
+from django.urls import reverse
 
 # creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
@@ -50,13 +51,13 @@ def edit_member_activation_email(request):
             member_activation_email.save()
             
             # redirect
-            return HttpResponseRedirect('/admin/edit_member_activation_email')      
+            return HttpResponseRedirect(reverse('usersadmin:edit_member_activation_email'))
         
     # add the form to the context
     context['form'] = form
     
     # render the page
-    return render(request, 'users/edit_member_activation_email.html', context)
+    return render(request, 'admin/edit_member_activation_email.html', context)
 
 # sends the member activation email
 @staff_member_required
@@ -89,7 +90,7 @@ def send_member_activation_emails(request):
                 messages.error(request, repr(e))
 
             # redirect
-            return HttpResponseRedirect('/admin/send_member_activation_emails')      
+            return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
         
     # if sending to inactive users...
     if request.method == 'POST' and 'send' in request.POST:
@@ -103,13 +104,13 @@ def send_member_activation_emails(request):
             messages.error(request, repr(e))
 
         # redirect
-        return HttpResponseRedirect('/admin/send_member_activation_emails')      
+        return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
         
     # add the form to the context
     context['form'] = form
     
     # render the page
-    return render(request, 'users/send_member_activation_emails.html', context)
+    return render(request, 'admin/send_member_activation_emails.html', context)
 
 # imports a list of names and email addresses
 @staff_member_required
@@ -158,7 +159,7 @@ def import_member_names_and_email_addresses(request):
                 log_users()
             
                 # redirect
-                return HttpResponseRedirect('/admin/import_member_names_and_email_addresses')
+                return HttpResponseRedirect(reverse('usersadmin:import_member_names_and_email_addresses'))
         
         # add exceptions to errors and log number of users created and existing
         except Exception as e:
@@ -169,7 +170,7 @@ def import_member_names_and_email_addresses(request):
     context['form'] = form
     
     # render the page
-    return render(request, 'users/import_member_names_and_email_addresses.html', context)
+    return render(request, 'admin/import_member_names_and_email_addresses.html', context)
 
 # activates the member
 @staff_member_required
