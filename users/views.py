@@ -9,7 +9,7 @@ from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm
 from django.contrib import messages
 from django.db import IntegrityError
 
-# creates an inactive user for the email and name
+# creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
 def create_inactive_user(request):
     try:
@@ -25,7 +25,7 @@ def create_inactive_user(request):
     except (KeyError):
         return HttpResponseForbidden()
 
-# returns the member activation email view
+# edits the member activation email
 @staff_member_required
 def edit_member_activation_email(request):
     
@@ -58,7 +58,7 @@ def edit_member_activation_email(request):
     # render the page
     return render(request, 'users/edit_member_activation_email.html', context)
 
-# returns the member activation email view
+# sends the member activation email
 @staff_member_required
 def send_member_activation_emails(request):
     
@@ -83,7 +83,7 @@ def send_member_activation_emails(request):
             try:
                 
                 # send the activation email to the test address
-                sent = member_activation_email.send_test()
+                sent = member_activation_email.send_test(request)
                 messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
             
             except Exception as e:
@@ -98,7 +98,7 @@ def send_member_activation_emails(request):
     # render the page
     return render(request, 'users/send_member_activation_emails.html', context)
 
-# returns the member activation email view
+# imports a list of names and email addresses
 @staff_member_required
 def import_member_names_and_email_addresses(request):
     

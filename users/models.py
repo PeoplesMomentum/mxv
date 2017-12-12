@@ -5,8 +5,6 @@ from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 
-# based mostly on https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#extending-the-existing-user-model
-
 # creates users and super users
 class UserManager(BaseUserManager):
     
@@ -87,15 +85,15 @@ class MemberActivationEmail(SingletonModel):
         verbose_name = "Member Activation Email"
         
     # sends the activation email to the test address
-    def send_test(self):
-        return self.send_to([self.test_email_address])
+    def send_test(self, request):
+        return self.send_to(request, [self.test_email_address])
 
     # sends the activation email to all inactive members
-    def send(self):
+    def send(self, request):
         pass
 
     # sends the activation email to the specified addresses
-    def send_to(self, recipient_email_addresses):
+    def send_to(self, request, recipient_email_addresses):
         
         # create the message with the [name] and [link] place-holders replaced with Mailgun recipient variables
         message = EmailMultiAlternatives(
@@ -110,7 +108,11 @@ class MemberActivationEmail(SingletonModel):
         users = User.objects.filter(email__in=recipient_email_addresses)
         
         # build the merge data for the recipients
-        message.merge_data = { user.email: { 'name': user.name, 'link': reverse('users:activate', kwargs = {'activation_key': user.activation_key}) } for user in users }
+        message.merge_data = { 
+            user.email: { 
+                'name': user.name, 
+                'link': request.build_absolute_uri(reverse('users:activate', kwargs = {'activation_key': user.activation_key})) } 
+            for user in users }
         
         # send the message to the recipients
         message.send()
