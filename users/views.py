@@ -9,6 +9,7 @@ from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm
 from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse
+from mxv.settings import JOIN_URL
 
 # creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
@@ -175,4 +176,14 @@ def import_member_names_and_email_addresses(request):
 # activates the member
 @staff_member_required
 def activate(request, activation_key):
-    pass
+    
+    # get the user with the activation key
+    user = User.objects.filter(activation_key = activation_key).first()
+    
+    # redirect activation attempts for an unknown user to the join page
+    if not user:
+        return HttpResponseRedirect(JOIN_URL)
+    
+    # test the view is wired up
+    return render(request, 'members/activate.html', { 'user' : user })
+

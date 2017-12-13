@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mxv.context_processors.default',
             ],
             'debug': DEBUG,
         },
@@ -162,3 +163,9 @@ ANYMAIL = {
 }
 DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
 
+# join page
+JOIN_URL = "https://join.peoplesmomentum.com"
+
+# site name
+SITE_NAME_SHORT = "MxV"
+SITE_NAME_LONG = "Momentum's Members' Hub"
