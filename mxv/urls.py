@@ -6,7 +6,7 @@ urlpatterns = [
     # landing page
     url(r'^$', views.index, name='index'),
     
-    # authentication and users
+    # activation and authentication
     url(r'^members/', include('users.urls')),
     
     # admin
