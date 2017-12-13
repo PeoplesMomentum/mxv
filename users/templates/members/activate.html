@@ -8,7 +8,12 @@
         <div class="col-sm">
             <h4>Hi {{ user.name }}.</h4>
             <p>Welcome to {{ site_name_long }}.</p>
-            <p>Choose a password and we'll log you in.</p>
+            <p>Choose a password and we'll log you in:</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Set password</button>
+            </form>
         </div>
     </div>
 </div>

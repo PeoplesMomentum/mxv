@@ -3,13 +3,16 @@ from users.models import User, MemberActivationEmail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
 from django.contrib.admin import site
 from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
 from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse
 from mxv.settings import JOIN_URL
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import SetPasswordForm
+from django.shortcuts import render, redirect
+from django.conf.global_settings import LOGIN_REDIRECT_URL
 
 # creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
@@ -174,7 +177,6 @@ def import_member_names_and_email_addresses(request):
     return render(request, 'admin/import_member_names_and_email_addresses.html', context)
 
 # activates the member
-@staff_member_required
 def activate(request, activation_key):
     
     # get the user with the activation key
@@ -184,6 +186,33 @@ def activate(request, activation_key):
     if not user:
         return HttpResponseRedirect(JOIN_URL)
     
-    # test the view is wired up
-    return render(request, 'members/activate.html', { 'user' : user })
+    # redirect activation attempts for an active user to the login page
+    if user.is_active:
+        return HttpResponseRedirect('/members/login')
+
+    # if POST...
+    if request.method == 'POST':
+        
+        # and the form is valid...
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            
+            # make the user active and save the user's password
+            user.is_active = True
+            user = form.save()
+            
+            # log the user in
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully set!')
+            return redirect('/')
+        else:
+            #show errors
+            messages.error(request, 'Please correct the error below.')
+    else:
+        # GET
+        form = SetPasswordForm(user)
+
+    return render(request, 'members/activate.html', { 
+        'user' : user,
+        'form': form })
 
