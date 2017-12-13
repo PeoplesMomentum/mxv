@@ -8,7 +8,6 @@ urlpatterns = [
     
     # authentication and users
     url(r'^members/', include('users.urls')),
-    url(r'^members/', include('django.contrib.auth.urls')),
     
     # admin
     url(r'^admin/', include('users.adminurls')),

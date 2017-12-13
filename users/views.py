@@ -11,8 +11,7 @@ from django.urls import reverse
 from mxv.settings import JOIN_URL
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
-from django.shortcuts import render, redirect
-from django.conf.global_settings import LOGIN_REDIRECT_URL
+from django.shortcuts import render
 
 # creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
@@ -188,7 +187,7 @@ def activate(request, activation_key):
     
     # redirect activation attempts for an active user to the login page
     if user.is_active:
-        return HttpResponseRedirect('/members/login')
+        return HttpResponseRedirect(reverse('users:login'))
 
     # if POST...
     if request.method == 'POST':
@@ -204,7 +203,7 @@ def activate(request, activation_key):
             # log the user in
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully set!')
-            return redirect('/')
+            return HttpResponseRedirect('/')
         else:
             #show errors
             messages.error(request, 'Please correct the error below.')
@@ -212,7 +211,7 @@ def activate(request, activation_key):
         # GET
         form = SetPasswordForm(user)
 
-    return render(request, 'members/activate.html', { 
+    return render(request, 'users/activate.html', { 
         'user' : user,
         'form': form })
 
