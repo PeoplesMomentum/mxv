@@ -23,9 +23,6 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         
-        # generate an activation key
-        user.activation_key = User.objects.make_random_password(length = 20)
-        
         user.save(using=self._db)
         return user
 

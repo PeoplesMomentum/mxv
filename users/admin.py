@@ -8,8 +8,6 @@ from django.contrib.auth.models import Group
 
 # form for creating a new user
 class UserCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
@@ -35,10 +33,6 @@ class UserCreationForm(forms.ModelForm):
 
 # form for editing a user
 class UserChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
     password = ReadOnlyPasswordHashField(label= ("Password"),
         help_text= ("Raw passwords are not stored, so there is no way to see "
                     "this user's password, but you can change the password "
@@ -76,12 +70,13 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password', 'name', 'activation_key', 'password1', 'password2')}
+            'fields': ('email', 'name', 'activation_key', 'password1', 'password2')}
         ),
     )
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
+    readonly_fields = ('activation_key',)
 
 # activation email admin setup
 class MemberActivationEmailModelAdmin(SingletonModelAdmin):
@@ -89,7 +84,6 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     def get_model_perms(self, request):
         return {}
 
-    
 # register the new admin classes
 admin.site.register(User, UserAdmin)
 admin.site.register(MemberActivationEmail, MemberActivationEmailModelAdmin)
