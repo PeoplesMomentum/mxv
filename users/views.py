@@ -3,11 +3,15 @@ from users.models import User, MemberActivationEmail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
 from django.contrib.admin import site
 from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
 from django.contrib import messages
 from django.db import IntegrityError
+from django.urls import reverse
+from mxv.settings import JOIN_URL
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import SetPasswordForm
+from django.shortcuts import render
 
 # creates an inactive user for the email and name (POST with email, name and secret)
 @csrf_exempt
@@ -50,13 +54,13 @@ def edit_member_activation_email(request):
             member_activation_email.save()
             
             # redirect
-            return HttpResponseRedirect('/admin/edit_member_activation_email')      
+            return HttpResponseRedirect(reverse('usersadmin:edit_member_activation_email'))
         
     # add the form to the context
     context['form'] = form
     
     # render the page
-    return render(request, 'users/edit_member_activation_email.html', context)
+    return render(request, 'admin/edit_member_activation_email.html', context)
 
 # sends the member activation email
 @staff_member_required
@@ -89,7 +93,7 @@ def send_member_activation_emails(request):
                 messages.error(request, repr(e))
 
             # redirect
-            return HttpResponseRedirect('/admin/send_member_activation_emails')      
+            return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
         
     # if sending to inactive users...
     if request.method == 'POST' and 'send' in request.POST:
@@ -103,13 +107,13 @@ def send_member_activation_emails(request):
             messages.error(request, repr(e))
 
         # redirect
-        return HttpResponseRedirect('/admin/send_member_activation_emails')      
+        return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
         
     # add the form to the context
     context['form'] = form
     
     # render the page
-    return render(request, 'users/send_member_activation_emails.html', context)
+    return render(request, 'admin/send_member_activation_emails.html', context)
 
 # imports a list of names and email addresses
 @staff_member_required
@@ -158,7 +162,7 @@ def import_member_names_and_email_addresses(request):
                 log_users()
             
                 # redirect
-                return HttpResponseRedirect('/admin/import_member_names_and_email_addresses')
+                return HttpResponseRedirect(reverse('usersadmin:import_member_names_and_email_addresses'))
         
         # add exceptions to errors and log number of users created and existing
         except Exception as e:
@@ -169,9 +173,45 @@ def import_member_names_and_email_addresses(request):
     context['form'] = form
     
     # render the page
-    return render(request, 'users/import_member_names_and_email_addresses.html', context)
+    return render(request, 'admin/import_member_names_and_email_addresses.html', context)
 
 # activates the member
-@staff_member_required
 def activate(request, activation_key):
-    pass
+    
+    # get the user with the activation key
+    user = User.objects.filter(activation_key = activation_key).first()
+    
+    # redirect activation attempts for an unknown user to the join page
+    if not user:
+        return HttpResponseRedirect(JOIN_URL)
+    
+    # redirect activation attempts for an active user to the login page
+    if user.is_active:
+        return HttpResponseRedirect(reverse('users:login'))
+
+    # if POST...
+    if request.method == 'POST':
+        
+        # and the form is valid...
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            
+            # make the user active and save the user's password
+            user.is_active = True
+            user = form.save()
+            
+            # log the user in
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully set!')
+            return HttpResponseRedirect('/')
+        else:
+            #show errors
+            messages.error(request, 'Please correct the error below.')
+    else:
+        # GET
+        form = SetPasswordForm(user)
+
+    return render(request, 'users/activate.html', { 
+        'user' : user,
+        'form': form })
+

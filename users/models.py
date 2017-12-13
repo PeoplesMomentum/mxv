@@ -23,9 +23,6 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         
-        # generate an activation key
-        user.activation_key = User.objects.make_random_password(length = 20)
-        
         user.save(using=self._db)
         return user
 
@@ -38,20 +35,23 @@ class UserManager(BaseUserManager):
             name = name
         )
         user.is_superuser = True
-        user.is_admin = True
         user.is_active = True
         
         user.save(using=self._db)
         return user
+
+# default to 20 digit activation keys
+activation_key_length = 20
+def activation_key_default():
+    return User.objects.make_random_password(length = activation_key_length)
 
 # a user identified uniquely by their email address and publicly by their name 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    activation_key = models.CharField(max_length=255, default='')
-
+    activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
     
@@ -69,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     @property
     def is_staff(self):
-        return self.is_admin
+        return self.is_superuser
 
 # member activation email
 class MemberActivationEmail(SingletonModel):

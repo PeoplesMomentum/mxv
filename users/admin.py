@@ -4,13 +4,10 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from users.models import User, MemberActivationEmail
 from solo.admin import SingletonModelAdmin
+from django.contrib.auth.models import Group
 
-
-## based mostly on https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#extending-the-existing-user-model
-
+# form for creating a new user
 class UserCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
@@ -34,16 +31,16 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
+# form for editing a user
 class UserChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
-    password = ReadOnlyPasswordHashField()
+    password = ReadOnlyPasswordHashField(label= ("Password"),
+        help_text= ("Raw passwords are not stored, so there is no way to see "
+                    "this user's password, but you can change the password "
+                    "using <a href=\'../password/\'>this form</a>."))
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'is_admin')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'is_superuser')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -51,6 +48,7 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+# user admin setup
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
@@ -59,12 +57,13 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'activation_key', 'is_admin')
-    list_filter = ('is_admin',)
+    list_display = ('email', 'name', 'activation_key', 'is_superuser')
+    list_filter = ('is_superuser',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'activation_key')}),
+        (None, {'fields': ('email', 'password', 'activation_key', 'is_active')}),
         ('Personal info', {'fields': ('name',)}),
-        ('Permissions', {'fields': ('is_admin',)}),
+        ('Permissions', {'fields': ('is_superuser',)}),
+        ('Important dates', {'fields': ('last_login',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -77,13 +76,17 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
+    readonly_fields = ('activation_key',)
 
+# activation email admin setup
 class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     # hide from the app list as it's linked separately
     def get_model_perms(self, request):
         return {}
 
-    
 # register the new admin classes
 admin.site.register(User, UserAdmin)
 admin.site.register(MemberActivationEmail, MemberActivationEmailModelAdmin)
+
+# not using builtin permissions
+admin.site.unregister(Group)
