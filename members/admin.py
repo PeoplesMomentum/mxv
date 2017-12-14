@@ -2,17 +2,17 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from users.models import User, MemberActivationEmail
+from members.models import Member, MemberActivationEmail
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 
-# form for creating a new user
-class UserCreationForm(forms.ModelForm):
+# form for creating a new member
+class MemberCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
-        model = User
+        model = Member
         fields = ('email', 'name', 'activation_key')
 
     def clean_password2(self):
@@ -25,21 +25,21 @@ class UserCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         # Save the provided password in hashed format
-        user = super(UserCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
+        member = super(MemberCreationForm, self).save(commit=False)
+        member.set_password(self.cleaned_data["password1"])
         if commit:
-            user.save()
-        return user
+            member.save()
+        return member
 
-# form for editing a user
-class UserChangeForm(forms.ModelForm):
+# form for editing a member
+class MemberChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(label= ("Password"),
         help_text= ("Raw passwords are not stored, so there is no way to see "
-                    "this user's password, but you can change the password "
+                    "this member's password, but you can change the password "
                     "using <a href=\'../password/\'>this form</a>."))
 
     class Meta:
-        model = User
+        model = Member
         fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'is_superuser')
 
     def clean_password(self):
@@ -48,13 +48,13 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
-# user admin setup
-class UserAdmin(BaseUserAdmin):
+# member admin setup
+class MemberAdmin(BaseUserAdmin):
     # The forms to add and change user instances
-    form = UserChangeForm
-    add_form = UserCreationForm
+    form = MemberChangeForm
+    add_form = MemberCreationForm
 
-    # The fields to be used in displaying the User model.
+    # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = ('email', 'name', 'activation_key', 'is_superuser')
@@ -85,7 +85,7 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
         return {}
 
 # register the new admin classes
-admin.site.register(User, UserAdmin)
+admin.site.register(Member, MemberAdmin)
 admin.site.register(MemberActivationEmail, MemberActivationEmailModelAdmin)
 
 # not using builtin permissions

@@ -29,7 +29,7 @@ DEBUG = True if os.environ.get('MXV_DEBUG', 'True') == 'True' else False
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
+    'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -143,10 +143,10 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # extend the base user model
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'members.Member'
 
-# get the secret used by the join page to create inactive users
-CREATE_INACTIVE_USER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_USER_SECRET', 'mxv')
+# get the secret used by the join page to create inactive members
+CREATE_INACTIVE_MEMBER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_MEMBER_SECRET', 'mxv')
 
 # set up HTML editor
 TINYMCE_DEFAULT_CONFIG = {

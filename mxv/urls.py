@@ -7,10 +7,10 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     
     # activation and authentication
-    url(r'^members/', include('users.urls')),
+    url(r'^members/', include('members.urls')),
     
     # admin
-    url(r'^admin/', include('users.adminurls')),
+    url(r'^admin/', include('members.adminurls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^admin/', admin.site.urls),
     

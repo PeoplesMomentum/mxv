@@ -5,48 +5,48 @@ from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 
-# creates users and super users
-class UserManager(BaseUserManager):
+# creates members and super users
+class MemberManager(BaseUserManager):
     
-    # creates a user
-    def create_user(self, email, name, password=None):
+    # creates a member
+    def create_member(self, email, name, password=None):
 
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError('Members must have an email address')
 
         if not name:
-            raise ValueError('Users must have a name')
+            raise ValueError('Members must have a name')
 
-        user = self.model(
+        member = self.model(
             email = self.normalize_email(email),
             name = name
         )
-        user.set_password(password)
+        member.set_password(password)
         
-        user.save(using=self._db)
-        return user
+        member.save(using=self._db)
+        return member
 
     # creates a superuser
     def create_superuser(self, email, name, password):
 
-        user = self.create_user(
+        member = self.create_member(
             email,
             password = password,
             name = name
         )
-        user.is_superuser = True
-        user.is_active = True
+        member.is_superuser = True
+        member.is_active = True
         
-        user.save(using=self._db)
-        return user
+        member.save(using=self._db)
+        return member
 
 # default to 20 digit activation keys
 activation_key_length = 20
 def activation_key_default():
-    return User.objects.make_random_password(length = activation_key_length)
+    return Member.objects.make_random_password(length = activation_key_length)
 
-# a user identified uniquely by their email address and publicly by their name 
-class User(AbstractBaseUser, PermissionsMixin):
+# a member identified uniquely by their email address and publicly by their name 
+class Member(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
@@ -55,9 +55,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
     
-    objects = UserManager()
+    objects = MemberManager()
 
-    # identify the user publicly by their name
+    # identify the member publicly by their name
     def get_full_name(self):
         return self.name
     def get_short_name(self):
@@ -89,13 +89,13 @@ class MemberActivationEmail(SingletonModel):
         return self.send_to(request, [self.test_email_address])
 
     # sends the activation email to all inactive members
-    def send_to_inactive_users(self, request):
+    def send_to_inactive_members(self, request):
         
-        # get the inactive users
-        inactive_users = User.objects.filter(is_active = False)
+        # get the inactive members
+        inactive_members = Member.objects.filter(is_active = False)
         
         # send the emails
-        return self.send_to(request, { user.email for user in inactive_users })
+        return self.send_to(request, { member.email for member in inactive_members })
         
         pass
 
@@ -111,21 +111,21 @@ class MemberActivationEmail(SingletonModel):
             content = self.place_holders_to_Mailgun_recipient_variables(self.html_content), 
             mimetype = "text/html")
         
-        # get the users for the email addresses
-        users = User.objects.filter(email__in=recipient_email_addresses)
+        # get the members for the email addresses
+        members = Member.objects.filter(email__in=recipient_email_addresses)
         
         # build the merge data for the recipients
         message.merge_data = { 
-            user.email: { 
-                'name': user.name, 
-                'link': request.build_absolute_uri(reverse('users:activate', kwargs = {'activation_key': user.activation_key})) } 
-            for user in users }
+            member.email: { 
+                'name': member.name, 
+                'link': request.build_absolute_uri(reverse('members:activate', kwargs = {'activation_key': member.activation_key})) } 
+            for member in members }
         
         # send the message to the recipients
         message.send()
         
-        # return the number of users emailed
-        return users.count() 
+        # return the number of members emailed
+        return members.count() 
 
     
     # replaces place-holders with Mailgun recipient variables

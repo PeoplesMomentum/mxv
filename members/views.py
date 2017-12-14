@@ -1,10 +1,10 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from users.models import User, MemberActivationEmail
+from members.models import Member, MemberActivationEmail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
-from .forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
+from members.forms import EditMemberActivationEmailForm, SendMemberActivationEmailsForm, ImportMemberNamesAndEmailAddressesForm
 from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse
@@ -13,17 +13,17 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render
 
-# creates an inactive user for the email and name (POST with email, name and secret)
+# creates an inactive member for the email and name (POST with email, name and secret)
 @csrf_exempt
-def create_inactive_user(request):
+def create_inactive_member(request):
     try:
         
         # if it's a post and the secret is correct...
-        if request.method == 'POST' and request.POST['secret'] == settings.CREATE_INACTIVE_USER_SECRET:
+        if request.method == 'POST' and request.POST['secret'] == settings.CREATE_INACTIVE_MEMBER_SECRET:
             
-            # create the user
-            User.objects.create_user(email = request.POST['email'], name = request.POST['name'])
-            return HttpResponse(content = 'Created inactive user for ' + request.POST['email'])
+            # create the member
+            Member.objects.create_member(email = request.POST['email'], name = request.POST['name'])
+            return HttpResponse(content = 'Created inactive member for ' + request.POST['email'])
         else:
             return HttpResponseForbidden()
     except (KeyError):
@@ -33,7 +33,7 @@ def create_inactive_user(request):
 @staff_member_required
 def edit_member_activation_email(request):
     
-    # include the django admin context for the user links
+    # include the django admin context for the member links
     context = site.each_context(request)
 
     # populate the form with the singleton activation email in case this is a GET
@@ -54,7 +54,7 @@ def edit_member_activation_email(request):
             member_activation_email.save()
             
             # redirect
-            return HttpResponseRedirect(reverse('usersadmin:edit_member_activation_email'))
+            return HttpResponseRedirect(reverse('membersadmin:edit_member_activation_email'))
         
     # add the form to the context
     context['form'] = form
@@ -66,7 +66,7 @@ def edit_member_activation_email(request):
 @staff_member_required
 def send_member_activation_emails(request):
     
-    # include the django admin context for the user links
+    # include the django admin context for the member links
     context = site.each_context(request)
 
     # populate the form with the singleton activation email in case this is a GET
@@ -93,21 +93,21 @@ def send_member_activation_emails(request):
                 messages.error(request, repr(e))
 
             # redirect
-            return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
+            return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
         
-    # if sending to inactive users...
+    # if sending to inactive members...
     if request.method == 'POST' and 'send' in request.POST:
         
         try:            
-            # send the activation email to inactive users
-            sent = member_activation_email.send_to_inactive_users(request)
+            # send the activation email to inactive members
+            sent = member_activation_email.send_to_inactive_members(request)
             messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
         
         except Exception as e:
             messages.error(request, repr(e))
 
         # redirect
-        return HttpResponseRedirect(reverse('usersadmin:send_member_activation_emails'))
+        return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
         
     # add the form to the context
     context['form'] = form
@@ -119,16 +119,16 @@ def send_member_activation_emails(request):
 @staff_member_required
 def import_member_names_and_email_addresses(request):
     
-    # track users
-    users_created = 0
-    users_already_existing = 0
+    # track members
+    members_created = 0
+    members_already_existing = 0
 
-    # include the django admin context for the user links
+    # include the django admin context for the member links
     context = site.each_context(request)
 
-    # logs the users created and already existing
-    def log_users():
-        messages.info(request, "%d users created (%d already existed)" % (users_created, users_already_existing))
+    # logs the members created and already existing
+    def log_members():
+        messages.info(request, "%d members created (%d already existed)" % (members_created, members_already_existing))
     
     # create am empty form in case this is a GET
     form = ImportMemberNamesAndEmailAddressesForm()
@@ -148,26 +148,26 @@ def import_member_names_and_email_addresses(request):
                 lines = csv.read().decode("utf-8").split("\n")
                 for line in lines: 
                     
-                    # create a user from the name and email address                       
+                    # create a member from the name and email address                       
                     fields = line.split(",")                    
                     try:
                         name = fields[0].replace('"', '')
                         email = fields[1].replace('"', '')
-                        User.objects.create_user(name = name, email = email)
-                        users_created += 1
+                        Member.objects.create_member(name = name, email = email)
+                        members_created += 1
                     except (IntegrityError):
-                        users_already_existing += 1
+                        members_already_existing += 1
             
-                # log number of users created and existing
-                log_users()
+                # log number of members created and existing
+                log_members()
             
                 # redirect
-                return HttpResponseRedirect(reverse('usersadmin:import_member_names_and_email_addresses'))
+                return HttpResponseRedirect(reverse('membersadmin:import_member_names_and_email_addresses'))
         
-        # add exceptions to errors and log number of users created and existing
+        # add exceptions to errors and log number of members created and existing
         except Exception as e:
             messages.error(request, repr(e))
-            log_users()
+            log_members()
                         
     # add the form to the context
     context['form'] = form
@@ -178,30 +178,30 @@ def import_member_names_and_email_addresses(request):
 # activates the member
 def activate(request, activation_key):
     
-    # get the user with the activation key
-    user = User.objects.filter(activation_key = activation_key).first()
+    # get the member with the activation key
+    member = Member.objects.filter(activation_key = activation_key).first()
     
-    # redirect activation attempts for an unknown user to the join page
-    if not user:
+    # redirect activation attempts for an unknown member to the join page
+    if not member:
         return HttpResponseRedirect(JOIN_URL)
     
-    # redirect activation attempts for an active user to the login page
-    if user.is_active:
-        return HttpResponseRedirect(reverse('users:login'))
+    # redirect activation attempts for an active member to the login page
+    if member.is_active:
+        return HttpResponseRedirect(reverse('members:login'))
 
     # if POST...
     if request.method == 'POST':
         
         # and the form is valid...
-        form = SetPasswordForm(user, request.POST)
+        form = SetPasswordForm(member, request.POST)
         if form.is_valid():
             
-            # make the user active and save the user's password
-            user.is_active = True
-            user = form.save()
+            # make the member active and save the user's password
+            member.is_active = True
+            member = form.save()
             
-            # log the user in
-            update_session_auth_hash(request, user)
+            # log the member in
+            update_session_auth_hash(request, member)
             messages.success(request, 'Your password was successfully set!')
             return HttpResponseRedirect('/')
         else:
@@ -209,9 +209,9 @@ def activate(request, activation_key):
             messages.error(request, 'Please correct the error below.')
     else:
         # GET
-        form = SetPasswordForm(user)
+        form = SetPasswordForm(member)
 
-    return render(request, 'users/activate.html', { 
-        'user' : user,
+    return render(request, 'members/activate.html', { 
+        'member' : member,
         'form': form })
 
