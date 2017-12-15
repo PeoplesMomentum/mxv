@@ -4,6 +4,7 @@ from solo.models import SingletonModel
 from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
+from django.db.models.deletion import SET_NULL
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -45,13 +46,24 @@ activation_key_length = 20
 def activation_key_default():
     return Member.objects.make_random_password(length = activation_key_length)
 
+# a group of members
+class MomentumGroup(models.Model):
+    name = models.CharField(max_length=255)
+    primary_contact = models.ForeignKey('Member', related_name='+')
+    
+    def __str__(self):
+        return self.name
+
 # a member identified uniquely by their email address and publicly by their name 
 class Member(AbstractBaseUser, PermissionsMixin):
+    momentum_group = models.ForeignKey(MomentumGroup, related_name = 'members', blank=True, null=True, on_delete=SET_NULL)
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
     activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
-    
+    is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
+    is_ncg_officer = models.BooleanField(default=False, verbose_name = 'NCG officer (can act on behalf of NCG)')
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
     
