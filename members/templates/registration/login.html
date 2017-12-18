@@ -1,20 +1,19 @@
 {% extends "mxv/base.html" %}
 {% load static %}
 
-{% block title %}Activate{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <h4>Hi {{ member.name }}.</h4>
-            <p>Welcome to {{ site_name_long }}.</p>
-            <p>Choose a password and we'll log you in:</p>
+            <h4>Login</h4>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Set password</button>
+                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
+            <p>Forgot password? <a href="/members/password_reset">Reset it</a></p>
         </div>
     </div>
 </div>
