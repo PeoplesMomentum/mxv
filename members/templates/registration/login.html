@@ -1,0 +1,20 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h4>Login</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                 <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p>Forgot password? <a href="/members/password_reset">Reset it</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

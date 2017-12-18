@@ -6,11 +6,14 @@ urlpatterns = [
     # landing page
     url(r'^$', views.index, name='index'),
     
-    # authentication and users
-    url(r'^members/', include('users.urls')),
+    # activation and authentication
+    url(r'^members/', include('members.urls')),
+    url(r'^members/password_reset/$', views.ExtraContextPasswordResetView.as_view(), name='password_reset'),
+    url(r'^members/', include('django.contrib.auth.urls')),
+    
     
     # admin
-    url(r'^admin/', include('users.adminurls')),
+    url(r'^admin/', include('members.adminurls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^admin/', admin.site.urls),
     

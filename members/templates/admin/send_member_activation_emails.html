@@ -7,9 +7,9 @@
 <!-- content -->
 {% block content %}
 
-<p>The test email addresses has to be an MxV member for this to work.</p>
+<p>The test email address has to be an MxV member for this to work.</p>
 
-<form action="{% url 'usersadmin:send_member_activation_emails' %}" method="post">
+<form action="{% url 'membersadmin:send_member_activation_emails' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="send_test" value="Send test email (and save test email address)" />
