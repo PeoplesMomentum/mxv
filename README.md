@@ -2,6 +2,17 @@
 
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/PeoplesMomentum/mxv.svg?columns=all)](https://waffle.io/PeoplesMomentum/mxv)
 
+## What's this?
+This new digital platform will be used initially to help in the generation of ideas for Momentum's submissions to the Labour Party Democracy Review.  It will probably broaden into a "Member's hub" after that.
+
+The intention is for this platform to generate a transparent debate between Momentum members about the changes we would like to see in the Labour Party by broadening discussions about party reform to as wide a pool of activists as possible, in order to fully harness the ideas, creativity and experiences of our membership and ensure that Momentum’s submissions to the Democracy Review are as representative as possible of the views of our members.
+
+See [this](https://github.com/PeoplesMomentum/mxv/blob/master/Docs/Requirements/MxV%20Summary%20Doc.pdf) document for more details of the platform requirements.
+
+## Get involved!
+
+Do you have development skills (see below for the technologies we've used)?  Then get involved!  This is your chance to put your skills to use in the political arena in order to further Momentum's and the Labour Party's aims.  This is *not* a theoretical exercise, your contributions *will* be used!
+
 ## Developer setup
 
 ### Prerequisites
