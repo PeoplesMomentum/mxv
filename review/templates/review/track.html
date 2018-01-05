@@ -3,25 +3,23 @@
 
 {% block title%}{{ track.name }}{% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item active">{{ track.name }}</li>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <ol class="breadcrumb my-4">
-        <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Tracks</a></li>
-        <li class="breadcrumb-item active">{{ track.name }}</li>
-    </ol>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm">
                 <div class="card" style="width: 20rem;">
-                    <a href="{% url 'review:theme' theme.pk %}" class="btn btn-primary">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ theme.name }}</h4>
-                            <p class="card-text">{{ theme.description }}</p>
-                        </div>
-                    </a>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ theme.name }}</h4>
+                        <p class="card-text">{{ theme.description }}</p>
+                        <a href="{% url 'review:theme' theme.pk %}" class="btn btn-primary">View theme</a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
-    </row>
-</div>
+    </div>
 {% endblock %}

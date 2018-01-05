@@ -3,24 +3,22 @@
 
 {% block title%}Democracy Review{% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Democracy Review</li>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <ol class="breadcrumb my-4">
-        <li class="breadcrumb-item active">Tracks</li>
-    </ol>
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm">
                 <div class="card" style="width: 20rem;">
-                    <a href="{% url 'review:track' track.pk %}" class="btn btn-primary">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ track.name }}</h4>
-                            <p class="card-text">{{ track.description }}</p>
-                        </div>
-                    </a>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ track.name }}</h4>
+                        <p class="card-text">{{ track.description }}</p>
+                        <a href="{% url 'review:track' track.pk %}" class="btn btn-primary">View track</a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
-    </row>
-</div>
+    </div>
 {% endblock %}

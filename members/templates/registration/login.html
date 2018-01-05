@@ -3,11 +3,13 @@
 
 {% block title %}Login{% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Login</li>
+{% endblock %}
+
 {% block content %}
-<div class="container">
     <div class="row">
         <div class="col-sm">
-            <h4>Login</h4>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
@@ -16,5 +18,4 @@
             <p>Forgot password? <a href="{% url 'password_reset' %}">Reset it</a></p>
         </div>
     </div>
-</div>
 {% endblock %}
