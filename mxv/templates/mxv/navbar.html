@@ -6,9 +6,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item active"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'review:index' %}">Participate</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
+            <li class="nav-item"><a class="nav-link" href="">Help</a></li>
         </ul>
         <ul class="navbar-nav">
             {% if user.is_authenticated %}

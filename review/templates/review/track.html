@@ -9,6 +9,8 @@
 {% endblock %}
 
 {% block content %}
+    <h6 class="card-text text-muted">Submission deadline: {{ track.submission_deadline }}</h6>
+    <h6 class="card-text text-muted">Nomination deadline: {{ track.nomination_deadline }}</h6>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm">
