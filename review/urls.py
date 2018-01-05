@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from review import views
 
 app_name = 'review'
 urlpatterns = [
