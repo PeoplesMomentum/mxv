@@ -18,5 +18,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     
     # democracy review
-    url(r'^democracy_review/', include('review.urls')),
+    url(r'^review/', include('review.urls')),
 ]
