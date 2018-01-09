@@ -37,6 +37,9 @@ class Proposal(models.Model):
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
     
+    def __str__(self):
+        return self.name
+    
 # previous versions of a proposal
 class ProposalHistory(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='history')

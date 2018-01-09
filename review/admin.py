@@ -1,5 +1,5 @@
 from django.contrib import admin
-from review.models import Track, Theme
+from review.models import Track, Theme, Proposal
 
 # themes in a track
 class ThemeInline(admin.TabularInline):
@@ -24,7 +24,14 @@ class ThemeAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(ThemeAdmin, self).get_queryset(request)
         return qs.order_by('track__display_order', 'display_order')
+    
+# proposal admin
+class ProposalAdmin(admin.ModelAdmin):
+    search_fields = ('name', 'text',)
+    list_display = ('name', 'theme', )
+    
      
 # registration
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
+admin.site.register(Proposal, ProposalAdmin)
