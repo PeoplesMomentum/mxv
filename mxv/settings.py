@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'solo',
     'tinymce',
-    'anymail'
+    'anymail',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [

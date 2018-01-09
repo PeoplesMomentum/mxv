@@ -1,7 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Track, Theme, Proposal
 from django.db.models import Count
+from review.forms import NewProposalForm
 
 @login_required
 def index(request):
@@ -27,4 +28,20 @@ def proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal })
-    
+
+@login_required
+def new_proposal(request, pk):
+    theme = get_object_or_404(Theme, pk = pk)
+    if request.method == "POST":
+        form = NewProposalForm(request.POST)
+        if form.is_valid():
+            proposal = form.save(commit = False)
+            proposal.theme = theme
+            proposal.created_by = request.user
+            proposal.save()
+            return redirect('review:theme', pk = theme.pk)
+    else:
+        form = NewProposalForm()
+    return render(request, 'review/new_proposal.html', { 
+        'theme' : theme,
+        'form' : form })

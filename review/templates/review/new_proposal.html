@@ -1,0 +1,19 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}New proposal in {{ theme.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' theme.track.pk %}">{{ theme.track.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:theme' theme.pk %}">{{ theme.name }}</a></li>
+    <li class="breadcrumb-item active">New proposal</li>
+{% endblock %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'review/includes/form.html' %}
+        <button type="submit" class="btn btn-success">Create new proposal</button>
+    </form>
+{% endblock %}

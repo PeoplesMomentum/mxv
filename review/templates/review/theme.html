@@ -10,12 +10,20 @@
 {% endblock %}
 
 {% block content %}
+    <div class="mb-4">
+        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-primary">New proposal</a>
+    </div>
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
                         <h4 class="card-title">{{ proposal.name }}</h4>
+                        <p class="card-text text-muted"><small>
+                            Created by: {{ proposal.created_by.name }}
+                            <br>
+                            Created at: {{ proposal.created_at }}
+                        </small></p>
                     </div>
                     <div class="card-footer">
                         <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>
