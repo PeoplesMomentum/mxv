@@ -3,13 +3,14 @@
 
 {% block title %}Logged out{% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Logged out</li>
+{% endblock %}
+
 {% block content %}
-<div class="container">
     <div class="row">
         <div class="col-sm">
-            <h4>Logged out</h4>
-            <p>Click <a href="/members/login">here</a> to log back in to <a href="/">{{ site_name_long }}</a>.</p>
+            <p>Click <a href="{% url 'login' %}">here</a> to log back in to <a href="/">{{ site_name_long }}</a>.</p>
         </div>
     </div>
-</div>
 {% endblock %}

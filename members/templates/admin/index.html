@@ -14,6 +14,19 @@
 
 {% if app_list %}
     {% for app in app_list %}
+                
+        <!-- member activation -->
+        {% if app.name == "Members" %}
+        <div class="app-members module">
+            <h2>Member activation tools</h2>
+            <ul class="actionlist">
+                <li class="changelink"><a href="{% url 'membersadmin:edit_member_activation_email' %}">Edit member activation email</a></li>
+                <li class="changelink"><a href="{% url 'membersadmin:send_member_activation_emails' %}">Send member activation emails</a></li>
+                <li class="changelink"><a href="{% url 'membersadmin:import_member_names_and_email_addresses' %}">Import member names and email addresses</a></li>
+            </ul>
+        </div>
+        {% endif %}
+        
         <div class="app-{{ app.app_label }} module">
         <table>
         <caption>
@@ -40,22 +53,14 @@
             {% endif %}
             </tr>
         {% endfor %}
+                
         </table>
         </div>
     {% endfor %}
+    
 {% else %}
     <p>{% trans "You don't have permission to edit anything." %}</p>
 {% endif %}
-
-    <!-- member activation -->
-    <div class="module">
-      <h2>Member activation tools</h2>
-        <ul class="actionlist">
-          <li class="changelink"><a href="/admin/edit_member_activation_email/">Edit member activation email</a></li>
-          <li class="changelink"><a href="/admin/send_member_activation_emails/">Send member activation emails</a></li>
-          <li class="changelink"><a href="/admin/import_member_names_and_email_addresses/">Import member names and email addresses</a></li>
-        </ul>
-    </div>
 
 </div>
 {% endblock %}

@@ -10,16 +10,24 @@ text_length = 4000
 class Track(models.Model):
     name = models.CharField(max_length=name_length, unique=True)
     description = models.TextField(max_length=description_length)
-    start = models.DateTimeField(auto_now_add=True)
-    proposal_deadline = models.DateTimeField()
-    nomination_deadline = models.DateTimeField()
+    start = models.DateField()
+    submission_deadline = models.DateField()
+    nomination_deadline = models.DateField()
+    display_order = models.IntegerField(default = 1)
+    
+    def __str__(self):
+        return self.name
 
 # a theme in a track
 class Theme(models.Model):
     track = models.ForeignKey(Track, related_name='themes')    
     name = models.CharField(max_length=name_length, unique=True)
     description = models.TextField(max_length=description_length)
-
+    display_order = models.IntegerField(default = 1)
+    
+    def __str__(self):
+        return self.name
+    
 # proposal in a theme
 class Proposal(models.Model):
     theme = models.ForeignKey(Theme, related_name='proposals')

@@ -1,0 +1,15 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ theme.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' theme.track.pk %}">{{ theme.track.name }}</a></li>
+    <li class="breadcrumb-item active">{{ theme.name }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    </div>
+{% endblock %}

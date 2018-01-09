@@ -3,8 +3,11 @@
 
 {% block title %}Activate{% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Activate</li>
+{% endblock %}
+
 {% block content %}
-<div class="container">
     <div class="row">
         <div class="col-sm">
             <h4>Hi {{ member.name }}.</h4>
@@ -17,5 +20,4 @@
             </form>
         </div>
     </div>
-</div>
 {% endblock %}

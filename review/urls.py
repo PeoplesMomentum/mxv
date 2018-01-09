@@ -1,8 +1,10 @@
 from django.conf.urls import url
 
-from . import views
+from review import views
 
 app_name = 'review'
 urlpatterns = [
-    url(r'^$', views.index, name='index')
+    url(r'^$', views.index, name='index'),
+    url(r'^track/(?P<pk>\d+)/$', views.track, name = 'track'),
+    url(r'^theme/(?P<pk>\d+)/$', views.theme, name = 'theme'),
 ]
