@@ -11,5 +11,17 @@
 
 {% block content %}
     <div class="row">
+        {% for proposal in proposals %}
+            <div class="col-sm d-flex align-items-stretch pt-4">
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ proposal.name }}</h4>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}    
     </div>
 {% endblock %}
