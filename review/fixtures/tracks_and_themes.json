@@ -7,7 +7,8 @@
             "start": "2017-12-01",
             "submission_deadline": "2017-12-29",
             "nomination_deadline": "2018-01-05",
-            "display_order": 1 }},
+            "display_order": 1,
+            "urgent": "False" }},
     {   "model" : "review.Track",
         "pk": 2,
         "fields": {
@@ -16,7 +17,8 @@
             "start": "2018-01-01",
             "submission_deadline": "2018-03-09",
             "nomination_deadline": "2018-03-16",
-            "display_order": 2 }},
+            "display_order": 2,
+            "urgent": "True" }},
     {   "model" : "review.Track",
         "pk": 3,
         "fields": {
@@ -25,7 +27,8 @@
             "start": "2018-01-01",
             "submission_deadline": "2018-06-15",
             "nomination_deadline": "2018-06-22",
-            "display_order": 3 }},
+            "display_order": 3,
+            "urgent": "False" }},
 
     {   "model" : "review.Theme",
         "pk": 1,

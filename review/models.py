@@ -14,6 +14,7 @@ class Track(models.Model):
     submission_deadline = models.DateField()
     nomination_deadline = models.DateField()
     display_order = models.IntegerField(default = 1)
+    urgent = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
