@@ -10,9 +10,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="mb-4">
-        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-primary">New proposal</a>
-    </div>
+    {% if not user_proposal %}
+        <p>You can create one proposal in this theme.</p>
+        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
+    {% else %}
+        <p>You have already created a proposal in this theme and so cannot create any more.</p>
+        <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+    {% endif %}
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
