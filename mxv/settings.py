@@ -29,6 +29,7 @@ DEBUG = True if os.environ.get('MXV_DEBUG', 'True') == 'True' else False
 # Application definition
 
 INSTALLED_APPS = [
+    'mxv.apps.MxvConfig',
     'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
     'django.contrib.admin',
