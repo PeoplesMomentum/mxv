@@ -187,7 +187,7 @@ def activate(request, activation_key):
     
     # redirect activation attempts for an active member to the login page
     if member.is_active:
-        return HttpResponseRedirect(reverse('members:login'))
+        return HttpResponseRedirect(reverse('login'))
 
     # if POST...
     if request.method == 'POST':
