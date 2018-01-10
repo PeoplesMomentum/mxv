@@ -19,7 +19,7 @@
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
                         <h4 class="card-title">{{ proposal.name }}</h4>
-                        <p class="card-text text-muted"><small>
+                        <small class="card-text text-muted">
                             Created by: {{ proposal.created_by.name }}
                             <br>
                             Created at: {{ proposal.created_at }}
@@ -27,7 +27,7 @@
                             Nominations: {{ proposal.nominations.count }}
                             <br>
                             Amendments: {{ proposal.amendments.count }}
-                        </small></p>
+                        </small>
                     </div>
                     <div class="card-footer">
                         <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>
