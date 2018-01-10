@@ -14,6 +14,11 @@
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
                         <h4 class="card-title">{{ track.name }}</h4>
+                        <small class="card-text text-muted">
+                            Submission deadline: {{ track.submission_deadline }}
+                            <br>
+                            Nomination deadline: {{ track.nomination_deadline }}
+                        </small>
                         <hr>
                         <p class="card-text">{{ track.description }}</p>
                         {% if track.urgent %}
@@ -22,11 +27,6 @@
                         {% endif %}
                     </div>
                     <div class="card-footer">
-                        <p class="card-text text-muted"><small>
-                            Submission deadline: {{ track.submission_deadline }}
-                            <br>
-                            Nomination deadline: {{ track.nomination_deadline }}
-                        </small></p>
                         <a href="{% url 'review:track' track.pk %}" class="btn btn-primary">View track</a>
                     </div>
                 </div>

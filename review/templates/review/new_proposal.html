@@ -13,7 +13,7 @@
 {% block content %}
     <form method="post" novalidate>
         {% csrf_token %}
-        {% include 'review/includes/form.html' %}
+        {% include 'mxv/includes/form.html' %}
         <button type="submit" class="btn btn-success">Create new proposal</button>
     </form>
 {% endblock %}

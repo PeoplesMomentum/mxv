@@ -29,6 +29,7 @@ DEBUG = True if os.environ.get('MXV_DEBUG', 'True') == 'True' else False
 # Application definition
 
 INSTALLED_APPS = [
+    'mxv.apps.MxvConfig',
     'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
     'django.contrib.admin',
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/London'
 USE_I18N = True
-USE_L10N = True
+USE_L10N = False
 USE_TZ = True
 
 # Change 'default' database configuration with $DATABASE_URL.
@@ -174,3 +175,7 @@ SITE_NAME_LONG = "Momentum's Members' Hub"
 # send members to the index page after they login
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/'
+
+# date/time formats
+DATE_FORMAT = 'd/m/Y'
+DATETIME_FORMAT = 'd/m/Y H:i:s'

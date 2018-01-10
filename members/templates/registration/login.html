@@ -10,9 +10,9 @@
 {% block content %}
     <div class="row">
         <div class="col-sm">
-            <form method="post">
+            <form method="post" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% include 'mxv/includes/form.html' %}
                  <button type="submit" class="btn btn-primary">Login</button>
             </form>
             <p>Forgot password? <a href="{% url 'password_reset' %}">Reset it</a></p>

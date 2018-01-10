@@ -13,9 +13,9 @@
             <h4>Hi {{ member.name }}.</h4>
             <p>Welcome to {{ site_name_long }}.</p>
             <p>Choose a password and we'll log you in:</p>
-            <form method="post">
+            <form method="post" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% include 'mxv/includes/form.html' %}
                 <button type="submit" class="btn btn-primary">Set password</button>
             </form>
         </div>

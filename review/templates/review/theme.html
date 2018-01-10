@@ -10,16 +10,20 @@
 {% endblock %}
 
 {% block content %}
-    <div class="mb-4">
-        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-primary">New proposal</a>
-    </div>
+    {% if not user_proposal %}
+        <p>You can create one proposal in this theme.</p>
+        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
+    {% else %}
+        <p>You have already created a proposal in this theme and so cannot create any more.</p>
+        <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+    {% endif %}
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
                         <h4 class="card-title">{{ proposal.name }}</h4>
-                        <p class="card-text text-muted"><small>
+                        <small class="card-text text-muted">
                             Created by: {{ proposal.created_by.name }}
                             <br>
                             Created at: {{ proposal.created_at }}
@@ -27,7 +31,11 @@
                             Nominations: {{ proposal.nominations.count }}
                             <br>
                             Amendments: {{ proposal.amendments.count }}
-                        </small></p>
+                            <br>
+                            Views: {{ proposal.views }}
+                        </small>
+                        <hr>
+                        <p class="card-text">{{ proposal.short_text }}</p>
                     </div>
                     <div class="card-footer">
                         <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>
