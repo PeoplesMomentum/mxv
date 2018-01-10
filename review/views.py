@@ -21,7 +21,7 @@ def theme(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     return render(request, 'review/theme.html', { 
         'theme' : theme, 
-        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count') })
+        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', 'created_at') })
 
 @login_required
 def proposal(request, pk):
