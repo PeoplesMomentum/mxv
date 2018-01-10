@@ -27,7 +27,11 @@
                             Nominations: {{ proposal.nominations.count }}
                             <br>
                             Amendments: {{ proposal.amendments.count }}
+                            <br>
+                            Views: {{ proposal.views }}
                         </small>
+                        <hr>
+                        <p class="card-text">{{ proposal.short_text }}</p>
                     </div>
                     <div class="card-footer">
                         <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>

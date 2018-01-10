@@ -26,6 +26,8 @@ def theme(request, pk):
 @login_required
 def proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
+    proposal.views += 1
+    proposal.save()
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal })
 
@@ -39,7 +41,7 @@ def new_proposal(request, pk):
             proposal.theme = theme
             proposal.created_by = request.user
             proposal.save()
-            return redirect('review:theme', pk = theme.pk)
+            return redirect('review:proposal', pk = proposal.pk)
     else:
         form = NewProposalForm()
     return render(request, 'review/new_proposal.html', { 

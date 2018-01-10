@@ -1,5 +1,6 @@
 from django.db import models
 from mxv.settings import AUTH_USER_MODEL
+from django.utils.text import Truncator
 
 # field sizes
 name_length = 100
@@ -36,9 +37,13 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
+    views = models.PositiveIntegerField(default = 0)
     
     def __str__(self):
         return self.name
+    
+    def short_text(self):
+        return Truncator(self.text).chars(100, '...')
     
 # previous versions of a proposal
 class ProposalHistory(models.Model):
