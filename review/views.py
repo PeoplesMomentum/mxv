@@ -27,9 +27,17 @@ def theme(request, pk):
 
 @login_required
 def proposal(request, pk):
+    # get the proposal
     proposal = get_object_or_404(Proposal, pk = pk)
-    proposal.views += 1
-    proposal.save()
+    
+    # increment the number of views only once per session
+    session_key = 'viewed_proposal_{}'.format(pk)
+    if not request.session.get(session_key, False):
+        proposal.views += 1
+        proposal.save()
+        request.session[session_key] = True
+        
+    # render the form
     form = ProposalForm(instance = proposal)
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal,
@@ -55,7 +63,7 @@ def new_proposal(request, pk):
 @login_required
 def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
-    if request.method == "POST":
+    if proposal.created_by == request.user and request.method == "POST":
         form = EditProposalForm(request.POST, instance = proposal)
         if form.is_valid():
             proposal = form.save()
@@ -69,7 +77,7 @@ def edit_proposal(request, pk):
 @login_required
 def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
-    if proposal and proposal.created_by == request.user and request.method == "POST":
+    if proposal.created_by == request.user and request.method == "POST":
         form = DeleteProposalForm(request.POST, instance = proposal)
         if form.is_valid():
             proposal.delete()
