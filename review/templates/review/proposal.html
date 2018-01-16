@@ -11,17 +11,13 @@
 {% endblock %}
 
 {% block content %}
-    <small class="card-text text-muted">
-        Created by: {{ proposal.created_by.name }}
-        <br>
-        Created at: {{ proposal.created_at }}
-        <br>
-        Nominations: {{ proposal.nominations.count }}
-        <br>
-        Amendments: {{ proposal.amendments.count }}
-        <br>
-        Views: {{ proposal.views }}
-    </small>
+    <div class="row card-text text-muted small">
+        <div class="col-sm"><b>Created by:</b> {{ proposal.created_by.name }}</div>
+        <div class="col-sm"><b>Created at:</b> {{ proposal.created_at }}</div>
+        <div class="col-sm"><b>Nominations:</b> {{ proposal.nominations.count }}</div>
+        <div class="col-sm"><b>Amendments:</b> {{ proposal.amendments.count }}</div>
+        <div class="col-sm"><b>Views:</b> {{ proposal.views }}</div>
+    </div>
     <hr>
     <form method="post" novalidate>
         {% csrf_token %}

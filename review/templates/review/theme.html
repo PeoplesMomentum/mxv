@@ -23,17 +23,13 @@
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
                         <h4 class="card-title">{{ proposal.name }}</h4>
-                        <small class="card-text text-muted">
-                            Created by: {{ proposal.created_by.name }}
-                            <br>
-                            Created at: {{ proposal.created_at }}
-                            <br>
-                            Nominations: {{ proposal.nominations.count }}
-                            <br>
-                            Amendments: {{ proposal.amendments.count }}
-                            <br>
-                            Views: {{ proposal.views }}
-                        </small>
+                        <table class="card-text text-muted small">
+                            <tr><td><b>Created by:</b></td><td>{{ proposal.created_by.name }}</td></tr>
+                            <tr><td><b>Created at:</b></td><td>{{ proposal.created_at }}</td></tr>
+                            <tr><td><b>Nominations:</b></td><td>{{ proposal.nominations.count }}</td></tr>
+                            <tr><td><b>Amendments:</b></td><td>{{ proposal.amendments.count }}</td></tr>
+                            <tr><td><b>Views:</b></td><td>{{ proposal.views }}</td></tr>
+                        </table>
                         <hr>
                         <p class="card-text">{{ proposal.short_text }}</p>
                     </div>
