@@ -17,17 +17,16 @@
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card" style="width: 20rem;">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ theme.name }}</h4>
-                        <table class="card-text text-muted small">
-                            <tr><td><b>Proposals:</b></td><td>{{ theme.proposals.count }}</td></tr>
-                        </table>
-                        <hr>
-                        <p class="card-text">{{ theme.description }}</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'review:theme' theme.pk %}" class="btn btn-primary">View theme</a>
-                    </div>
+                    <a href="{% url 'review:theme' theme.pk %}" class="text-left">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ theme.name }}</h4>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Proposals:</b></td><td>{{ theme.proposals.count }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text">{{ theme.description }}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endfor %}

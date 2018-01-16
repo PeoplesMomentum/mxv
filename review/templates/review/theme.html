@@ -21,21 +21,20 @@
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card" style="width: 20rem;">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ proposal.name }}</h4>
-                        <table class="card-text text-muted small">
-                            <tr><td><b>Created by:</b></td><td>{{ proposal.created_by.name }}</td></tr>
-                            <tr><td><b>Created at:</b></td><td>{{ proposal.created_at }}</td></tr>
-                            <tr><td><b>Nominations:</b></td><td>{{ proposal.nominations.count }}</td></tr>
-                            <tr><td><b>Amendments:</b></td><td>{{ proposal.amendments.count }}</td></tr>
-                            <tr><td><b>Views:</b></td><td>{{ proposal.views }}</td></tr>
-                        </table>
-                        <hr>
-                        <p class="card-text">{{ proposal.short_text }}</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">View proposal</a>
-                    </div>
+                    <a href="{% url 'review:proposal' proposal.pk %}" class="text-left">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ proposal.name }}</h4>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Created by:</b></td><td>{{ proposal.created_by.name }}</td></tr>
+                                <tr><td><b>Created at:</b></td><td>{{ proposal.created_at }}</td></tr>
+                                <tr><td><b>Nominations:</b></td><td>{{ proposal.nominations.count }}</td></tr>
+                                <tr><td><b>Amendments:</b></td><td>{{ proposal.amendments.count }}</td></tr>
+                                <tr><td><b>Views:</b></td><td>{{ proposal.views }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text">{{ proposal.short_text }}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endfor %}    
