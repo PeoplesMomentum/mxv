@@ -63,6 +63,7 @@ class Amendment(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='amendments')
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='amendments')
     created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
 
 # previous versions of an amendment

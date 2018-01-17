@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Track, Theme, Proposal, Amendment
 from django.db.models import Count
-from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm
+from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm
 
 @login_required
 def index(request):
@@ -54,7 +54,7 @@ def new_proposal(request, pk):
             proposal.theme = theme
             proposal.created_by = request.user
             proposal.save()
-            return redirect('review:proposal', pk = proposal.pk)
+            return redirect('review:theme', pk = theme.pk)
     else:
         form = EditProposalForm()
     return render(request, 'review/new_proposal.html', { 
@@ -99,3 +99,49 @@ def amendment(request, pk):
     return render(request, 'review/amendment.html', { 
         'amendment' : amendment,
         'form': form })
+
+@login_required
+def new_amendment(request, pk):
+    proposal = get_object_or_404(Proposal, pk = pk)
+    if request.method == "POST":
+        form = EditAmendmentForm(request.POST)
+        if form.is_valid():
+            amendment = form.save(commit = False)
+            amendment.proposal = proposal
+            amendment.created_by = request.user
+            amendment.save()
+            return redirect('review:proposal', pk = proposal.pk)
+    else:
+        form = EditAmendmentForm()
+    return render(request, 'review/new_amendment.html', { 
+        'proposal' : proposal,
+        'form' : form })
+
+@login_required
+def edit_amendment(request, pk):
+    amendment = get_object_or_404(Amendment, pk = pk)
+    if amendment.created_by == request.user and request.method == "POST":
+        form = EditAmendmentForm(request.POST, instance = amendment)
+        if form.is_valid():
+            amendment = form.save()
+            return redirect('review:amendment', pk = amendment.pk)
+    else:
+        form = EditAmendmentForm(instance = amendment)
+    return render(request, 'review/edit_amendment.html', { 
+        'amendment' : amendment,
+        'form' : form })
+
+@login_required
+def delete_amendment(request, pk):
+    amendment = get_object_or_404(Amendment, pk = pk)
+    if amendment.created_by == request.user and request.method == "POST":
+        form = DeleteAmendmentForm(request.POST, instance = amendment)
+        if form.is_valid():
+            amendment.delete()
+            return redirect('review:proposal', pk = amendment.proposal.pk)
+    else:
+        form = DeleteAmendmentForm(instance = amendment)
+    return render(request, 'review/delete_amendment.html', { 
+        'amendment' : amendment,
+        'form' : form })
+

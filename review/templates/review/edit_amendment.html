@@ -1,14 +1,14 @@
 {% extends "mxv/base.html" %}
 {% load static %}
 
-{% block title%}{{ amendment.name }}{% endblock %}
+{% block title%}Edit {{ amendment.name }}{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track' amendment.proposal.theme.track.pk %}">{{ amendment.proposal.theme.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:theme' amendment.proposal.theme.pk %}">{{ amendment.proposal.theme.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:proposal' amendment.proposal.pk %}">{{ amendment.proposal.name }}</a></li>
-    <li class="breadcrumb-item active">{{ amendment.name }}</li>
+    <li class="breadcrumb-item active">Edit {{ amendment.name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -20,9 +20,7 @@
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
+        <button type="submit" class="btn btn-success">Save changes</button>
+        <a href="{% url 'review:amendment' amendment.pk %}" class="btn btn-primary">Cancel</a>
     </form>    
-    {% if amendment.created_by == user %}
-        <a href="{% url 'review:edit_amendment' amendment.pk %}" class="btn btn-success">Edit</a>
-        <a href="{% url 'review:delete_amendment' amendment.pk %}" class="btn btn-danger">Delete</a>
-    {% endif %}
 {% endblock %}
