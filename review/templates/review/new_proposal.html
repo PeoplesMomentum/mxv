@@ -15,5 +15,6 @@
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
         <button type="submit" class="btn btn-success">Create new proposal</button>
+        <a href="{% url 'review:theme' theme.pk %}" class="btn btn-primary">Cancel</a>
     </form>
 {% endblock %}

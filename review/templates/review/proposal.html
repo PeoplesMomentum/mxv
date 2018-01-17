@@ -31,10 +31,12 @@
     <div class="row card-text text-muted">
         <div class="col-sm">
             <h6>Amendments</h6>
+            <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
             {% for amendment in amendments %}
                 <div class="card bg-light border-secondary mt-4" style="">
                     <a href="{% url 'review:amendment' amendment.pk %}" class="text-left">
                         <div class="card-body">
+                            <h4 class="card-title">{{ amendment.name }}</h4>
                             <table class="card-text text-muted small">
                                 <tr><td><b>Created by:</b></td><td>{{ amendment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at:</b></td><td>{{ amendment.created_at }}</td></tr>
