@@ -11,14 +11,13 @@
     <div class="row">
         <div class="col-sm d-flex align-items-stretch pt-4">
             <div class="card bg-light border-secondary" style="width: 20rem;">
-                <div class="card-body">
-                    <h4 class="card-title">Labour's Democracy Review</h4>
-                    <hr class="border-secondary">
-                    <p class="card-text">Help us draft proposals for the Labour Party's Democracy Review.</p>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'review:index' %}" class="btn btn-primary">Get involved</a>
-                </div>
+                <a href="{% url 'review:index' %}" class="text-left">
+                    <div class="card-body">
+                        <h4 class="card-title">Labour's Democracy Review</h4>
+                        <hr class="border-secondary">
+                        <p class="card-text">Help us draft proposals for the Labour Party's Democracy Review.</p>
+                    </div>
+                </a>
             </div>
         </div>
         <div class="col-sm d-flex align-items-stretch pt-4">
@@ -29,7 +28,7 @@
                     <p class="card-text">Want to change how Momentum functions?  Here's your chance.</p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary disabled">Coming soon...</a>
+                    <p class="text-muted">Coming soon...</p>
                 </div>
             </div>
         </div>
@@ -41,7 +40,7 @@
                     <p class="card-text">How shall we annoy the Tories next?</p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary disabled">Coming soon...</a>
+                    <p class="text-muted">Coming soon...</p>
                 </div>
             </div>
         </div>
