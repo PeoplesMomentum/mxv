@@ -11,7 +11,7 @@
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card" style="width: 20rem;">
+                <div class="card bg-light border-secondary" style="width: 20rem;">
                     <a href="{% url 'review:track' track.pk %}" class="text-left">
                         <div class="card-body">
                             <h4 class="card-title">{{ track.name }}</h4>
@@ -19,7 +19,7 @@
                                 <tr><td><b>Submission deadline:</b></td><td>{{ track.submission_deadline }}</td></tr>
                                 <tr><td><b>Nomination deadline:</b></td><td>{{ track.nomination_deadline }}</td></tr>
                             </table>
-                            <hr>
+                            <hr class="border-secondary">
                             <p class="card-text">{{ track.description }}</p>
                             {% if track.urgent %}
                                 <hr>

@@ -20,7 +20,7 @@
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card" style="width: 20rem;">
+                <div class="card bg-light border-secondary" style="width: 20rem;">
                     <a href="{% url 'review:proposal' proposal.pk %}" class="text-left">
                         <div class="card-body">
                             <h4 class="card-title">{{ proposal.name }}</h4>
@@ -31,7 +31,7 @@
                                 <tr><td><b>Amendments:</b></td><td>{{ proposal.amendments.count }}</td></tr>
                                 <tr><td><b>Views:</b></td><td>{{ proposal.views }}</td></tr>
                             </table>
-                            <hr>
+                            <hr class="border-secondary">
                             <p class="card-text">{{ proposal.short_text }}</p>
                         </div>
                     </a>

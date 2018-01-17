@@ -16,14 +16,14 @@
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card" style="width: 20rem;">
+                <div class="card bg-light border-secondary" style="width: 20rem;">
                     <a href="{% url 'review:theme' theme.pk %}" class="text-left">
                         <div class="card-body">
                             <h4 class="card-title">{{ theme.name }}</h4>
                             <table class="card-text text-muted small">
                                 <tr><td><b>Proposals:</b></td><td>{{ theme.proposals.count }}</td></tr>
                             </table>
-                            <hr>
+                            <hr class="border-secondary">
                             <p class="card-text">{{ theme.description }}</p>
                         </div>
                     </a>
