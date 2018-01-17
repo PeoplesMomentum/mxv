@@ -11,24 +11,22 @@
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card" style="width: 20rem;">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ track.name }}</h4>
-                        <small class="card-text text-muted">
-                            Submission deadline: {{ track.submission_deadline }}
-                            <br>
-                            Nomination deadline: {{ track.nomination_deadline }}
-                        </small>
-                        <hr>
-                        <p class="card-text">{{ track.description }}</p>
-                        {% if track.urgent %}
+                <div class="card bg-light border-secondary" style="width: 20rem;">
+                    <a href="{% url 'review:track' track.pk %}" class="text-left">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ track.name }}</h4>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Submission deadline:</b></td><td>{{ track.submission_deadline }}</td></tr>
+                                <tr><td><b>Nomination deadline:</b></td><td>{{ track.nomination_deadline }}</td></tr>
+                            </table>
                             <hr>
-                            <p class="card-subtitle text-danger">This track is currently the priority.</p>
-                        {% endif %}
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'review:track' track.pk %}" class="btn btn-primary">View track</a>
-                    </div>
+                            <p class="card-text">{{ track.description }}</p>
+                            {% if track.urgent %}
+                                <hr>
+                                <p class="card-subtitle text-danger">This track is currently the priority.</p>
+                            {% endif %}
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endfor %}

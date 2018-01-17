@@ -9,26 +9,24 @@
 {% endblock %}
 
 {% block content %}
-    <small class="card-text text-muted">
-        Submission deadline: {{ track.submission_deadline }}
-        <br>
-        Nomination deadline: {{ track.nomination_deadline }}
-    </small>
+     <div class="row card-text text-muted small">
+        <div class="col-sm"><b>Submission deadline:</b> {{ track.submission_deadline }}</div>
+        <div class="col-sm"><b>Nomination deadline:</b> {{ track.nomination_deadline }}</div>
+    </div>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card" style="width: 20rem;">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ theme.name }}</h4>
-                        <small class="card-text text-muted">
-                            Proposals: {{ theme.proposals.count }}
-                        </small>
-                        <hr>
-                        <p class="card-text">{{ theme.description }}</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'review:theme' theme.pk %}" class="btn btn-primary">View theme</a>
-                    </div>
+                <div class="card bg-light border-secondary" style="width: 20rem;">
+                    <a href="{% url 'review:theme' theme.pk %}" class="text-left">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ theme.name }}</h4>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Proposals:</b></td><td>{{ theme.proposals.count }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text">{{ theme.description }}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endfor %}

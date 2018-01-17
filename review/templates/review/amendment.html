@@ -1,0 +1,24 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ amendment.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' amendment.proposal.theme.track.pk %}">{{ amendment.proposal.theme.track.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:theme' amendment.proposal.theme.pk %}">{{ amendment.proposal.theme.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:proposal' amendment.proposal.pk %}">{{ amendment.proposal.name }}</a></li>
+    <li class="breadcrumb-item active">{{ amendment.name }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row card-text text-muted small">
+        <div class="col-sm"><b>Created by:</b> {{ amendment.created_by.name }}</div>
+        <div class="col-sm"><b>Created at:</b> {{ amendment.created_at }}</div>
+    </div>
+    <hr>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'mxv/includes/form.html' %}
+    </form>    
+{% endblock %}

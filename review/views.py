@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Track, Theme, Proposal
+from .models import Track, Theme, Proposal, Amendment
 from django.db.models import Count
-from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm
+from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm
 
 @login_required
 def index(request):
@@ -22,17 +22,26 @@ def theme(request, pk):
     user_proposal = theme.proposals.filter(created_by = request.user).first()
     return render(request, 'review/theme.html', { 
         'theme' : theme, 
-        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', 'created_at'),
+        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', '-created_at'),
         'user_proposal': user_proposal })
 
 @login_required
 def proposal(request, pk):
+    # get the proposal
     proposal = get_object_or_404(Proposal, pk = pk)
-    proposal.views += 1
-    proposal.save()
+    
+    # increment the number of views only once per session
+    session_key = 'viewed_proposal_{}'.format(pk)
+    if not request.session.get(session_key, False):
+        proposal.views += 1
+        proposal.save()
+        request.session[session_key] = True
+        
+    # render the form
     form = ProposalForm(instance = proposal)
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal,
+        'amendments' : proposal.amendments.order_by('-created_at'),
         'form': form })
 
 @login_required
@@ -55,7 +64,7 @@ def new_proposal(request, pk):
 @login_required
 def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
-    if request.method == "POST":
+    if proposal.created_by == request.user and request.method == "POST":
         form = EditProposalForm(request.POST, instance = proposal)
         if form.is_valid():
             proposal = form.save()
@@ -69,7 +78,7 @@ def edit_proposal(request, pk):
 @login_required
 def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
-    if proposal and proposal.created_by == request.user and request.method == "POST":
+    if proposal.created_by == request.user and request.method == "POST":
         form = DeleteProposalForm(request.POST, instance = proposal)
         if form.is_valid():
             proposal.delete()
@@ -79,3 +88,14 @@ def delete_proposal(request, pk):
     return render(request, 'review/delete_proposal.html', { 
         'proposal' : proposal,
         'form' : form })
+
+@login_required
+def amendment(request, pk):
+    # get the amendment
+    amendment = get_object_or_404(Amendment, pk = pk)
+    
+    # render the form
+    form = AmendmentForm(instance = amendment)
+    return render(request, 'review/amendment.html', { 
+        'amendment' : amendment,
+        'form': form })
