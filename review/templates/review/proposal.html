@@ -27,4 +27,27 @@
         <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
+    <hr>
+    <div class="row card-text text-muted">
+        <div class="col-sm">
+            <h6>Amendments</h6>
+            {% for amendment in amendments %}
+                <div class="card bg-light border-secondary mt-4" style="">
+                    <a href="{% url 'review:amendment' amendment.pk %}" class="text-left">
+                        <div class="card-body">
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Created by:</b></td><td>{{ amendment.created_by.name }}</td></tr>
+                                <tr><td><b>Created at:</b></td><td>{{ amendment.created_at }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text">{{ amendment.text }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-sm">
+            <h6>Comments</h6>
+        </div>
+    </div>
 {% endblock %}

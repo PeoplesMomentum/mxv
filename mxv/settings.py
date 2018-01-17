@@ -179,3 +179,6 @@ LOGIN_REDIRECT_URL = '/'
 # date/time formats
 DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y H:i:s'
+
+# close the session when the browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -1,6 +1,16 @@
 from django import forms
 from .models import Proposal, text_length
 
+class ProposalForm(forms.ModelForm):
+    name = forms.CharField(
+        widget = forms.TextInput(attrs = { 'disabled': True }))
+    text = forms.CharField(
+        widget = forms.Textarea(attrs = { 'disabled': True, 'rows': 5 }))
+
+    class Meta:
+        model = Proposal
+        fields = ['name', 'text']
+
 class EditProposalForm(forms.ModelForm):
     name = forms.CharField(
         widget = forms.TextInput(attrs = { 'placeholder': "Choose a name for your proposal" }))
@@ -13,16 +23,6 @@ class EditProposalForm(forms.ModelForm):
         model = Proposal
         fields = ['name', 'text']
         
-class ProposalForm(forms.ModelForm):
-    name = forms.CharField(
-        widget = forms.TextInput(attrs = { 'disabled': True }))
-    text = forms.CharField(
-        widget = forms.Textarea(attrs = { 'disabled': True, 'rows': 5 }))
-
-    class Meta:
-        model = Proposal
-        fields = ['name', 'text']
-
 class DeleteProposalForm(forms.ModelForm):
     name = forms.CharField(
         widget = forms.TextInput(attrs = { 'readonly': True }))
@@ -33,5 +33,11 @@ class DeleteProposalForm(forms.ModelForm):
         model = Proposal
         fields = ['name', 'text']
 
-        
-        
+class AmendmentForm(forms.ModelForm):
+    text = forms.CharField(
+        widget = forms.Textarea(attrs = { 'disabled': True, 'rows': 5 }))
+
+    class Meta:
+        model = Proposal
+        fields = ['text']
+
