@@ -23,7 +23,7 @@
                             <tr><td><b>Proposals</b></td><td>{{ theme.proposals.count }}</td></tr>
                         </table>
                         <hr>
-                        <p class="card-text">{{ theme.description }}</p>
+                        <p class="card-text">{{ theme.short_description }}</p>
                         <div class="text-right">
                             <a href="{% url 'review:theme' theme.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>

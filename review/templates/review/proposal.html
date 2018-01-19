@@ -41,7 +41,7 @@
                             <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
                         </table>
                         <hr>
-                        <p class="card-text">{{ amendment.text }}</p>
+                        <p class="card-text">{{ amendment.short_text }}</p>
                         <div class="text-right">
                             <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
