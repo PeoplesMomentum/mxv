@@ -12,11 +12,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row card-text text-muted small">
-        <div class="col-sm"><b>Created by:</b> {{ amendment.created_by.name }}</div>
-        <div class="col-sm"><b>Created at:</b> {{ amendment.created_at }}</div>
-    </div>
-    <hr>
+    <table class="card-text text-muted small">
+        <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
+        <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
+    </table>
+    <br>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}

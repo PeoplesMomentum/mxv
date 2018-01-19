@@ -9,13 +9,18 @@ text_length = 4000
 
 # a track in the democracy review
 class Track(models.Model):
+    # appearance
     name = models.CharField(max_length=name_length, unique=True)
-    description = models.TextField(max_length=description_length)
-    start = models.DateField()
-    submission_deadline = models.DateField()
-    nomination_deadline = models.DateField()
     display_order = models.IntegerField(default = 1)
     urgent = models.BooleanField(default=False)
+    # submissions
+    allow_member_proposals = models.BooleanField(default=True)
+    submission_start = models.DateField(blank=True, null=True, default=None)
+    submission_end = models.DateField(blank=True, null=True, default=None)
+    # voting
+    allow_voting = models.BooleanField(default=True)
+    voting_start = models.DateField(blank=True, null=True, default=None)
+    voting_end = models.DateField(blank=True, null=True, default=None)
     
     def __str__(self):
         return self.name

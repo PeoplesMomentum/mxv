@@ -8,8 +8,8 @@ class ThemeInline(admin.TabularInline):
 
 # track admin
 class TrackAdmin(admin.ModelAdmin):
-    search_fields = ('name', 'description',)
-    list_display = ('name', 'description', 'display_order', )
+    search_fields = ('name', )
+    list_display = ('name', 'display_order', )
     inlines = (ThemeInline,)
     
     def get_queryset(self, request):

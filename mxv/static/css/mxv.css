@@ -1,1 +1,8 @@
-hr { background: darkgray }
+hr { 
+    background: darkgray 
+}
+
+td { 
+    padding: 0px 15px 0px 0px  
+}
+
