@@ -10,12 +10,16 @@
 {% endblock %}
 
 {% block content %}
-    {% if not user_proposal %}
-        <p>You can create one proposal in this theme.</p>
-        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
+    {% if theme.track.allow_member_proposals %}
+        {% if not user_proposal %}
+            <p>You can create one proposal in this theme.</p>
+            <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
+        {% else %}
+            <p>You have already created a proposal in this theme and so cannot create any more.</p>
+            <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+        {% endif %}
     {% else %}
-        <p>You have already created a proposal in this theme and so cannot create any more.</p>
-        <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+        <p class="text-danger small">This track does not allow members to create proposals at this time, however you can still view existing proposals and comment on them.</p>
     {% endif %}
     <br><br>
     <table class="card-text text-muted small">
