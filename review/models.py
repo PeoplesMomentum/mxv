@@ -6,16 +6,22 @@ from django.utils.text import Truncator
 name_length = 100
 description_length = 1000
 text_length = 4000
+short_length = 100
 
 # a track in the democracy review
 class Track(models.Model):
+    # appearance
     name = models.CharField(max_length=name_length, unique=True)
-    description = models.TextField(max_length=description_length)
-    start = models.DateField()
-    submission_deadline = models.DateField()
-    nomination_deadline = models.DateField()
     display_order = models.IntegerField(default = 1)
     urgent = models.BooleanField(default=False)
+    # submissions
+    allow_member_proposals = models.BooleanField(default=True)
+    submission_start = models.DateField(blank=True, null=True, default=None)
+    submission_end = models.DateField(blank=True, null=True, default=None)
+    # nominations
+    allow_nominations = models.BooleanField(default=True)
+    nomination_start = models.DateField(blank=True, null=True, default=None)
+    nomination_end = models.DateField(blank=True, null=True, default=None)
     
     def __str__(self):
         return self.name
@@ -26,10 +32,14 @@ class Theme(models.Model):
     name = models.CharField(max_length=name_length, unique=True)
     description = models.TextField(max_length=description_length)
     display_order = models.IntegerField(default = 1)
+    guidance = models.TextField(max_length=description_length, default = '')
     
     def __str__(self):
         return self.name
     
+    def short_description(self):
+        return Truncator(self.description).chars(short_length, '...')
+
 # proposal in a theme
 class Proposal(models.Model):
     theme = models.ForeignKey(Theme, related_name='proposals')
@@ -43,7 +53,7 @@ class Proposal(models.Model):
         return self.name
     
     def short_text(self):
-        return Truncator(self.text).chars(100, '...')
+        return Truncator(self.text).chars(short_length, '...')
     
 # previous versions of a proposal
 class ProposalHistory(models.Model):
@@ -65,6 +75,9 @@ class Amendment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
+    
+    def short_text(self):
+        return Truncator(self.text).chars(short_length, '...')
 
 # previous versions of an amendment
 class AmendmentHistory(models.Model):

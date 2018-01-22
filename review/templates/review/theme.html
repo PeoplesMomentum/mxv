@@ -10,31 +10,50 @@
 {% endblock %}
 
 {% block content %}
-    {% if not user_proposal %}
-        <p>You can create one proposal in this theme.</p>
-        <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
-    {% else %}
-        <p>You have already created a proposal in this theme and so cannot create any more.</p>
-        <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+
+    {% if theme.guidance %}
+        <blockquote class="blockquote text-muted">
+            <p class="small">{{ theme.guidance }}</p>
+            <footer class="blockquote-footer">Momentum</footer>
+        </blockquote>
     {% endif %}
+
+    {% if theme.track.allow_member_proposals %}
+        {% if not user_proposal %}
+            <p>You can create one proposal in this theme.</p>
+            <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
+        {% else %}
+            <p>You have already created a proposal in this theme and so cannot create any more.</p>
+            <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
+        {% endif %}
+        <br/><br/>
+    {% else %}
+        <p class="text-danger small">This track does not allow members to create proposals at this time, however you can still view existing proposals and comment on them.</p>
+    {% endif %}
+
+    <table class="card-text text-muted small">
+        <tr><td><b>Proposals</b></td><td>{{ theme.proposals.count }}</td></tr>
+    </table>
+    
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card bg-light border-secondary" style="width: 20rem;">
-                    <a href="{% url 'review:proposal' proposal.pk %}" class="text-left">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ proposal.name }}</h4>
-                            <table class="card-text text-muted small">
-                                <tr><td><b>Created by:</b></td><td>{{ proposal.created_by.name }}</td></tr>
-                                <tr><td><b>Created at:</b></td><td>{{ proposal.created_at }}</td></tr>
-                                <tr><td><b>Nominations:</b></td><td>{{ proposal.nominations.count }}</td></tr>
-                                <tr><td><b>Amendments:</b></td><td>{{ proposal.amendments.count }}</td></tr>
-                                <tr><td><b>Views:</b></td><td>{{ proposal.views }}</td></tr>
-                            </table>
-                            <hr>
-                            <p class="card-text">{{ proposal.short_text }}</p>
+                    <div class="card-body">
+                        <a href="{% url 'review:proposal' proposal.pk %}"><h4 class="card-title">{{ proposal.name }}</h4></a>
+                        <table class="card-text text-muted small">
+                            <tr><td><b>Created by</b></td><td>{{ proposal.created_by.name }}</td></tr>
+                            <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
+                            <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
+                            <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
+                            <tr><td><b>Views</b></td><td>{{ proposal.views }}</td></tr>
+                        </table>
+                        <hr>
+                        <p class="card-text">{{ proposal.short_text }}</p>
+                        <div class="text-right">
+                            <a href="{% url 'review:proposal' proposal.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         {% endfor %}    

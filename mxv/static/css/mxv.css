@@ -1,1 +1,15 @@
-hr { background: darkgray }
+hr { 
+    background: darkgray 
+}
+
+td { 
+    padding: 0px 15px 0px 0px  
+}
+
+blockquote {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-left: 15px;
+    border-left: 2px solid #ccc;
+}

@@ -9,24 +9,27 @@
 {% endblock %}
 
 {% block content %}
-     <div class="row card-text text-muted small">
-        <div class="col-sm"><b>Submission deadline:</b> {{ track.submission_deadline }}</div>
-        <div class="col-sm"><b>Nomination deadline:</b> {{ track.nomination_deadline }}</div>
-    </div>
+    <table class="card-text text-muted small">
+        <tr><td><b>Submissions</b></td><td>{{ track.submission_start }} - {{ track.submission_end }}</td></tr>
+        <tr><td><b>Voting</b></td><td>{% if track.allow_voting %} {{ track.voting_start }} - {{ track.voting_end }} {% else %}N/A {% endif %}</td></tr>
+    </table>
+    <br/>
+    <p class="card-subtitle text-danger small">{% if track.urgent %}This track is currently the priority.{% endif %}</p>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card bg-light border-secondary" style="width: 20rem;">
-                    <a href="{% url 'review:theme' theme.pk %}" class="text-left">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ theme.name }}</h4>
-                            <table class="card-text text-muted small">
-                                <tr><td><b>Proposals:</b></td><td>{{ theme.proposals.count }}</td></tr>
-                            </table>
-                            <hr>
-                            <p class="card-text">{{ theme.description }}</p>
+                    <div class="card-body">
+                        <a href="{% url 'review:theme' theme.pk %}"><h4 class="card-title">{{ theme.name }}</h4></a>
+                        <table class="card-text text-muted small">
+                            <tr><td><b>Proposals</b></td><td>{{ theme.proposals.count }}</td></tr>
+                        </table>
+                        <hr>
+                        <p class="card-text">{{ theme.description }}</p>
+                        <div class="text-right">
+                            <a href="{% url 'review:theme' theme.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         {% endfor %}

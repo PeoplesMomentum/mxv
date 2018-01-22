@@ -47,6 +47,11 @@ def proposal(request, pk):
 @login_required
 def new_proposal(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
+    
+    # silent redirect back to theme as the user must have crafted/cached a URL to get here with member proposals turned off
+    if not theme.track.allow_member_proposals:
+        return redirect('review:theme', pk = theme.pk)
+
     if request.method == "POST":
         form = EditProposalForm(request.POST)
         if form.is_valid():
