@@ -18,10 +18,10 @@ class Track(models.Model):
     allow_member_proposals = models.BooleanField(default=True)
     submission_start = models.DateField(blank=True, null=True, default=None)
     submission_end = models.DateField(blank=True, null=True, default=None)
-    # voting
-    allow_voting = models.BooleanField(default=True)
-    voting_start = models.DateField(blank=True, null=True, default=None)
-    voting_end = models.DateField(blank=True, null=True, default=None)
+    # nominations
+    allow_nominations = models.BooleanField(default=True)
+    nomination_start = models.DateField(blank=True, null=True, default=None)
+    nomination_end = models.DateField(blank=True, null=True, default=None)
     
     def __str__(self):
         return self.name

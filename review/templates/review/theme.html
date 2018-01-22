@@ -26,6 +26,7 @@
             <p>You have already created a proposal in this theme and so cannot create any more.</p>
             <a href="{% url 'review:proposal' user_proposal.pk %}" class="btn btn-primary">View your proposal</a>
         {% endif %}
+        <br/><br/>
     {% else %}
         <p class="text-danger small">This track does not allow members to create proposals at this time, however you can still view existing proposals and comment on them.</p>
     {% endif %}
