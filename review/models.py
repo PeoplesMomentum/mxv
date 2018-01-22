@@ -32,6 +32,7 @@ class Theme(models.Model):
     name = models.CharField(max_length=name_length, unique=True)
     description = models.TextField(max_length=description_length)
     display_order = models.IntegerField(default = 1)
+    guidance = models.TextField(max_length=description_length, default = '')
     
     def __str__(self):
         return self.name

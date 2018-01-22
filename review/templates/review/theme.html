@@ -10,6 +10,14 @@
 {% endblock %}
 
 {% block content %}
+
+    {% if theme.guidance %}
+        <blockquote class="blockquote text-muted">
+            <p class="small">{{ theme.guidance }}</p>
+            <footer class="blockquote-footer">Momentum</footer>
+        </blockquote>
+    {% endif %}
+
     {% if theme.track.allow_member_proposals %}
         {% if not user_proposal %}
             <p>You can create one proposal in this theme.</p>
@@ -21,10 +29,11 @@
     {% else %}
         <p class="text-danger small">This track does not allow members to create proposals at this time, however you can still view existing proposals and comment on them.</p>
     {% endif %}
-    <br><br>
+
     <table class="card-text text-muted small">
         <tr><td><b>Proposals</b></td><td>{{ theme.proposals.count }}</td></tr>
     </table>
+    
     <div class="row">
         {% for proposal in proposals %}
             <div class="col-sm d-flex align-items-stretch pt-4">
