@@ -27,17 +27,7 @@ def theme(request, pk):
 
 @login_required
 def proposal(request, pk):
-    # get the proposal
     proposal = get_object_or_404(Proposal, pk = pk)
-    
-    # increment the number of views only once per session
-    session_key = 'viewed_proposal_{}'.format(pk)
-    if not request.session.get(session_key, False):
-        proposal.views += 1
-        proposal.save()
-        request.session[session_key] = True
-        
-    # render the form
     form = ProposalForm(instance = proposal)
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal,
@@ -96,10 +86,7 @@ def delete_proposal(request, pk):
 
 @login_required
 def amendment(request, pk):
-    # get the amendment
     amendment = get_object_or_404(Amendment, pk = pk)
-    
-    # render the form
     form = AmendmentForm(instance = amendment)
     return render(request, 'review/amendment.html', { 
         'amendment' : amendment,

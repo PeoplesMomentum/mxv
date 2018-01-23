@@ -47,7 +47,6 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
-    views = models.PositiveIntegerField(default = 0)
     
     def __str__(self):
         return self.name
