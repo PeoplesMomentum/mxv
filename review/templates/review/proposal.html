@@ -16,6 +16,7 @@
         <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
         <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
         <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
+        <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
     </table>
     <br>
     
@@ -39,30 +40,34 @@
     
     <hr>
     <div class="row card-text text-muted">
-        <div class="col-sm">
-            <h6>Comments</h6>
-        </div>
-        <div class="col-sm">
-            <h6>Amendments</h6>
-            {% if proposal.theme.track.allow_submissions %}
-                <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
-            {% endif %}
-            {% for amendment in amendments %}
-                <div class="card bg-light border-secondary mt-4" style="">
-                    <div class="card-body">
-                        <a href="{% url 'review:amendment' amendment.pk %}"><h4 class="card-title">{{ amendment.name }}</h4></a>
-                        <table class="card-text text-muted small">
-                            <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
-                            <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
-                        </table>
-                        <hr>
-                        <p class="card-text">{{ amendment.short_text }}</p>
-                        <div class="text-right">
-                            <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
+        {% if proposal.theme.track.show_comments %}
+            <div class="col-sm">
+                <h6>Comments</h6>
+            </div>
+        {% endif %}
+        {% if proposal.theme.track.show_amendments %}
+            <div class="col-sm">
+                <h6>Amendments</h6>
+                {% if proposal.theme.track.allow_submissions %}
+                    <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
+                {% endif %}
+                {% for amendment in amendments %}
+                    <div class="card bg-light border-secondary mt-4" style="">
+                        <div class="card-body">
+                            <a href="{% url 'review:amendment' amendment.pk %}"><h4 class="card-title">{{ amendment.name }}</h4></a>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
+                                <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text">{{ amendment.short_text }}</p>
+                            <div class="text-right">
+                                <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

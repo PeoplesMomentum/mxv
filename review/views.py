@@ -32,14 +32,15 @@ def proposal(request, pk):
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal,
         'amendments' : proposal.amendments.order_by('-created_at'),
+        'comments' : proposal.comments.order_by('-created_at'),
         'form': form })
 
 @login_required
 def new_proposal(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     
-    # silent redirect back to theme as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not theme.track.allow_submissions:
+    # silent redirect back to theme as the user must have crafted/cached a URL to get here
+    if not theme.track.allow_proposals:
         return redirect('review:theme', pk = theme.pk)
 
     if request.method == "POST":
@@ -60,8 +61,8 @@ def new_proposal(request, pk):
 def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not proposal.theme.track.allow_submissions:
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not proposal.theme.track.allow_proposals:
         return redirect('review:proposal', pk = proposal.pk)
 
     if proposal.created_by == request.user and request.method == "POST":
@@ -79,8 +80,8 @@ def edit_proposal(request, pk):
 def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not proposal.theme.track.allow_submissions:
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not proposal.theme.track.allow_proposals:
         return redirect('review:proposal', pk = proposal.pk)
 
     if proposal.created_by == request.user and request.method == "POST":
@@ -106,8 +107,8 @@ def amendment(request, pk):
 def new_amendment(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not proposal.theme.track.allow_submissions:
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not proposal.theme.track.allow_amendments:
         return redirect('review:proposal', pk = proposal.pk)
 
     if request.method == "POST":
@@ -128,8 +129,8 @@ def new_amendment(request, pk):
 def edit_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
-    # silent redirect back to amendment as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not amendment.proposal.theme.track.allow_submissions:
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not amendment.proposal.theme.track.allow_amendments:
         return redirect('review:amendment', pk = amendment.pk)
 
     if amendment.created_by == request.user and request.method == "POST":
@@ -147,8 +148,8 @@ def edit_amendment(request, pk):
 def delete_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
-    # silent redirect back to amendment as the user must have crafted/cached a URL to get here with member submissions turned off
-    if not amendment.proposal.theme.track.allow_submissions:
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not amendment.proposal.theme.track.allow_amendments:
         return redirect('review:amendment', pk = amendment.pk)
 
     if amendment.created_by == request.user and request.method == "POST":
