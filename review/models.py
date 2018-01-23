@@ -15,7 +15,7 @@ class Track(models.Model):
     display_order = models.IntegerField(default = 1)
     urgent = models.BooleanField(default=False)
     # submissions
-    allow_member_proposals = models.BooleanField(default=True)
+    allow_submissions = models.BooleanField(default=True)
     submission_start = models.DateField(blank=True, null=True, default=None)
     submission_end = models.DateField(blank=True, null=True, default=None)
     # nominations
