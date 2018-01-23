@@ -40,6 +40,9 @@
     <hr>
     <div class="row card-text text-muted">
         <div class="col-sm">
+            <h6>Comments</h6>
+        </div>
+        <div class="col-sm">
             <h6>Amendments</h6>
             {% if proposal.theme.track.allow_submissions %}
                 <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
@@ -60,9 +63,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
-        <div class="col-sm">
-            <h6>Comments</h6>
         </div>
     </div>
 {% endblock %}
