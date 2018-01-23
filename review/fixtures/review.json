@@ -168,6 +168,14 @@
             "created_by": 3,
             "created_at": "2018-01-25" }},
     {   "model" : "review.Proposal",
+        "pk": 3,
+        "fields": {
+            "theme": 3,
+            "name": "Momentum's proposed submission",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
         "pk": 4,
         "fields": {
             "theme": 4,
@@ -193,7 +201,7 @@
         "fields": {
             "proposal": 2,
             "url": "/static/review/Young_Labour_Proposal_for_the_Democracy_Review.pdf",
-            "display_text": "Democracy Review: Submissions to Reform BAME Labour" }},
+            "display_text": "Democracy Review: Submission to Reform Young Labour" }},
     {   "model" : "review.ProposalURL",
         "pk": 4,
         "fields": {
