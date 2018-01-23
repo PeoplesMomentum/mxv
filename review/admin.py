@@ -35,4 +35,3 @@ class ProposalAdmin(admin.ModelAdmin):
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
-admin.site.register(ProposalURL)
