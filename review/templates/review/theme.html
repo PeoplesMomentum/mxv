@@ -18,7 +18,7 @@
         </blockquote>
     {% endif %}
 
-    {% if theme.track.allow_member_proposals %}
+    {% if theme.track.allow_submissions %}
         {% if not user_proposal %}
             <p>You can create one proposal in this theme.</p>
             <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
