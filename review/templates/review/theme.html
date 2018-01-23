@@ -18,7 +18,7 @@
         </blockquote>
     {% endif %}
 
-    {% if theme.track.allow_member_proposals %}
+    {% if theme.track.allow_submissions %}
         {% if not user_proposal %}
             <p>You can create one proposal in this theme.</p>
             <a href="{% url 'review:new_proposal' theme.pk %}" class="btn btn-success">New proposal</a>
@@ -46,7 +46,7 @@
                             <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
                             <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
                             <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
-                            <tr><td><b>Views</b></td><td>{{ proposal.views }}</td></tr>
+                            <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
                         </table>
                         <hr>
                         <p class="card-text">{{ proposal.short_text }}</p>

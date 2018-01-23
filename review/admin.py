@@ -1,5 +1,5 @@
 from django.contrib import admin
-from review.models import Track, Theme, Proposal, ProposalURL
+from review.models import Track, Theme, Proposal, Comment
 
 # themes in a track
 class ThemeInline(admin.TabularInline):
@@ -30,8 +30,13 @@ class ProposalAdmin(admin.ModelAdmin):
     search_fields = ('name', 'text',)
     list_display = ('name', 'theme', )
     
+# comment admin
+class CommentAdmin(admin.ModelAdmin):
+    search_fields = ('text',)
+    list_display = ('short_text', 'proposal', )
      
 # registration
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
+admin.site.register(Comment, CommentAdmin)

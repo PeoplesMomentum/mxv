@@ -14,12 +14,17 @@ class Track(models.Model):
     name = models.CharField(max_length=name_length, unique=True)
     display_order = models.IntegerField(default = 1)
     urgent = models.BooleanField(default=False)
+    # visibility
+    show_amendments = models.BooleanField(default=True)
+    show_comments = models.BooleanField(default=True)
+    # permissions
+    allow_submissions = models.BooleanField(default=True)
+    allow_comments = models.BooleanField(default=True)
+    allow_nominations = models.BooleanField(default=True)
     # submissions
-    allow_member_proposals = models.BooleanField(default=True)
     submission_start = models.DateField(blank=True, null=True, default=None)
     submission_end = models.DateField(blank=True, null=True, default=None)
-    # nominations
-    allow_nominations = models.BooleanField(default=True)
+    # nomination dates
     nomination_start = models.DateField(blank=True, null=True, default=None)
     nomination_end = models.DateField(blank=True, null=True, default=None)
     
@@ -47,7 +52,6 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
-    views = models.PositiveIntegerField(default = 0)
     
     def __str__(self):
         return self.name
@@ -68,12 +72,6 @@ class ProposalURL(models.Model):
     url = models.TextField(max_length=description_length)
     display_text = models.TextField(max_length=description_length)
 
-# a member's nomination of a proposal
-class Nomination(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='nominations')
-    nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations')
-    nominated_at = models.DateTimeField(auto_now_add=True)
-
 # an amendment to a proposal
 class Amendment(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='amendments')
@@ -81,6 +79,9 @@ class Amendment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
+    
+    def __str__(self):
+        return self.name
     
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
@@ -91,4 +92,19 @@ class AmendmentHistory(models.Model):
     created_at = models.DateTimeField()    
     text = models.TextField(max_length=text_length)
 
+# a comment on a proposal
+class Comment(models.Model):
+    proposal = models.ForeignKey(Proposal, related_name='comments')
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments')
+    created_at = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=description_length)
+    
+    def short_text(self):
+        return Truncator(self.text).chars(short_length, '...')
+
+# a member's nomination of a proposal
+class Nomination(models.Model):
+    proposal = models.ForeignKey(Proposal, related_name='nominations')
+    nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations')
+    nominated_at = models.DateTimeField(auto_now_add=True)
 

@@ -1,0 +1,21 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}New comment on {{ proposal.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' proposal.theme.track.pk %}">{{ proposal.theme.track.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:theme' proposal.theme.pk %}">{{ proposal.theme.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:proposal' proposal.pk %}">{{ proposal.name }}</a></li>
+    <li class="breadcrumb-item active">New comment</li>
+{% endblock %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'mxv/includes/form.html' %}
+        <button type="submit" class="btn btn-success">Create new comment</button>
+        <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">Cancel</a>
+   </form>
+{% endblock %}

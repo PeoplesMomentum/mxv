@@ -16,7 +16,7 @@
         <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
         <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
         <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
-        <tr><td><b>Views</b></td><td>{{ proposal.views }}</td></tr>
+        <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
     </table>
     <br>
     
@@ -40,28 +40,51 @@
     
     <hr>
     <div class="row card-text text-muted">
-        <div class="col-sm">
-            <h6>Amendments</h6>
-            <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
-            {% for amendment in amendments %}
-                <div class="card bg-light border-secondary mt-4" style="">
-                    <div class="card-body">
-                        <a href="{% url 'review:amendment' amendment.pk %}"><h4 class="card-title">{{ amendment.name }}</h4></a>
-                        <table class="card-text text-muted small">
-                            <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
-                            <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
-                        </table>
-                        <hr>
-                        <p class="card-text">{{ amendment.short_text }}</p>
-                        <div class="text-right">
-                            <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
+        {% if proposal.theme.track.show_comments %}
+            <div class="col-sm">
+                <h6>Comments</h6>
+                {% if proposal.theme.track.allow_comments %}
+                    <p class="small">Please comment on the above proposal but be aware that comments cannot be deleted or edited once made.</p>
+                    <a href="{% url 'review:new_comment' proposal.pk %}" class="btn btn-success">New comment</a>
+                {% endif %}
+                {% for comment in comments %}
+                    <div class="card bg-light border-secondary mt-4" style="">
+                        <div class="card-body">
+                            <table class="small">
+                                <tr><td><b>Created by</b></td><td>{{ comment.created_by.name }}</td></tr>
+                                <tr><td><b>Created at</b></td><td>{{ comment.created_at }}</td></tr>
+                            </table>
+                            <hr>
+                            <p>{{ comment.text }}</p>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="col-sm">
-            <h6>Comments</h6>
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if proposal.theme.track.show_amendments %}
+            <div class="col-sm">
+                <h6>Amendments</h6>
+                {% if proposal.theme.track.allow_submissions %}
+                    <p class="small">Please suggest amendments to the above proposal, you can edit or delete your own amendments while submissions are open.</p>
+                    <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
+                {% endif %}
+                {% for amendment in amendments %}
+                    <div class="card bg-light border-secondary mt-4" style="">
+                        <div class="card-body">
+                            <a href="{% url 'review:amendment' amendment.pk %}"><h4 class="card-title">{{ amendment.name }}</h4></a>
+                            <table class="small">
+                                <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
+                                <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
+                            </table>
+                            <hr>
+                            <p>{{ amendment.short_text }}</p>
+                            <div class="text-right">
+                                <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

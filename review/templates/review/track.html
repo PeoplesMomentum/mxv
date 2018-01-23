@@ -10,7 +10,7 @@
 
 {% block content %}
     <table class="card-text text-muted small">
-        <tr><td><b>Submissions</b></td><td>{{ track.submission_start }} - {{ track.submission_end }}</td></tr>
+        <tr><td><b>Submissions</b></td><td>{% if track.allow_submissions %} {{ track.submission_start }} - {{ track.submission_end }} {% else %}N/A {% endif %}</td></tr>
         <tr><td><b>Voting</b></td><td>{% if track.allow_nominations %} {{ track.nomination_start }} - {{ track.nomination_end }} {% else %}N/A {% endif %}</td></tr>
     </table>
     <br/>

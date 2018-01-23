@@ -1,5 +1,5 @@
 from django import forms
-from .models import Proposal, text_length, Amendment
+from .models import Proposal, text_length, Amendment, Comment
 
 class ProposalForm(forms.ModelForm):
     name = forms.CharField(
@@ -64,4 +64,14 @@ class DeleteAmendmentForm(forms.ModelForm):
     class Meta:
         model = Amendment
         fields = ['name', 'text']
+
+class EditCommentForm(forms.ModelForm):
+    text = forms.CharField(
+        widget = forms.Textarea(attrs = { 'rows': 5, 'placeholder': "What is your comment?" }), 
+        max_length = text_length, 
+        help_text = "The maximum length of the text is %d" % text_length)
+
+    class Meta:
+        model = Comment
+        fields = ['text']
 
