@@ -62,7 +62,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
-    is_ncg_officer = models.BooleanField(default=False, verbose_name = 'NCG officer (can act on behalf of NCG)')
+    is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']

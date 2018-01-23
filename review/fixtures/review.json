@@ -6,8 +6,6 @@
             "display_order": 1,
             "urgent": "False",
             "allow_member_proposals": "False",
-            "submission_start": "2018-01-25",
-            "submission_end": "2018-04-20",
             "allow_nominations": "False" }},
     {   "model" : "review.Track",
         "pk": 2,
@@ -151,5 +149,67 @@
             "track": 3,
             "name": "Regional Structures",
             "description": "The role, accountability and transparency of regional structures.",
-            "display_order": 6 }}
+            "display_order": 6 }},
+                        
+    {   "model" : "review.Proposal",
+        "pk": 1,
+        "fields": {
+            "theme": 1,
+            "name": "Momentum's proposed submission",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 2,
+        "fields": {
+            "theme": 2,
+            "name": "Momentum's proposed submission",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 4,
+        "fields": {
+            "theme": 4,
+            "name": "Members' Council recommendations",
+            "text": "The document listed below contains the Members' Council recommendations for this theme.",
+            "created_by": 4,
+            "created_at": "2018-01-25" }},
+                        
+    {   "model" : "review.ProposalURL",
+        "pk": 1,
+        "fields": {
+            "proposal": 1,
+            "url": "/static/review/Democracy_Review_Submission_Reforming_BAME_Labour.pdf",
+            "display_text": "Democracy Review: Submissions to Reform BAME Labour" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 2,
+        "fields": {
+            "proposal": 1,
+            "url": "/static/review/BAME_Labour_Survey_Results_Summary.pdf",
+            "display_text": "Momentum recently undertook a consultation with all of our BAME members and supporters via to inform our submissions to the Democracy Review.  The responses paint a dismal picture of a failing organisation." }},
+    {   "model" : "review.ProposalURL",
+        "pk": 3,
+        "fields": {
+            "proposal": 2,
+            "url": "/static/review/Young_Labour_Proposal_for_the_Democracy_Review.pdf",
+            "display_text": "Democracy Review: Submissions to Reform BAME Labour" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 4,
+        "fields": {
+            "proposal": 2,
+            "url": "https://medium.com/@maxshanly/towards-a-new-model-young-labour-29960414261a",
+            "display_text": "Towards a Model Young Labour" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 5,
+        "fields": {
+            "proposal": 3,
+            "url": "/static/review/Submission_to_Labour_Party_Democracy_Review_on_Annual_Women_Conference.pdf",
+            "display_text": "Women's Conference: Submission to Reform Women's Conference" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 6,
+        "fields": {
+            "proposal": 4,
+            "url": "/static/review/Members_Council_Recommendations.pdf",
+            "display_text": "The Members' Council has made the following recommendations to improve CLP governance." }}
 ]
