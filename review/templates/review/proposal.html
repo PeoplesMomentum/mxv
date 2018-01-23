@@ -41,7 +41,9 @@
     <div class="row card-text text-muted">
         <div class="col-sm">
             <h6>Amendments</h6>
-            <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
+            {% if proposal.theme.track.allow_submissions %}
+                <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
+            {% endif %}
             {% for amendment in amendments %}
                 <div class="card bg-light border-secondary mt-4" style="">
                     <div class="card-body">

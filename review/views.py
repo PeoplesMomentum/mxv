@@ -38,8 +38,8 @@ def proposal(request, pk):
 def new_proposal(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     
-    # silent redirect back to theme as the user must have crafted/cached a URL to get here with member proposals turned off
-    if not theme.track.allow_member_proposals:
+    # silent redirect back to theme as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not theme.track.allow_submissions:
         return redirect('review:theme', pk = theme.pk)
 
     if request.method == "POST":
@@ -59,6 +59,11 @@ def new_proposal(request, pk):
 @login_required
 def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
+    
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not proposal.theme.track.allow_submissions:
+        return redirect('review:proposal', pk = proposal.pk)
+
     if proposal.created_by == request.user and request.method == "POST":
         form = EditProposalForm(request.POST, instance = proposal)
         if form.is_valid():
@@ -73,6 +78,11 @@ def edit_proposal(request, pk):
 @login_required
 def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
+    
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not proposal.theme.track.allow_submissions:
+        return redirect('review:proposal', pk = proposal.pk)
+
     if proposal.created_by == request.user and request.method == "POST":
         form = DeleteProposalForm(request.POST, instance = proposal)
         if form.is_valid():
@@ -95,6 +105,11 @@ def amendment(request, pk):
 @login_required
 def new_amendment(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
+    
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not proposal.theme.track.allow_submissions:
+        return redirect('review:proposal', pk = proposal.pk)
+
     if request.method == "POST":
         form = EditAmendmentForm(request.POST)
         if form.is_valid():
@@ -112,6 +127,11 @@ def new_amendment(request, pk):
 @login_required
 def edit_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
+    
+    # silent redirect back to amendment as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not amendment.proposal.theme.track.allow_submissions:
+        return redirect('review:amendment', pk = amendment.pk)
+
     if amendment.created_by == request.user and request.method == "POST":
         form = EditAmendmentForm(request.POST, instance = amendment)
         if form.is_valid():
@@ -126,6 +146,11 @@ def edit_amendment(request, pk):
 @login_required
 def delete_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
+    
+    # silent redirect back to amendment as the user must have crafted/cached a URL to get here with member submissions turned off
+    if not amendment.proposal.theme.track.allow_submissions:
+        return redirect('review:amendment', pk = amendment.pk)
+
     if amendment.created_by == request.user and request.method == "POST":
         form = DeleteAmendmentForm(request.POST, instance = amendment)
         if form.is_valid():
