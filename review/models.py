@@ -62,6 +62,12 @@ class ProposalHistory(models.Model):
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
 
+# proposal URLs
+class ProposalURL(models.Model):
+    proposal = models.ForeignKey(Proposal, related_name='urls')
+    url = models.TextField(max_length=description_length)
+    display_text = models.TextField(max_length=description_length)
+
 # a member's nomination of a proposal
 class Nomination(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='nominations')

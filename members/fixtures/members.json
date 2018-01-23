@@ -1,0 +1,29 @@
+[
+    {   "model" : "members.Member",
+        "pk": 1,
+        "fields": {
+            "email": "admin@peoplesmomentum.com",
+            "name": "Admin",
+            "is_active": "True",
+            "is_superuser": "True" }},
+    {   "model" : "members.Member",
+        "pk": 2,
+        "fields": {
+            "email": "momentum@peoplesmomentum.com",
+            "name": "Momentum",
+            "is_active": "True" }},
+    {   "model" : "members.Member",
+        "pk": 3,
+        "fields": {
+            "email": "ncg@peoplesmomentum.com",
+            "name": "National Coordinating Group",
+            "is_active": "True",
+            "is_ncg": "True" }},
+    {   "model" : "members.Member",
+        "pk": 4,
+        "fields": {
+            "email": "members.council@peoplesmomentum.com",
+            "name": "Members' Council",
+            "is_active": "True",
+            "is_members_council": "True" }}
+]

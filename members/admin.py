@@ -46,7 +46,7 @@ class MemberChangeForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'is_superuser', 'is_ncg', 'is_ncg_officer')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'is_superuser', 'is_ncg', 'is_members_council')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -68,7 +68,7 @@ class MemberAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'activation_key', 'is_active')}),
         ('Personal info', {'fields': ('name', 'momentum_group', )}),
-        ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_ncg_officer')}),
+        ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
