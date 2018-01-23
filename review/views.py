@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Track, Theme, Proposal, Amendment
 from django.db.models import Count
-from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm
+from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm
 
 @login_required
 def index(request):
@@ -40,7 +40,7 @@ def new_proposal(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     
     # silent redirect back to theme as the user must have crafted/cached a URL to get here
-    if not theme.track.allow_proposals:
+    if not theme.track.allow_submissions:
         return redirect('review:theme', pk = theme.pk)
 
     if request.method == "POST":
@@ -62,7 +62,7 @@ def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
     # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.allow_proposals:
+    if not proposal.theme.track.allow_submissions:
         return redirect('review:proposal', pk = proposal.pk)
 
     if proposal.created_by == request.user and request.method == "POST":
@@ -81,7 +81,7 @@ def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
     # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.allow_proposals:
+    if not proposal.theme.track.allow_submissions:
         return redirect('review:proposal', pk = proposal.pk)
 
     if proposal.created_by == request.user and request.method == "POST":
@@ -108,7 +108,7 @@ def new_amendment(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
     # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.allow_amendments:
+    if not proposal.theme.track.allow_submissions:
         return redirect('review:proposal', pk = proposal.pk)
 
     if request.method == "POST":
@@ -130,7 +130,7 @@ def edit_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
     # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not amendment.proposal.theme.track.allow_amendments:
+    if not amendment.proposal.theme.track.allow_submissions:
         return redirect('review:amendment', pk = amendment.pk)
 
     if amendment.created_by == request.user and request.method == "POST":
@@ -149,7 +149,7 @@ def delete_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
     # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not amendment.proposal.theme.track.allow_amendments:
+    if not amendment.proposal.theme.track.allow_submissions:
         return redirect('review:amendment', pk = amendment.pk)
 
     if amendment.created_by == request.user and request.method == "POST":
@@ -161,5 +161,27 @@ def delete_amendment(request, pk):
         form = DeleteAmendmentForm(instance = amendment)
     return render(request, 'review/delete_amendment.html', { 
         'amendment' : amendment,
+        'form' : form })
+
+@login_required
+def new_comment(request, pk):
+    proposal = get_object_or_404(Proposal, pk = pk)
+    
+    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    if not proposal.theme.track.allow_comments:
+        return redirect('review:proposal', pk = proposal.pk)
+
+    if request.method == "POST":
+        form = EditCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.proposal = proposal
+            comment.created_by = request.user
+            comment.save()
+            return redirect('review:proposal', pk = proposal.pk)
+    else:
+        form = EditCommentForm()
+    return render(request, 'review/new_comment.html', { 
+        'proposal' : proposal,
         'form' : form })
 
