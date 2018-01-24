@@ -21,7 +21,7 @@
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
     </form>    
-    {% if amendment.created_by == user %}
+    {% if amendment.proposal.theme.track.submissions_currently_allowed and amendment.created_by == user %}
         <a href="{% url 'review:edit_amendment' amendment.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_amendment' amendment.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
