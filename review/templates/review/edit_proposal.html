@@ -1,13 +1,14 @@
 {% extends "mxv/base.html" %}
 {% load static %}
 
-{% block title%}Edit {{ proposal.name }}{% endblock %}
+{% block title%}Edit{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track' proposal.theme.track.pk %}">{{ proposal.theme.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:theme' proposal.theme.pk %}">{{ proposal.theme.name }}</a></li>
-    <li class="breadcrumb-item active">Edit {{ proposal.name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'review:proposal' proposal.pk %}">{{ proposal.name }}</a></li>
+    <li class="breadcrumb-item active">Edit</li>
 {% endblock %}
 
 {% block content %}
