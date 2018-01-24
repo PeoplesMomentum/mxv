@@ -69,7 +69,7 @@ def proposal(request, pk):
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
         'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),
-        'user_requested_moderation': request.user.moderation_requests.filter(proposal = proposal).exists(),
+        'user_requested_moderation': request.user.moderation_requests.filter(proposal = proposal).first(),
         'form': form })
 
 @login_required
@@ -138,7 +138,7 @@ def amendment(request, pk):
     form = AmendmentForm(instance = amendment)
     return render(request, 'review/amendment.html', { 
         'amendment' : amendment,
-        'user_requested_moderation': request.user.moderation_requests.filter(amendment = amendment).exists(),
+        'user_requested_moderation': request.user.moderation_requests.filter(amendment = amendment).first(),
         'form': form })
 
 @login_required
@@ -283,7 +283,7 @@ def comment(request, pk):
     form = CommentForm(instance = comment)
     return render(request, 'review/comment.html', { 
         'comment' : comment,
-        'user_requested_moderation': request.user.moderation_requests.filter(comment = comment).exists(),
+        'user_requested_moderation': request.user.moderation_requests.filter(comment = comment).first(),
         'form': form })
 
 @login_required

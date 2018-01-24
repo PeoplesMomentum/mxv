@@ -26,7 +26,10 @@
         {% if not user_requested_moderation %}
             <a href="{% url 'review:moderate_comment' comment.pk %}" class="btn btn-danger">Request moderation</a>
         {% else %}
-            <p class="text-danger">You have requested moderation of this comment.</p>
+            <p class="text-danger">You have requested moderation of this comment:</p>
+            <blockquote class="blockquote">
+                <p class="text-danger small">{{ user_requested_moderation.reason }}</p>
+            </blockquote>            
         {% endif %}
     {% endif %}
 {% endblock %}
