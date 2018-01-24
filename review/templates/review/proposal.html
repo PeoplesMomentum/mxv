@@ -23,11 +23,19 @@
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
+        {% if proposal.created_by != user %}
+            {% if user_nominated_proposal %}
+                <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
+            {% else %}
+                <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
+            {% endif %}
+        {% endif %}
     </form>    
     {% if proposal.created_by == user %}
         <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
+    <br/>
 
     {% if proposal.urls.count > 0 %}
         <h6 class="card-text text-muted">Related items</h6>

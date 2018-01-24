@@ -27,12 +27,42 @@ def theme(request, pk):
 
 @login_required
 def proposal(request, pk):
+    # get the proposal
     proposal = get_object_or_404(Proposal, pk = pk)
+
+    # create the form for the proposal
     form = ProposalForm(instance = proposal)
+    
+    # if this is a valid post and nominations are allowed...
+    if request.method == 'POST':
+        form = ProposalForm(request.POST)
+        if form.is_valid() and proposal.theme.track.allow_nominations:        
+            
+            # if nominating...
+            if 'nominate' in request.POST:
+                
+                # clear existing user nominations in this theme
+                for nomination in request.user.nominations.filter(proposal__theme = proposal.theme):
+                    nomination.delete()
+                
+                # nominate the proposal
+                proposal.nominations.create(proposal = proposal, nominated_by = request.user)
+                
+            # if clearing the nomination...
+            if 'clear_nomination' in request.POST:
+                
+                # delete the nomination
+                nomination = proposal.nominations.filter(nominated_by = request.user).first()
+                if nomination:
+                    nomination.delete()
+                    
+            return redirect('review:proposal', pk = proposal.pk)
+    
     return render(request, 'review/proposal.html', { 
         'proposal' : proposal,
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
+        'user_nominated_proposal': request.user.nominations.filter(proposal = proposal).exists(),
         'form': form })
 
 @login_required
