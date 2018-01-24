@@ -23,12 +23,18 @@
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
-        {% if proposal.theme.track.submissions_currently_allowed %}
-            {% if proposal.created_by != user %}
-                {% if user_nominated_proposal %}
-                    <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
-                {% else %}
-                    <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
+        {% if proposal.theme.track.nominations_currently_allowed %}
+            {% if proposal.created_by.is_ncg %}
+                <p>Nominations are not necessary for proposals made by the National Coordinating Group.</p>
+            {% elif proposal.created_by.is_members_council %}
+                <p>Nominations are not necessary for proposals made by the Members' Council.</p>
+            {% else %}
+                {% if proposal.created_by != user %}
+                    {% if user_nominated_proposal %}
+                        <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
+                    {% else %}
+                        <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% else %}
