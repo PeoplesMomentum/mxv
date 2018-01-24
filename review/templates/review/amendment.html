@@ -15,6 +15,7 @@
     <table class="card-text text-muted small">
         <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
         <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
+        <tr><td><b>Moderation requests</b></td><td>{{ amendment.moderation_requests.count }}</td></tr>
     </table>
     <br>
     <form method="post" novalidate>
@@ -24,5 +25,12 @@
     {% if amendment.proposal.theme.track.submissions_currently_allowed and amendment.created_by == user %}
         <a href="{% url 'review:edit_amendment' amendment.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_amendment' amendment.pk %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+    {% if amendment.created_by != user %}
+        {% if not user_requested_moderation %}
+            <a href="{% url 'review:moderate_amendment' amendment.pk %}" class="btn btn-danger">Request moderation</a>
+        {% else %}
+            <p class="text-danger">You have requested moderation of this amendment.</p>
+        {% endif %}
     {% endif %}
 {% endblock %}

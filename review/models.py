@@ -104,7 +104,7 @@ class Comment(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='comments')
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(max_length=description_length)
+    text = models.TextField(max_length=text_length)
     
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
@@ -114,4 +114,14 @@ class Nomination(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='nominations')
     nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations')
     nominated_at = models.DateTimeField(auto_now_add=True)
+    
+# a moderation request
+class ModerationRequest(models.Model):
+    proposal = models.ForeignKey(Proposal, related_name='moderation_requests', blank=True, null=True, default=None)
+    amendment = models.ForeignKey(Amendment, related_name='moderation_requests', blank=True, null=True, default=None)
+    comment = models.ForeignKey(Comment, related_name='moderation_requests', blank=True, null=True, default=None)
+    requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(max_length=text_length, default='')
+    
 

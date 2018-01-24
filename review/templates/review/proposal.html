@@ -17,6 +17,7 @@
         <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
         <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
         <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
+        <tr><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
     </table>
     <br>
     
@@ -30,7 +31,7 @@
                 <p>Nominations are not necessary for proposals made by the Members' Council.</p>
             {% else %}
                 {% if proposal.created_by != user %}
-                    {% if user_nominated_proposal %}
+                    {% if user_nominated %}
                         <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
                     {% else %}
                         <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
@@ -38,8 +39,8 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if user_nominated_proposal %}
-                <p>You nominated this proposal.</p>
+            {% if user_nominated %}
+                <p>You have nominated this proposal.</p>
             {% endif %}
         {% endif %}
     </form>    
@@ -47,9 +48,17 @@
         <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
+    {% if proposal.created_by != user %}
+        {% if not user_requested_moderation %}
+            <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
+        {% else %}
+            <p class="text-danger">You have requested moderation of this proposal.</p>
+        {% endif %}
+    {% endif %}
     <br/>
 
     {% if proposal.urls.count > 0 %}
+        <br/>
         <h6 class="card-text text-muted">Related items</h6>
         <ul>
         {% for url in proposal.urls.all %}
@@ -73,9 +82,13 @@
                             <table class="small">
                                 <tr><td><b>Created by</b></td><td>{{ comment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at</b></td><td>{{ comment.created_at }}</td></tr>
+                                <tr><td><b>Moderation requests</b></td><td>{{ comment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
                             <p>{{ comment.text }}</p>
+                            <div class="text-right">
+                                <a href="{% url 'review:comment' comment.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -95,6 +108,7 @@
                             <table class="small">
                                 <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
+                                <tr><td><b>Moderation requests</b></td><td>{{ amendment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
                             <p>{{ amendment.short_text }}</p>

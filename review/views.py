@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Track, Theme, Proposal, Amendment
+from .models import Track, Theme, Proposal, Amendment, Comment
 from django.db.models import Count
-from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm
+from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm, ModerationRequestForm, CommentForm
 
 @login_required
 def index(request):
@@ -68,7 +68,8 @@ def proposal(request, pk):
         'proposal' : proposal,
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
-        'user_nominated_proposal': request.user.nominations.filter(proposal = proposal).exists(),
+        'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),
+        'user_requested_moderation': request.user.moderation_requests.filter(proposal = proposal).exists(),
         'form': form })
 
 @login_required
@@ -137,6 +138,7 @@ def amendment(request, pk):
     form = AmendmentForm(instance = amendment)
     return render(request, 'review/amendment.html', { 
         'amendment' : amendment,
+        'user_requested_moderation': request.user.moderation_requests.filter(amendment = amendment).exists(),
         'form': form })
 
 @login_required
@@ -221,3 +223,93 @@ def new_comment(request, pk):
         'proposal' : proposal,
         'form' : form })
 
+@login_required
+def moderate_proposal(request, pk):
+    # get the proposal
+    proposal = get_object_or_404(Proposal, pk = pk)
+        
+    # if this is a valid post...
+    if request.method == "POST":
+        form = ModerationRequestForm('proposal', request.POST)
+        if form.is_valid():
+            
+            # save the moderation request
+            moderation_request = form.save(commit = False)
+            moderation_request.proposal = proposal
+            moderation_request.requested_by = request.user
+            moderation_request.save()
+            
+            # notify that moderation is required
+            
+            # return to the referring entity
+            return redirect("review:proposal", pk = pk)
+    else:
+        form = ModerationRequestForm('proposal')
+    
+    return render(request, 'review/moderate_proposal.html', {
+        'proposal': proposal,
+        'form' : form })
+    
+@login_required
+def moderate_amendment(request, pk):
+    # get the amendment
+    amendment = get_object_or_404(Amendment, pk = pk)
+        
+    # if this is a valid post...
+    if request.method == "POST":
+        form = ModerationRequestForm('amendment', request.POST)
+        if form.is_valid():
+            
+            # save the moderation request
+            moderation_request = form.save(commit = False)
+            moderation_request.amendment = amendment
+            moderation_request.requested_by = request.user
+            moderation_request.save()
+            
+            # notify that moderation is required
+            
+            # return to the referring entity
+            return redirect("review:amendment", pk = pk)
+    else:
+        form = ModerationRequestForm('amendment')
+    
+    return render(request, 'review/moderate_amendment.html', {
+        'amendment': amendment,
+        'form' : form })
+    
+@login_required
+def comment(request, pk):
+    comment = get_object_or_404(Comment, pk = pk)
+    form = CommentForm(instance = comment)
+    return render(request, 'review/comment.html', { 
+        'comment' : comment,
+        'user_requested_moderation': request.user.moderation_requests.filter(comment = comment).exists(),
+        'form': form })
+
+@login_required
+def moderate_comment(request, pk):
+    # get the comment
+    comment = get_object_or_404(Comment, pk = pk)
+        
+    # if this is a valid post...
+    if request.method == "POST":
+        form = ModerationRequestForm('comment', request.POST)
+        if form.is_valid():
+            
+            # save the moderation request
+            moderation_request = form.save(commit = False)
+            moderation_request.comment = comment
+            moderation_request.requested_by = request.user
+            moderation_request.save()
+            
+            # notify that moderation is required
+            
+            # return to the referring entity
+            return redirect("review:comment", pk = pk)
+    else:
+        form = ModerationRequestForm('comment')
+    
+    return render(request, 'review/moderate_comment.html', {
+        'comment': comment,
+        'form' : form })
+    
