@@ -3,9 +3,9 @@ from .models import Proposal, text_length, Amendment, Comment
 
 class ProposalForm(forms.ModelForm):
     name = forms.CharField(
-        widget = forms.TextInput(attrs = { 'disabled': True }))
+        widget = forms.TextInput(attrs = { 'readonly': True }))
     text = forms.CharField(
-        widget = forms.Textarea(attrs = { 'disabled': True, 'rows': 5 }))
+        widget = forms.Textarea(attrs = { 'readonly': True, 'rows': 5 }))
 
     class Meta:
         model = Proposal
@@ -35,9 +35,9 @@ class DeleteProposalForm(forms.ModelForm):
 
 class AmendmentForm(forms.ModelForm):
     name = forms.CharField(
-        widget = forms.TextInput(attrs = { 'disabled': True }))
+        widget = forms.TextInput(attrs = { 'readonly': True }))
     text = forms.CharField(
-        widget = forms.Textarea(attrs = { 'disabled': True, 'rows': 5 }))
+        widget = forms.Textarea(attrs = { 'readonly': True, 'rows': 5 }))
 
     class Meta:
         model = Amendment

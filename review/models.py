@@ -1,6 +1,7 @@
 from django.db import models
 from mxv.settings import AUTH_USER_MODEL
 from django.utils.text import Truncator
+from datetime import date
 
 # field sizes
 name_length = 100
@@ -30,6 +31,12 @@ class Track(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def submissions_currently_allowed(self):
+        return self.allow_submissions and date.today() >= self.submission_start <= self.submission_end
+
+    def nominations_currently_allowed(self):
+        return self.allow_nominations and date.today() >= self.nomination_start <= self.nomination_end
 
 # a theme in a track
 class Theme(models.Model):
