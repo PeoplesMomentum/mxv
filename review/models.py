@@ -2,6 +2,7 @@ from django.db import models
 from mxv.settings import AUTH_USER_MODEL
 from django.utils.text import Truncator
 from datetime import date
+from django.core.mail.message import EmailMultiAlternatives
 
 # field sizes
 name_length = 100
@@ -123,5 +124,34 @@ class ModerationRequest(models.Model):
     requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests')
     requested_at = models.DateTimeField(auto_now_add=True)
     reason = models.TextField(max_length=text_length, default='')
+    
+    def notify_staff(self):
+        # build the email body
+        article = ''
+        entity = ''
+        if self.proposal:
+            entity = 'proposal'
+            article = 'a'
+        elif self.amendment:
+            entity = 'amendment'
+            article = 'an'
+        elif self.comment:
+            entity = 'comment'
+            article = 'a'
+        body = 'Moderation of %s %s has been requested by %s (%s) for the following reason:\n\n  %s' % (article, entity, self.requested_by.name, self.requested_by.email, self.reason)
+        
+        # send the email
+        message = EmailMultiAlternatives(
+            subject = 'Moderation required', 
+            body = body,
+            to = { notification.email_address for notification in ModerationRequestNotification.objects.all() }) 
+        message.send()
+            
+    
+# email addresses to notify about moderation requests
+class ModerationRequestNotification(models.Model):
+    email_address = models.EmailField(default = '')
+
+    
     
 
