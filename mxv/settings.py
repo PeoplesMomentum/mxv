@@ -169,8 +169,8 @@ DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
 JOIN_URL = "https://join.peoplesmomentum.com"
 
 # site name
-SITE_NAME_SHORT = "MxV"
-SITE_NAME_LONG = "Momentum's Members' Hub"
+SITE_NAME_SHORT = "My Momentum"
+SITE_NAME_LONG = "My Momentum"
 
 # send members to the index page after they login
 LOGIN_URL = '/members/login'
