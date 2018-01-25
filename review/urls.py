@@ -26,4 +26,7 @@ urlpatterns = [
     url(r'^proposal/(?P<pk>\d+)/new_comment/$', views.new_comment, name = 'new_comment'),
     url(r'^comment/(?P<pk>\d+)/$', views.comment, name = 'comment'),
     url(r'^comment/(?P<pk>\d+)/moderate/$', views.moderate_comment, name = 'moderate_comment'),
+    # support pages
+    url(r'^help/$', views.help, name = 'help'),
+    url(r'^rules/$', views.rules, name = 'rules'),
 ]

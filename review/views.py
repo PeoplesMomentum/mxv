@@ -361,3 +361,11 @@ def moderate_comment(request, pk):
         'comment': comment,
         'form' : form })
     
+@login_required
+def help(request):
+    return render(request, 'review/help.html')
+
+@login_required
+def rules(request):
+    return render(request, 'review/rules.html')
+

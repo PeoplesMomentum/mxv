@@ -16,6 +16,8 @@ class Track(models.Model):
     name = models.CharField(max_length=name_length, unique=True)
     display_order = models.IntegerField(default = 1)
     urgent = models.BooleanField(default=False)
+    description = models.TextField(max_length=description_length, default='')
+    guidance = models.TextField(max_length=description_length, default='')
     # visibility
     show_amendments = models.BooleanField(default=True)
     show_comments = models.BooleanField(default=True)
