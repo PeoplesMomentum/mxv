@@ -27,8 +27,9 @@ def theme(request, pk):
 
 @login_required
 def proposal(request, pk):
-    # get the proposal
+    # get the proposal and moderation request
     proposal = get_object_or_404(Proposal, pk = pk)
+    user_requested_moderation = request.user.moderation_requests.filter(proposal = proposal).first()
 
     # create the form for the proposal
     form = ProposalForm(instance = proposal)
@@ -62,6 +63,10 @@ def proposal(request, pk):
                 if nomination:
                     nomination.delete()
                     
+            # cancel the moderation request
+            if 'cancel_moderation' in request.POST and user_requested_moderation:
+                user_requested_moderation.delete()
+                    
             return redirect('review:proposal', pk = proposal.pk)
     
     return render(request, 'review/proposal.html', { 
@@ -69,7 +74,7 @@ def proposal(request, pk):
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
         'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),
-        'user_requested_moderation': request.user.moderation_requests.filter(proposal = proposal).first(),
+        'user_requested_moderation': user_requested_moderation,
         'form': form })
 
 @login_required

@@ -24,6 +24,7 @@
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
+        
         {% if proposal.theme.track.nominations_currently_allowed %}
             {% if proposal.created_by.is_ncg %}
                 <p>Nominations are not necessary for proposals made by the National Coordinating Group.</p>
@@ -43,21 +44,26 @@
                 <p>You have nominated this proposal.</p>
             {% endif %}
         {% endif %}
+        
+        {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
+            {% if not user_requested_moderation %}
+                <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
+            {% else %}
+                <br/>
+                <p class="text-danger">You have requested moderation of this proposal:</p>
+                <blockquote class="blockquote">
+                    <p class="text-danger small">{{ user_requested_moderation.reason }}</p>
+                </blockquote>     
+                <button type="submit" name="cancel_moderation" class="btn btn-danger">Cancel moderation request</button>
+            {% endif %}
+        {% endif %}
+    
     </form>    
+    
     {% if proposal.theme.track.submissions_currently_allowed and proposal.created_by == user %}
+        <br/>
         <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
-    {% endif %}
-    {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
-        {% if not user_requested_moderation %}
-            <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
-        {% else %}
-            <p class="text-danger">You have requested moderation of this proposal:</p>
-            <blockquote class="blockquote">
-                <p class="text-danger small">{{ user_requested_moderation.reason }}</p>
-            </blockquote>            
-        {% endif %}
-        <br/>
     {% endif %}
 
     {% if proposal.urls.count > 0 %}
@@ -97,6 +103,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+        
         {% if proposal.theme.track.show_amendments %}
             <div class="col-sm">
                 <h6>Amendments</h6>
