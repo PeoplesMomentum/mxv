@@ -1,5 +1,5 @@
 from django.contrib import admin
-from review.models import Track, Theme, Proposal, Comment
+from review.models import Track, Theme, Proposal, Comment, ModerationRequest
 
 # themes in a track
 class ThemeInline(admin.TabularInline):
@@ -35,8 +35,15 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ('text',)
     list_display = ('short_text', 'proposal', )
      
+# moderation request admin
+class ModerationRequestAdmin(admin.ModelAdmin):
+    search_fields = ('reason',)
+    list_display = ('reason', 'requested_by', 'moderated')
+    readonly_fields = ('proposal', 'amendment', 'comment', 'requested_by', 'requested_at', 'reason')
+     
 # registration
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(ModerationRequest, ModerationRequestAdmin)

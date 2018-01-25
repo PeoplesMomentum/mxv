@@ -124,6 +124,10 @@ class ModerationRequest(models.Model):
     requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests')
     requested_at = models.DateTimeField(auto_now_add=True)
     reason = models.TextField(max_length=text_length, default='')
+    moderated = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.reason
     
     def notify_staff(self):
         # build the email body
