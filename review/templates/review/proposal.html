@@ -23,9 +23,14 @@
     
     <form method="post" novalidate>
         {% csrf_token %}
-        {% include 'mxv/includes/form.html' %}
         
-        {% if proposal.theme.track.nominations_currently_allowed %}
+        {% if not proposal.moderated %}
+            {% include 'mxv/includes/form.html' %}
+        {% else %}
+            <p class="text-danger">Moderated.  Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
+        {% endif %}
+        
+        {% if not proposal.moderated and proposal.theme.track.nominations_currently_allowed %}
             {% if proposal.created_by.is_ncg %}
                 <p>Nominations are not necessary for proposals made by the National Coordinating Group.</p>
             {% elif proposal.created_by.is_members_council %}
@@ -45,7 +50,7 @@
             {% endif %}
         {% endif %}
         
-        {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
+        {% if not proposal.moderated and not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
             {% if not user_requested_moderation %}
                 <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
             {% else %}
@@ -62,7 +67,9 @@
     
     {% if proposal.theme.track.submissions_currently_allowed and proposal.created_by == user %}
         <br/>
-        <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
+        {% if not proposal.moderated %}
+            <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
+        {% endif %}
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
 
@@ -94,7 +101,11 @@
                                 <tr><td><b>Moderation requests</b></td><td>{{ comment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
-                            <p>{{ comment.text }}</p>
+                            {% if not comment.moderated %}
+                                <p class="card-text">{{ comment.short_text }}</p>
+                            {% else %}
+                                <p class="text-danger">Moderated.  Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
+                            {% endif %}
                             <div class="text-right">
                                 <a href="{% url 'review:comment' comment.pk %}">View <i class="fa fa-chevron-right"></i></a>
                             </div>
@@ -114,14 +125,24 @@
                 {% for amendment in amendments %}
                     <div class="card bg-light border-secondary mt-4" style="">
                         <div class="card-body">
-                            <a href="{% url 'review:amendment' amendment.pk %}"><h4 class="card-title">{{ amendment.name }}</h4></a>
+                            <a href="{% url 'review:amendment' amendment.pk %}">
+                                {% if not amendment.moderated %}
+                                    <h4 class="card-title">{{ amendment.name }}</h4>
+                                {% else %}
+                                    <p class="text-danger">Moderated.</p>
+                                {% endif %}
+                            </a>
                             <table class="small">
                                 <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
                                 <tr><td><b>Moderation requests</b></td><td>{{ amendment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
-                            <p>{{ amendment.short_text }}</p>
+                            {% if not amendment.moderated %}
+                                <p class="card-text">{{ amendment.short_text }}</p>
+                            {% else %}
+                                <p class="text-danger">Moderated.  Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
+                            {% endif %}
                             <div class="text-right">
                                 <a href="{% url 'review:amendment' amendment.pk %}">View <i class="fa fa-chevron-right"></i></a>
                             </div>

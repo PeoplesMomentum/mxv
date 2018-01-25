@@ -67,6 +67,9 @@ class Proposal(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
     
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # previous versions of a proposal
 class ProposalHistory(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='history')
@@ -94,6 +97,9 @@ class Amendment(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
 
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # previous versions of an amendment
 class AmendmentHistory(models.Model):
     amendment = models.ForeignKey(Amendment, related_name='history')
@@ -110,6 +116,9 @@ class Comment(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
 
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # a member's nomination of a proposal
 class Nomination(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='nominations')
@@ -151,6 +160,15 @@ class ModerationRequest(models.Model):
             to = { notification.email_address for notification in ModerationRequestNotification.objects.all() }) 
         message.send()
             
+    def moderated_entity_created_by(self):
+        if self.proposal:
+            return self.proposal.created_by
+        elif self.amendment:
+            return self.amendment.created_by
+        elif self.comment:
+            return self.comment.created_by
+        else:
+            return ''
     
 # email addresses to notify about moderation requests
 class ModerationRequestNotification(models.Model):

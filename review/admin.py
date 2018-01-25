@@ -38,8 +38,8 @@ class CommentAdmin(admin.ModelAdmin):
 # moderation request admin
 class ModerationRequestAdmin(admin.ModelAdmin):
     search_fields = ('reason',)
-    list_display = ('reason', 'requested_by', 'moderated')
-    readonly_fields = ('proposal', 'amendment', 'comment', 'requested_by', 'requested_at', 'reason')
+    list_display = ('reason', 'requested_by', 'moderated_entity_created_by', 'moderated')
+    readonly_fields = ('proposal', 'amendment', 'comment', 'moderated_entity_created_by', 'requested_by', 'requested_at', 'reason')
      
 # registration
 admin.site.register(Track, TrackAdmin)

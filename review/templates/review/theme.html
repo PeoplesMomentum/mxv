@@ -40,7 +40,13 @@
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card bg-light border-secondary" style="width: 20rem;">
                     <div class="card-body">
-                        <a href="{% url 'review:proposal' proposal.pk %}"><h4 class="card-title">{{ proposal.name }}</h4></a>
+                        <a href="{% url 'review:proposal' proposal.pk %}">
+                            {% if not proposal.moderated %}
+                                <h4 class="card-title">{{ proposal.name }}</h4>
+                            {% else %}
+                                <p class="text-danger">Moderated.</p>
+                            {% endif %}
+                        </a>
                         <table class="card-text text-muted small">
                             <tr><td><b>Created by</b></td><td>{{ proposal.created_by.name }}</td></tr>
                             <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
@@ -50,7 +56,11 @@
                             <tr><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
                         </table>
                         <hr>
-                        <p class="card-text">{{ proposal.short_text }}</p>
+                        {% if not proposal.moderated %}
+                            <p class="card-text">{{ proposal.short_text }}</p>
+                        {% else %}
+                            <p class="text-danger">Moderated.  Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
+                        {% endif %}
                         <div class="text-right">
                             <a href="{% url 'review:proposal' proposal.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
