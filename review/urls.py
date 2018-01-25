@@ -15,11 +15,15 @@ urlpatterns = [
     url(r'^proposal/(?P<pk>\d+)/$', views.proposal, name = 'proposal'),
     url(r'^proposal/(?P<pk>\d+)/edit/$', views.edit_proposal, name = 'edit_proposal'),
     url(r'^proposal/(?P<pk>\d+)/delete/$', views.delete_proposal, name = 'delete_proposal'),
+    url(r'^proposal/(?P<pk>\d+)/moderate/$', views.moderate_proposal, name = 'moderate_proposal'),
     # amendments
     url(r'^proposal/(?P<pk>\d+)/new_amendment/$', views.new_amendment, name = 'new_amendment'),
     url(r'^amendment/(?P<pk>\d+)/$', views.amendment, name = 'amendment'),
     url(r'^amendment/(?P<pk>\d+)/edit/$', views.edit_amendment, name = 'edit_amendment'),
     url(r'^amendment/(?P<pk>\d+)/delete/$', views.delete_amendment, name = 'delete_amendment'),
+    url(r'^amendment/(?P<pk>\d+)/moderate/$', views.moderate_amendment, name = 'moderate_amendment'),
     # comments
     url(r'^proposal/(?P<pk>\d+)/new_comment/$', views.new_comment, name = 'new_comment'),
+    url(r'^comment/(?P<pk>\d+)/$', views.comment, name = 'comment'),
+    url(r'^comment/(?P<pk>\d+)/moderate/$', views.moderate_comment, name = 'moderate_comment'),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Proposal, text_length, Amendment, Comment
+from .models import Proposal, Amendment, Comment, ModerationRequest, name_length, text_length
 
 class ProposalForm(forms.ModelForm):
     name = forms.CharField(
@@ -13,11 +13,13 @@ class ProposalForm(forms.ModelForm):
 
 class EditProposalForm(forms.ModelForm):
     name = forms.CharField(
-        widget = forms.TextInput(attrs = { 'placeholder': "Choose a name for your proposal" }))
+        widget = forms.TextInput(attrs = { 'placeholder': "Choose a name for your proposal" }),
+        max_length = name_length,
+        help_text = "The maximum length of the name is %d characters" % name_length)
     text = forms.CharField(
         widget = forms.Textarea(attrs = { 'rows': 5, 'placeholder': "What is your proposal?" }), 
         max_length = text_length, 
-        help_text = "The maximum length of the text is %d" % text_length)
+        help_text = "The maximum length of the text is %d characters" % text_length)
 
     class Meta:
         model = Proposal
@@ -45,11 +47,13 @@ class AmendmentForm(forms.ModelForm):
 
 class EditAmendmentForm(forms.ModelForm):
     name = forms.CharField(
-        widget = forms.TextInput(attrs = { 'placeholder': "Choose a name for your amendment" }))
+        widget = forms.TextInput(attrs = { 'placeholder': "Choose a name for your amendment" }),
+        max_length = name_length,
+        help_text = "The maximum length of the name is %d characters" % name_length)
     text = forms.CharField(
         widget = forms.Textarea(attrs = { 'rows': 5, 'placeholder': "What is your amendment?" }), 
         max_length = text_length, 
-        help_text = "The maximum length of the text is %d" % text_length)
+        help_text = "The maximum length of the text is %d characters" % text_length)
 
     class Meta:
         model = Amendment
@@ -69,7 +73,27 @@ class EditCommentForm(forms.ModelForm):
     text = forms.CharField(
         widget = forms.Textarea(attrs = { 'rows': 5, 'placeholder': "What is your comment?" }), 
         max_length = text_length, 
-        help_text = "The maximum length of the text is %d" % text_length)
+        help_text = "The maximum length of the text is %d characters" % text_length)
+
+    class Meta:
+        model = Comment
+        fields = ['text']
+
+class ModerationRequestForm(forms.ModelForm):
+    def __init__(self, entity, *args,**kwargs):
+        super(ModerationRequestForm, self).__init__(*args, **kwargs)
+        self.fields['reason'] = forms.CharField(
+            widget = forms.Textarea(attrs = { 'rows': 5, 'placeholder': "Why does this %s require moderation?" % entity }), 
+            max_length = text_length, 
+            help_text = "The maximum length of the reason is %d characters" % text_length)
+
+    class Meta:
+        model = ModerationRequest
+        fields = ['reason']
+
+class CommentForm(forms.ModelForm):
+    text = forms.CharField(
+        widget = forms.Textarea(attrs = { 'readonly': True, 'rows': 5 }))
 
     class Meta:
         model = Comment

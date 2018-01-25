@@ -1,7 +1,7 @@
 {% extends "mxv/base.html" %}
 {% load static %}
 
-{% block title%}Delete{% endblock %}
+{% block title%}Request moderation{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
@@ -9,19 +9,15 @@
     <li class="breadcrumb-item"><a href="{% url 'review:theme' amendment.proposal.theme.pk %}">{{ amendment.proposal.theme.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:proposal' amendment.proposal.pk %}">{{ amendment.proposal.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:amendment' amendment.pk %}">{{ amendment.name }}</a></li>
-    <li class="breadcrumb-item active">Delete</li>
+    <li class="breadcrumb-item active">Request moderation</li>
 {% endblock %}
 
 {% block content %}
-    <div class="row card-text text-muted small">
-        <div class="col-sm"><b>Created by:</b> {{ amendment.created_by.name }}</div>
-        <div class="col-sm"><b>Created at:</b> {{ amendment.created_at }}</div>
-    </div>
-    <hr>
+    <p>Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
-        <button type="submit" class="btn btn-danger">Delete this amendment?</button>
+        <button type="submit" class="btn btn-danger">Request moderation</button>
         <a href="{% url 'review:amendment' amendment.pk %}" class="btn btn-primary">Cancel</a>
-    </form>    
+   </form>
 {% endblock %}

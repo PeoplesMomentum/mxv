@@ -2,6 +2,7 @@ from django.db import models
 from mxv.settings import AUTH_USER_MODEL
 from django.utils.text import Truncator
 from datetime import date
+from django.core.mail.message import EmailMultiAlternatives
 
 # field sizes
 name_length = 100
@@ -66,6 +67,9 @@ class Proposal(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
     
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # previous versions of a proposal
 class ProposalHistory(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='history')
@@ -93,6 +97,9 @@ class Amendment(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
 
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # previous versions of an amendment
 class AmendmentHistory(models.Model):
     amendment = models.ForeignKey(Amendment, related_name='history')
@@ -104,14 +111,71 @@ class Comment(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='comments')
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(max_length=description_length)
+    text = models.TextField(max_length=text_length)
     
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
 
+    def moderated(self):
+        return self.moderation_requests.filter(moderated = True).exists()
+    
 # a member's nomination of a proposal
 class Nomination(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='nominations')
     nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations')
     nominated_at = models.DateTimeField(auto_now_add=True)
+    
+# a moderation request
+class ModerationRequest(models.Model):
+    proposal = models.ForeignKey(Proposal, related_name='moderation_requests', blank=True, null=True, default=None)
+    amendment = models.ForeignKey(Amendment, related_name='moderation_requests', blank=True, null=True, default=None)
+    comment = models.ForeignKey(Comment, related_name='moderation_requests', blank=True, null=True, default=None)
+    requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(max_length=text_length, default='')
+    moderated = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.reason
+    
+    def notify_staff(self):
+        # build the email body
+        article = ''
+        entity = ''
+        if self.proposal:
+            entity = 'proposal'
+            article = 'a'
+        elif self.amendment:
+            entity = 'amendment'
+            article = 'an'
+        elif self.comment:
+            entity = 'comment'
+            article = 'a'
+        body = 'Moderation of %s %s has been requested by %s (%s) for the following reason:\n\n  %s' % (article, entity, self.requested_by.name, self.requested_by.email, self.reason)
+        
+        # send the email
+        message = EmailMultiAlternatives(
+            subject = 'Moderation required', 
+            body = body,
+            to = { notification.email_address for notification in ModerationRequestNotification.objects.all() }) 
+        message.send()
+            
+    def moderated_entity_created_by(self):
+        if self.proposal:
+            return self.proposal.created_by
+        elif self.amendment:
+            return self.amendment.created_by
+        elif self.comment:
+            return self.comment.created_by
+        else:
+            return ''
+    
+# email addresses to notify about moderation requests
+class ModerationRequestNotification(models.Model):
+    email_address = models.EmailField(default = '')
+    
+    def __str__(self):
+        return self.email_address
+    
+    
 

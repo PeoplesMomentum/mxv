@@ -1,21 +1,22 @@
 {% extends "mxv/base.html" %}
 {% load static %}
 
-{% block title%}New amendment{% endblock %}
+{% block title%}Request moderation{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track' proposal.theme.track.pk %}">{{ proposal.theme.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:theme' proposal.theme.pk %}">{{ proposal.theme.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:proposal' proposal.pk %}">{{ proposal.name }}</a></li>
-    <li class="breadcrumb-item active">New amendment</li>
+    <li class="breadcrumb-item active">Request moderation</li>
 {% endblock %}
 
 {% block content %}
+    <p>Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
-        <button type="submit" class="btn btn-success">Create new amendment</button>
+        <button type="submit" class="btn btn-danger">Request moderation</button>
         <a href="{% url 'review:proposal' proposal.pk %}" class="btn btn-primary">Cancel</a>
    </form>
 {% endblock %}
