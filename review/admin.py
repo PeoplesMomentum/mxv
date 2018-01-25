@@ -1,5 +1,5 @@
 from django.contrib import admin
-from review.models import Track, Theme, Proposal, Comment, ModerationRequest
+from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification
 
 # themes in a track
 class ThemeInline(admin.TabularInline):
@@ -47,3 +47,4 @@ admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(ModerationRequest, ModerationRequestAdmin)
+admin.site.register(ModerationRequestNotification)

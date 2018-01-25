@@ -155,7 +155,9 @@ class ModerationRequest(models.Model):
 # email addresses to notify about moderation requests
 class ModerationRequestNotification(models.Model):
     email_address = models.EmailField(default = '')
-
+    
+    def __str__(self):
+        return self.email_address
     
     
 
