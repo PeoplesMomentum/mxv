@@ -82,6 +82,7 @@ class ProposalURL(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='urls')
     url = models.TextField(max_length=description_length)
     display_text = models.TextField(max_length=description_length)
+    external = models.BooleanField(default=False)
 
 # an amendment to a proposal
 class Amendment(models.Model):

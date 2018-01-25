@@ -125,6 +125,7 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
@@ -169,8 +170,8 @@ DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
 JOIN_URL = "https://join.peoplesmomentum.com"
 
 # site name
-SITE_NAME_SHORT = "MxV"
-SITE_NAME_LONG = "Momentum's Members' Hub"
+SITE_NAME_SHORT = "My Momentum"
+SITE_NAME_LONG = "My Momentum"
 
 # send members to the index page after they login
 LOGIN_URL = '/members/login'

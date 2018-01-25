@@ -216,6 +216,7 @@
         "fields": {
             "proposal": 2,
             "url": "https://medium.com/@maxshanly/towards-a-new-model-young-labour-29960414261a",
+            "external": "True",
             "display_text": "Towards a Model Young Labour" }},
     {   "model" : "review.ProposalURL",
         "pk": 5,
