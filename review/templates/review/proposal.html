@@ -48,7 +48,7 @@
         <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
-    {% if proposal.created_by != user %}
+    {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
         {% if not user_requested_moderation %}
             <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
         {% else %}
@@ -57,8 +57,8 @@
                 <p class="text-danger small">{{ user_requested_moderation.reason }}</p>
             </blockquote>            
         {% endif %}
+        <br/>
     {% endif %}
-    <br/>
 
     {% if proposal.urls.count > 0 %}
         <br/>
