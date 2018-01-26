@@ -369,3 +369,11 @@ def help(request):
 def rules(request):
     return render(request, 'review/rules.html')
 
+@login_required
+def faq(request):
+    return render(request, 'review/faq.html')
+
+@login_required
+def recommendations(request):
+    return render(request, 'review/recommendations.html')
+

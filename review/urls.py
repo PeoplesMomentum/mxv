@@ -29,4 +29,6 @@ urlpatterns = [
     # support pages
     url(r'^help/$', views.help, name = 'help'),
     url(r'^rules/$', views.rules, name = 'rules'),
+    url(r'^faq/$', views.faq, name = 'faq'),
+    url(r'^recommendations/$', views.recommendations, name = 'recommendations'),
 ]
