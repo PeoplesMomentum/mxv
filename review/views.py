@@ -92,12 +92,18 @@ def new_proposal(request, pk):
             proposal.theme = theme
             proposal.created_by = request.user
             proposal.save()
-            return redirect('review:theme', pk = theme.pk)
+            return redirect('review:proposal_submitted', pk = theme.pk)
     else:
         form = EditProposalForm()
     return render(request, 'review/proposals/new_proposal.html', { 
         'theme' : theme,
         'form' : form })
+
+@login_required
+def proposal_submitted(request, pk):
+    theme = get_object_or_404(Theme, pk = pk)
+    return render(request, 'review/proposals/proposal_submitted.html', { 
+        'theme' : theme })
 
 @login_required
 def edit_proposal(request, pk):
