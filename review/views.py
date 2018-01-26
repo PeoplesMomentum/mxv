@@ -381,3 +381,7 @@ def recommendations(request):
 def moderation(request):
     return render(request, 'review/support/moderation.html')
 
+@login_required
+def guide(request):
+    return render(request, 'review/support/guide.html')
+

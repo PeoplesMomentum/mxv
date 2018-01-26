@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+    <p>Please see here for our <a href="{% url 'review:guide' %}">Guide to Making a Proposal</a></p>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}
