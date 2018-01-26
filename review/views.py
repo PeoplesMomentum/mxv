@@ -377,3 +377,7 @@ def faq(request):
 def recommendations(request):
     return render(request, 'review/recommendations.html')
 
+@login_required
+def moderation(request):
+    return render(request, 'review/moderation.html')
+
