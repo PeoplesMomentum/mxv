@@ -15,7 +15,8 @@
     </table>
     <br/>
     <p class="card-text">{{ track.description }}</p>
-    <p class="card-text small {% if track.urgent %}text-danger{% else %}text-muted{% endif %}">{{ track.guidance }}</p>
+    <p class="card-text {% if track.urgent %}text-danger{% endif %}">{{ track.guidance }}</p>
+    <p class="card-text">Before proceeding, you may like to check out these <a href="{% static 'review/Democracy_Review_Ideas_from_Grassroots_Activists.pdf' %}">Ideas from Grassroots Activists</a>.</p>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">
