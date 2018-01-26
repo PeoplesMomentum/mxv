@@ -12,7 +12,7 @@ def index(request):
 @login_required
 def track(request, pk):
     track = get_object_or_404(Track, pk = pk)
-    return render(request, 'review/track.html', { 
+    return render(request, 'review/tracks/track.html', { 
         'track' : track, 
         'themes': track.themes.order_by('display_order') })
     
@@ -20,7 +20,7 @@ def track(request, pk):
 def theme(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     user_proposal = theme.proposals.filter(created_by = request.user).first()
-    return render(request, 'review/theme.html', { 
+    return render(request, 'review/themes/theme.html', { 
         'theme' : theme, 
         'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', '-created_at'),
         'user_proposal': user_proposal })
@@ -69,7 +69,7 @@ def proposal(request, pk):
                     
             return redirect('review:proposal', pk = proposal.pk)
     
-    return render(request, 'review/proposal.html', { 
+    return render(request, 'review/proposals/proposal.html', { 
         'proposal' : proposal,
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
@@ -92,12 +92,18 @@ def new_proposal(request, pk):
             proposal.theme = theme
             proposal.created_by = request.user
             proposal.save()
-            return redirect('review:theme', pk = theme.pk)
+            return redirect('review:proposal_submitted', pk = theme.pk)
     else:
         form = EditProposalForm()
-    return render(request, 'review/new_proposal.html', { 
+    return render(request, 'review/proposals/new_proposal.html', { 
         'theme' : theme,
         'form' : form })
+
+@login_required
+def proposal_submitted(request, pk):
+    theme = get_object_or_404(Theme, pk = pk)
+    return render(request, 'review/proposals/proposal_submitted.html', { 
+        'theme' : theme })
 
 @login_required
 def edit_proposal(request, pk):
@@ -114,7 +120,7 @@ def edit_proposal(request, pk):
             return redirect('review:proposal', pk = proposal.pk)
     else:
         form = EditProposalForm(instance = proposal)
-    return render(request, 'review/edit_proposal.html', { 
+    return render(request, 'review/proposals/edit_proposal.html', { 
         'proposal' : proposal,
         'form' : form })
 
@@ -133,7 +139,7 @@ def delete_proposal(request, pk):
             return redirect('review:theme', pk = proposal.theme.pk)
     else:
         form = DeleteProposalForm(instance = proposal)
-    return render(request, 'review/delete_proposal.html', { 
+    return render(request, 'review/proposals/delete_proposal.html', { 
         'proposal' : proposal,
         'form' : form })
 
@@ -161,7 +167,7 @@ def moderate_proposal(request, pk):
     else:
         form = ModerationRequestForm('proposal')
     
-    return render(request, 'review/moderate_proposal.html', {
+    return render(request, 'review/proposals/moderate_proposal.html', {
         'proposal': proposal,
         'form' : form })
     
@@ -191,7 +197,7 @@ def amendment(request, pk):
                     
             return redirect('review:amendment', pk = amendment.pk)
     
-    return render(request, 'review/amendment.html', { 
+    return render(request, 'review/amendments/amendment.html', { 
         'amendment' : amendment,
         'user_requested_moderation': user_requested_moderation,
         'form': form })
@@ -214,7 +220,7 @@ def new_amendment(request, pk):
             return redirect('review:proposal', pk = proposal.pk)
     else:
         form = EditAmendmentForm()
-    return render(request, 'review/new_amendment.html', { 
+    return render(request, 'review/amendments/new_amendment.html', { 
         'proposal' : proposal,
         'form' : form })
 
@@ -233,7 +239,7 @@ def edit_amendment(request, pk):
             return redirect('review:amendment', pk = amendment.pk)
     else:
         form = EditAmendmentForm(instance = amendment)
-    return render(request, 'review/edit_amendment.html', { 
+    return render(request, 'review/amendments/edit_amendment.html', { 
         'amendment' : amendment,
         'form' : form })
 
@@ -252,7 +258,7 @@ def delete_amendment(request, pk):
             return redirect('review:proposal', pk = amendment.proposal.pk)
     else:
         form = DeleteAmendmentForm(instance = amendment)
-    return render(request, 'review/delete_amendment.html', { 
+    return render(request, 'review/amendments/delete_amendment.html', { 
         'amendment' : amendment,
         'form' : form })
 
@@ -280,7 +286,7 @@ def moderate_amendment(request, pk):
     else:
         form = ModerationRequestForm('amendment')
     
-    return render(request, 'review/moderate_amendment.html', {
+    return render(request, 'review/amendments/moderate_amendment.html', {
         'amendment': amendment,
         'form' : form })
     
@@ -306,7 +312,7 @@ def comment(request, pk):
                     
             return redirect('review:comment', pk = comment.pk)
     
-    return render(request, 'review/comment.html', { 
+    return render(request, 'review/comments/comment.html', { 
         'comment' : comment,
         'user_requested_moderation': user_requested_moderation,
         'form': form })
@@ -329,7 +335,7 @@ def new_comment(request, pk):
             return redirect('review:proposal', pk = proposal.pk)
     else:
         form = EditCommentForm()
-    return render(request, 'review/new_comment.html', { 
+    return render(request, 'review/comments/new_comment.html', { 
         'proposal' : proposal,
         'form' : form })
 
@@ -357,7 +363,31 @@ def moderate_comment(request, pk):
     else:
         form = ModerationRequestForm('comment')
     
-    return render(request, 'review/moderate_comment.html', {
+    return render(request, 'review/comments/moderate_comment.html', {
         'comment': comment,
         'form' : form })
     
+@login_required
+def help(request):
+    return render(request, 'review/support/help.html')
+
+@login_required
+def rules(request):
+    return render(request, 'review/support/rules.html')
+
+@login_required
+def faq(request):
+    return render(request, 'review/support/faq.html')
+
+@login_required
+def recommendations(request):
+    return render(request, 'review/support/recommendations.html')
+
+@login_required
+def moderation(request):
+    return render(request, 'review/support/moderation.html')
+
+@login_required
+def guide(request):
+    return render(request, 'review/support/guide.html')
+

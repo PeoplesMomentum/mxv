@@ -1,0 +1,18 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Help{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item active">Help</li>
+{% endblock %}
+
+{% block content %}
+    <h4>Technical help</h4>
+    <p>Momentum members will receive an email containing a single-use activation link.  Simply click on this link to start the activation of your My Momentum account, set a password and start using My Momentum.</p>
+    <p>For technical issues please email: <a href="mailto:mymomentum@peoplesmomentum.com">mymomentum@peoplesmomentum.com</a></p>    
+    <h4>Labour’s Democracy Review</h4>
+    <p>Momentum have developed a <a href="{% url 'review:index' %}">digital platform</a> to generate ideas for submissions to the Labour Party Democracy Review, and allow members to comment on and upvote proposals they support. The aim is to enable a transparent debate between Momentum members, broaden our knowledge and discussion about party reform and ensure that Momentum’s submissions to the Democracy Review come from the grassroots of the movement.</p>
+    <p>Please see our <a href="{% url 'review:rules' %}">guide on how the platform works</a>, or our more detailed <a href="{% url 'review:faq' %}">FAQ</a>.</p>
+{% endblock %}

@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block content %}
+    <p>The Labour Party’s Democracy Review is an unprecedented opportunity for ordinary members to input into the culture, rules and structure of the Labour Party.  We’re inviting our members to collaborate on forming Momentum’s submissions to the review.</p>
+    <p>Click below to read, submit and discuss proposals. You can make one proposal per theme, and then nominate your favourite in each. Get started now, or visit <a href="{% url 'review:help' %}">Help</a> to read our <a href="{% url 'review:rules' %}">guide to the platform</a>.</p>
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm d-flex align-items-stretch pt-4">
@@ -15,17 +17,20 @@
                     <div class="card-body">
                         <a href="{% url 'review:track' track.pk %}"><h4 class="card-title">{{ track.name }}</h4></a>
                         <table class="card-text text-muted small">
-                            <tr><td><b>Submissions</b></td><td>{% if track.allow_submissions %} {{ track.submission_start }} - {{ track.submission_end }} {% else %}N/A {% endif %}</td></tr>
-                            <tr><td><b>Nominations</b></td><td>{% if track.allow_nominations %} {{ track.nomination_start }} - {{ track.nomination_end }} {% else %}N/A {% endif %}</td></tr>
+                            <tr><td><b>Submissions</b></td><td>{% if track.allow_submissions %} {{ track.submission_start }} - {{ track.submission_end }} {% else %} Completed {% endif %}</td></tr>
+                            <tr><td><b>Nominations</b></td><td>{% if track.allow_nominations %} {{ track.nomination_start }} - {{ track.nomination_end }} {% else %} N/A {% endif %}</td></tr>
                         </table>
                         <hr>
+                        <p class="card-text">{{ track.description }}</p>
+                        <p class="card-text small {% if track.urgent %}text-danger{% else %}text-muted{% endif %}">{{ track.guidance }}</p>
                         <div class="text-right align-bottom">
                             <a href="{% url 'review:track' track.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
-                        <p class="card-subtitle text-danger small">{% if track.urgent %}This track is currently the priority.{% endif %}</p>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
+    <br/>
+    <p>We acknowledge that the deadlines for Track 2 are extremely tight, and would like to apologise for this. The reason is the importance of being able to circulate finalised submissions in time for activists to be able to pass them through CLPs before the 23rd March deadline.</p>
 {% endblock %}

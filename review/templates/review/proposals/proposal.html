@@ -119,7 +119,7 @@
             <div class="col-sm">
                 <h6>Amendments</h6>
                 {% if proposal.theme.track.submissions_currently_allowed %}
-                    <p class="small">Please suggest amendments to the above proposal, you can edit or delete your own amendments while submissions are open.</p>
+                    <p class="small">Please suggest amendments to constructively develop the above proposal. You can edit or delete your own amendments while submissions are open.</p>
                     <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>
                 {% endif %}
                 {% for amendment in amendments %}

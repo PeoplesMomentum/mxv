@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^theme/(?P<pk>\d+)/$', views.theme, name = 'theme'),
     # proposals
     url(r'^theme/(?P<pk>\d+)/new_proposal/$', views.new_proposal, name = 'new_proposal'),
+    url(r'^theme/(?P<pk>\d+)/proposal_submitted/$', views.proposal_submitted, name = 'proposal_submitted'),
     url(r'^proposal/(?P<pk>\d+)/$', views.proposal, name = 'proposal'),
     url(r'^proposal/(?P<pk>\d+)/edit/$', views.edit_proposal, name = 'edit_proposal'),
     url(r'^proposal/(?P<pk>\d+)/delete/$', views.delete_proposal, name = 'delete_proposal'),
@@ -26,4 +27,11 @@ urlpatterns = [
     url(r'^proposal/(?P<pk>\d+)/new_comment/$', views.new_comment, name = 'new_comment'),
     url(r'^comment/(?P<pk>\d+)/$', views.comment, name = 'comment'),
     url(r'^comment/(?P<pk>\d+)/moderate/$', views.moderate_comment, name = 'moderate_comment'),
+    # support pages
+    url(r'^help/$', views.help, name = 'help'),
+    url(r'^rules/$', views.rules, name = 'rules'),
+    url(r'^faq/$', views.faq, name = 'faq'),
+    url(r'^recommendations/$', views.recommendations, name = 'recommendations'),
+    url(r'^moderation/$', views.moderation, name = 'moderation'),
+    url(r'^guide/$', views.guide, name = 'guide'),
 ]
