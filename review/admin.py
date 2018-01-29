@@ -1,5 +1,7 @@
 from django.contrib import admin
 from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification
+from django.urls.base import reverse
+from django.utils.safestring import mark_safe
 
 # themes in a track
 class ThemeInline(admin.TabularInline):
@@ -39,7 +41,32 @@ class CommentAdmin(admin.ModelAdmin):
 class ModerationRequestAdmin(admin.ModelAdmin):
     search_fields = ('reason',)
     list_display = ('reason', 'requested_by', 'moderated_entity_created_by', 'moderated')
-    readonly_fields = ('proposal', 'amendment', 'comment', 'moderated_entity_created_by', 'requested_by', 'requested_at', 'reason')
+    readonly_fields = ('moderated_entity_type', 'entity_link', 'moderated_entity_created_by', 'requested_by', 'requested_at', 'reason')
+    exclude = ('proposal', 'amendment', 'comment')
+    
+    def moderated_entity_type(self, obj):
+        if obj.proposal:
+            return 'proposal'
+        if obj.amendment:
+            return 'amendment'
+        if obj.comment:
+            return 'comment'
+    
+    def entity_link(self, obj):
+        entity_href = ''
+        entity_text = ''
+        if obj.proposal:
+            entity_href = reverse('admin:review_proposal_change', args=(obj.proposal.pk,))
+            entity_text = obj.proposal.short_text()
+        if obj.amendment:
+            entity_href = reverse('admin:review_amendment_change', args=(obj.amendment.pk,))
+            entity_text = obj.amendment.short_text()
+        if obj.comment:
+            entity_href = reverse('admin:review_comment_change', args=(obj.comment.pk,))
+            entity_text = obj.proposal.short_text()
+        return mark_safe('<a href="{}">{}</a>'.format(entity_href, entity_text))
+    
+    entity_link.short_description = 'moderated entity text'
      
 # registration
 admin.site.register(Track, TrackAdmin)
