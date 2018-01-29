@@ -15,7 +15,7 @@
 
     {% if theme.guidance %}
         <blockquote class="blockquote text-muted">
-            <p class="small">{{ theme.guidance }}</p>
+            <p class="small">{{ theme.guidance|safe }}</p>
             <footer class="blockquote-footer">Momentum</footer>
         </blockquote>
     {% endif %}

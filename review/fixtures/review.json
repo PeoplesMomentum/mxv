@@ -71,7 +71,6 @@
             "description": "Women's Conference is a special Conference for female delegates representing women members of the party.  It was historically used by women to pass their own policy and submit it to annual Conference.",
             "display_order": 3,
             "guidance": "Although the January 12th deadline for individual submissions has passed, CLPs and Women's Forums can continue to make submisisons after the deadline, and the debate over the future of Women's Conference will continue. Please have a look at our proposed submission and let us know what you think." }},
-
     {   "model" : "review.Theme",
         "pk": 4,
         "fields": {
@@ -85,6 +84,7 @@
         "fields": {
             "track": 2,
             "name": "Membership Involvement and Participation",
+            "guidance": "In need of inspiration? Check out these brilliant articles full of ideas for revitalising CLPs in New Socialist: <a href=\"https://newsocialist.org.uk/corbynism-from-below/\" target=\"_blank\">Corbynism from Below</a> by Tom Blackburn, and <a href=\"https://newsocialist.org.uk/chorlton-socialist-club-building-on-a-movement/\" target=\"_blank\">Chorley Socialist Club</a> by Sean Cummings.",
             "description": "Strengthening the involvement and participation of our hundreds of thousands of new members in constituency parties and other aspects of the Party’s work.  This is a broad theme covering all reforms that enhance the involvement and participation of members which are not dealt with under other themes.",
             "display_order": 2 }},
     {   "model" : "review.Theme",
@@ -202,6 +202,33 @@
             "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 4,
             "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 5,
+        "fields": {
+            "theme": 5,
+            "name": "Momentum NCG Proposal for a Charter of Members’ Rights",
+            "summary": "A Charter of Members’ Rights is necessary to remake the Labour Party so that it is structurally and culturally coherent with democratic socialist principles. Given the massive potential of the incredible expansion of the party membership in recent years, it is necessary to ensure that the talent, creativity, and commitment of the members is fully harnessed. This Charter includes key relevant recommendations to protect and expand members’ rights.",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 6,
+        "fields": {
+            "theme": 5,
+            "name": "Momentum NCG Proposal for a Code of Ethics",
+            "summary": "Remaking the Labour Party so that it can transform the lives of millions of people will only be possible if there is a fundamental cultural change instigated throughout the length and breadth of the party. This cultural change needs to be built on commitments by all actors in the party to mutual respect, engagement and participation, transparency, and accountability. The objective of this Code of Ethics is to establish a basis for this cultural transformation.",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 7,
+        "fields": {
+            "theme": 5,
+            "name": "Momentum NCG Proposal for a Labour Party Ombudsperson",
+            "summary": "This proposal argues for the creation of the role of an ombudsperson to enforce the Charter of Rights and Code of Ethics. It is essential that the ombudsperson is accountable to the NEC and that their work does not cut across other NEC functions. However, the ombudsperson must personally be truly independent and command widespread support and command widespread support across the party as a whole.",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 3,
+            "created_at": "2018-01-25" }},
                         
     {   "model" : "review.ProposalURL",
         "pk": 1,
@@ -252,5 +279,23 @@
         "fields": {
             "proposal": 4,
             "url": "/static/review/Members_Council_Recommendations_for_CLP_Governance.pdf",
-            "display_text": "The Members' Council has made the following recommendations to improve CLP governance." }}
+            "display_text": "The Members' Council has made the following recommendations to improve CLP governance." }},
+    {   "model" : "review.ProposalURL",
+        "pk": 9,
+        "fields": {
+            "proposal": 5,
+            "url": "/static/review/Charter_of_Members_Rights.pdf",
+            "display_text": "Momentum NCG Proposal for a Charter of Members’ Rights." }},
+    {   "model" : "review.ProposalURL",
+        "pk": 10,
+        "fields": {
+            "proposal": 6,
+            "url": "/static/review/Code_of_Ethics_2017.pdf",
+            "display_text": "Momentum NCG Proposal for a Code of Ethics." }},
+    {   "model" : "review.ProposalURL",
+        "pk": 11,
+        "fields": {
+            "proposal": 7,
+            "url": "/static/review/Labour_Party_Ombudsperson_Proposal.pdf",
+            "display_text": "Momentum NCG Proposal for a Labour Party Ombudsperson." }}
 ]
