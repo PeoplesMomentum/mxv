@@ -3,6 +3,7 @@ from mxv.settings import AUTH_USER_MODEL
 from django.utils.text import Truncator
 from datetime import date
 from django.core.mail.message import EmailMultiAlternatives
+from django.urls.base import reverse
 
 # field sizes
 name_length = 100
@@ -144,20 +145,18 @@ class ModerationRequest(models.Model):
     def __str__(self):
         return self.reason
     
-    def notify_staff(self):
+    def notify_staff(self, request):
         # build the email body
-        article = ''
         entity = ''
+        href = request.build_absolute_uri(reverse('admin:review_moderationrequest_change', args = (self.id,)))
         if self.proposal:
-            entity = 'proposal'
-            article = 'a'
+            entity = 'a proposal'
         elif self.amendment:
-            entity = 'amendment'
-            article = 'an'
+            entity = 'an amendment'
         elif self.comment:
-            entity = 'comment'
-            article = 'a'
-        body = 'Moderation of %s %s has been requested by %s (%s) for the following reason:\n\n  %s' % (article, entity, self.requested_by.name, self.requested_by.email, self.reason)
+            entity = 'a comment'
+        body = 'Moderation of %s has been requested by %s (%s):\n\n  %s' % (
+            entity, self.requested_by.name, self.requested_by.email, href)
         
         # send the email
         message = EmailMultiAlternatives(

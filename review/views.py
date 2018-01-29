@@ -164,7 +164,7 @@ def moderate_proposal(request, pk):
             moderation_request.save()
             
             # notify that moderation is required
-            moderation_request.notify_staff()
+            moderation_request.notify_staff(request)
             
             return redirect("review:proposal", pk = pk)
     else:
@@ -292,7 +292,7 @@ def moderate_amendment(request, pk):
             moderation_request.save()
             
             # notify that moderation is required
-            moderation_request.notify_staff()
+            moderation_request.notify_staff(request)
             
             # return to the referring entity
             return redirect("review:amendment", pk = pk)
@@ -371,7 +371,7 @@ def moderate_comment(request, pk):
             moderation_request.save()
             
             # notify that moderation is required
-            moderation_request.notify_staff()
+            moderation_request.notify_staff(request)
             
             # return to the referring entity
             return redirect("review:comment", pk = pk)
