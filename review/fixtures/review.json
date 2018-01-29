@@ -179,7 +179,8 @@
         "pk": 2,
         "fields": {
             "theme": 2,
-            "name": "Momentum's proposed submission",
+            "name": "Momentum Submission to Transform Young Labour",
+            "summary": "In order to fully harness the talent, creativity, and ideological commitment to transforming society of our young members, Young Labour must be allowed fully autonomy, fair representation in party structures, resources commensurate to its membership. This proposal outlines some basic requirements to reform Young Labour into an organisation capable of unleashing the creative of potential of hundreds and thousands of committed young people moved by the desire to transform society.",
             "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 3,
             "created_at": "2018-01-25" }},
@@ -187,7 +188,8 @@
         "pk": 3,
         "fields": {
             "theme": 3,
-            "name": "Momentum's proposed submission",
+            "name": "Suggestions for Women’s Conference",
+            "summary": "These proposals were drawn up by Teresa Clark and Jean Crocker based on consultations with female activists from around the country. They attempt to reconstitute Women’s Conference as a meaningful institution that allows female party members to develop policy and empower women.",
             "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 3,
             "created_at": "2018-01-25" }},
