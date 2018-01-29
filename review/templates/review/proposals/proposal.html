@@ -17,7 +17,7 @@
         <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
         <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
         <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
-        <tr><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
+        <tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
     </table>
     <br>
     
@@ -51,13 +51,13 @@
         {% endif %}
         
         {% if not proposal.moderated and not proposal.created_by.is_ncg and not proposal.created_by.is_members_council and proposal.created_by != user %}
-            {% if not user_requested_moderation %}
+            {% if not moderation %}
                 <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
             {% else %}
                 <br/>
                 <p class="text-danger">You have requested moderation of this proposal:</p>
                 <blockquote class="blockquote">
-                    <p class="text-danger small">{{ user_requested_moderation.reason }}</p>
+                    <p class="text-danger small">{{ moderation.reason }}</p>
                 </blockquote>     
                 <button type="submit" name="cancel_moderation" class="btn btn-danger">Cancel moderation request</button>
             {% endif %}
@@ -98,7 +98,7 @@
                             <table class="small">
                                 <tr><td><b>Created by</b></td><td>{{ comment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at</b></td><td>{{ comment.created_at }}</td></tr>
-                                <tr><td><b>Moderation requests</b></td><td>{{ comment.moderation_requests.count }}</td></tr>
+                                <tr class="{% if comment.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ comment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
                             {% if not comment.moderated %}
@@ -135,7 +135,7 @@
                             <table class="small">
                                 <tr><td><b>Created by</b></td><td>{{ amendment.created_by.name }}</td></tr>
                                 <tr><td><b>Created at</b></td><td>{{ amendment.created_at }}</td></tr>
-                                <tr><td><b>Moderation requests</b></td><td>{{ amendment.moderation_requests.count }}</td></tr>
+                                <tr class="{% if amendment.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ amendment.moderation_requests.count }}</td></tr>
                             </table>
                             <hr>
                             {% if not amendment.moderated %}
