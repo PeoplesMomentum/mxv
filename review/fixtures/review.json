@@ -170,7 +170,8 @@
         "pk": 1,
         "fields": {
             "theme": 1,
-            "name": "Momentum's proposed submission",
+            "name": "Momentum’s Submissions to Transform BAME Labour",
+            "summary": "Momentum sent a survey to our Black, Asian and Minority Ethnic members and supporters asking about their experiences and expectations relating to BAME Labour, eliciting over 1000 responses. The responses paint a dismal picture of a failing organisation. In response, Momentum has formulated these proposals for a fully autonomous, resourced, transparent, organisation capable of overcoming institutional racism, engaging with BAME voters and empowering BAME members.",
             "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 3,
             "created_at": "2018-01-25" }},
@@ -211,30 +212,43 @@
         "fields": {
             "proposal": 1,
             "url": "/static/review/BAME_Labour_Survey_Results_Summary.pdf",
-            "display_text": "Momentum recently undertook a consultation with all of our BAME members and supporters via to inform our submissions to the Democracy Review.  The responses paint a dismal picture of a failing organisation." }},
+            "display_text": "To see the results of our consultation survey, please see the BAME Labour Consultation Results" }},
     {   "model" : "review.ProposalURL",
         "pk": 3,
+        "fields": {
+            "proposal": 1,
+            "url": "/static/review/The_Seema_Chandwani_Guide_to_Debating_BAME_Labour_in_your_CLP.pdf",
+            "display_text": "The Seema Chandwani Guide to Debating BAME Labour in your CLP" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 4,
+        "fields": {
+            "proposal": 1,
+            "url": "https://newsocialist.org.uk/bame-labour-time-for-reform/",
+            "external": "True",
+            "display_text": "If you are unfamiliar with the challenges facing BAME Labour Party members to reform BAME Labour, check out this article by Becky Boumelha" }},
+    {   "model" : "review.ProposalURL",
+        "pk": 5,
         "fields": {
             "proposal": 2,
             "url": "/static/review/Young_Labour_Proposal_for_the_Democracy_Review.pdf",
             "display_text": "Democracy Review: Submission to Reform Young Labour" }},
     {   "model" : "review.ProposalURL",
-        "pk": 4,
+        "pk": 6,
         "fields": {
             "proposal": 2,
             "url": "https://medium.com/@maxshanly/towards-a-new-model-young-labour-29960414261a",
             "external": "True",
             "display_text": "Towards a Model Young Labour" }},
     {   "model" : "review.ProposalURL",
-        "pk": 5,
+        "pk": 7,
         "fields": {
             "proposal": 3,
             "url": "/static/review/Submission_to_Labour_Party_Democracy_Review_on_Annual_Women_Conference.pdf",
             "display_text": "Women's Conference: Submission to Reform Women's Conference" }},
     {   "model" : "review.ProposalURL",
-        "pk": 6,
+        "pk": 8,
         "fields": {
             "proposal": 4,
-            "url": "/static/review/Members_Council_Recommendations.pdf",
+            "url": "/static/review/Members_Council_Recommendations_for_CLP_Governance.pdf",
             "display_text": "The Members' Council has made the following recommendations to improve CLP governance." }}
 ]

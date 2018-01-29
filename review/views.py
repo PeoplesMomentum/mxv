@@ -57,6 +57,7 @@ def proposal(request, pk):
 
     return render(request, 'review/proposals/proposal.html', { 
         'proposal' : proposal,
+        'proposal_urls' : proposal.urls.order_by('pk'),
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
         'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),

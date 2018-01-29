@@ -15,7 +15,7 @@
 
     {% if theme.guidance %}
         <blockquote class="blockquote text-muted">
-            <p class="small">{{ theme.guidance|safe }}</p>
+            <p class="small">{{ theme.guidance }}</p>
             <footer class="blockquote-footer">Momentum</footer>
         </blockquote>
     {% endif %}
@@ -52,8 +52,8 @@
                         <table class="card-text text-muted small">
                             <tr><td><b>Created by</b></td><td>{{ proposal.created_by.name }}</td></tr>
                             <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
-                            <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
-                            <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
+                            {% if proposal.theme.track.allow_nominations %}<tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>{% endif %}
+                            {% if proposal.theme.track.allow_submissions %}<tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>{% endif %}
                             <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
                             <tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
                         </table>
