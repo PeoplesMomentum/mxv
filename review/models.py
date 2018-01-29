@@ -119,6 +119,9 @@ class Comment(models.Model):
     def short_text(self):
         return Truncator(self.text).chars(short_length, '...')
 
+    def __str__(self):
+        return self.short_text()
+    
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
     

@@ -55,7 +55,7 @@
                             <tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>
                             <tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>
                             <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
-                            <tr><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
+                            <tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
                         </table>
                         <hr>
                         {% if not proposal.moderated %}

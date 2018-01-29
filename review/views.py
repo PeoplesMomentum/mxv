@@ -27,74 +27,65 @@ def theme(request, pk):
 
 @login_required
 def proposal(request, pk):
-    # get the proposal and moderation request
     proposal = get_object_or_404(Proposal, pk = pk)
-    user_requested_moderation = request.user.moderation_requests.filter(proposal = proposal).first()
-
-    # create the form for the proposal
-    form = ProposalForm(instance = proposal)
+    moderation = request.user.moderation_requests.filter(proposal = proposal).first()
     
-    # if this is a post...
+    # if valid post...
     if request.method == 'POST':
-        
-        # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-        if not proposal.theme.track.nominations_currently_allowed():
-            return redirect('review:proposal', pk = proposal.pk)
-        
-        # if the form is valid...
         form = ProposalForm(request.POST)
         if form.is_valid():        
             
-            # if nominating...
-            if 'nominate' in request.POST:
-                
-                # clear existing user nominations in this theme
+            # nominate if allowed
+            if 'nominate' in request.POST and proposal.theme.track.nominations_currently_allowed():
                 for nomination in request.user.nominations.filter(proposal__theme = proposal.theme):
                     nomination.delete()
-                
-                # nominate the proposal
                 proposal.nominations.create(proposal = proposal, nominated_by = request.user)
                 
-            # if clearing the nomination...
-            if 'clear_nomination' in request.POST:
-                
-                # delete the nomination
-                nomination = proposal.nominations.filter(nominated_by = request.user).first()
+            # clear nomination if allowed
+            if 'clear_nomination' in request.POST and proposal.theme.track.nominations_currently_allowed():
+                nomination = proposal.nominations.filter(nominated_by = request.user, proposal = proposal).first()
                 if nomination:
                     nomination.delete()
                     
-            # cancel the moderation request
-            if 'cancel_moderation' in request.POST and user_requested_moderation:
-                user_requested_moderation.delete()
+            # cancel moderation if moderation request exists
+            if 'cancel_moderation' in request.POST and moderation:
+                moderation.delete()
                     
             return redirect('review:proposal', pk = proposal.pk)
-    
+    else:
+        form = ProposalForm(instance = proposal)
+
     return render(request, 'review/proposals/proposal.html', { 
         'proposal' : proposal,
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
         'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),
-        'user_requested_moderation': user_requested_moderation,
+        'moderation': moderation,
         'form': form })
 
 @login_required
 def new_proposal(request, pk):
     theme = get_object_or_404(Theme, pk = pk)
     
-    # silent redirect back to theme as the user must have crafted/cached a URL to get here
-    if not theme.track.submissions_currently_allowed():
+    # redirect if submissions are not allowed or user already has a proposal in this theme
+    if not theme.track.nominations_currently_allowed() or request.user.proposals.filter(theme = theme).exists():
         return redirect('review:theme', pk = theme.pk)
 
+    # if valid post...
     if request.method == "POST":
         form = EditProposalForm(request.POST)
         if form.is_valid():
+            
+            # create proposal
             proposal = form.save(commit = False)
             proposal.theme = theme
             proposal.created_by = request.user
             proposal.save()
+            
             return redirect('review:proposal_submitted', pk = theme.pk)
     else:
         form = EditProposalForm()
+        
     return render(request, 'review/proposals/new_proposal.html', { 
         'theme' : theme,
         'form' : form })
@@ -109,17 +100,22 @@ def proposal_submitted(request, pk):
 def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.submissions_currently_allowed():
+    # redirect if moderated, submissions are not allowed or incorrect user
+    if proposal.moderated or not proposal.theme.track.submissions_currently_allowed() or request.user != proposal.created_by:
         return redirect('review:proposal', pk = proposal.pk)
 
-    if proposal.created_by == request.user and request.method == "POST":
+    # if valid post...
+    if request.method == "POST":
         form = EditProposalForm(request.POST, instance = proposal)
         if form.is_valid():
+            
+            # save the proposal
             proposal = form.save()
+            
             return redirect('review:proposal', pk = proposal.pk)
     else:
         form = EditProposalForm(instance = proposal)
+        
     return render(request, 'review/proposals/edit_proposal.html', { 
         'proposal' : proposal,
         'form' : form })
@@ -128,27 +124,35 @@ def edit_proposal(request, pk):
 def delete_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.submissions_currently_allowed():
+    # redirect if submissions are not allowed or incorrect user
+    if not proposal.theme.track.submissions_currently_allowed() or request.user != proposal.created_by:
         return redirect('review:proposal', pk = proposal.pk)
 
-    if proposal.created_by == request.user and request.method == "POST":
+    # if valid post...
+    if request.method == "POST":
         form = DeleteProposalForm(request.POST, instance = proposal)
         if form.is_valid():
+            
+            # delete the proposal
             proposal.delete()
+            
             return redirect('review:theme', pk = proposal.theme.pk)
     else:
         form = DeleteProposalForm(instance = proposal)
+        
     return render(request, 'review/proposals/delete_proposal.html', { 
         'proposal' : proposal,
         'form' : form })
 
 @login_required
 def moderate_proposal(request, pk):
-    # get the proposal
     proposal = get_object_or_404(Proposal, pk = pk)
         
-    # if this is a valid post...
+    # redirect if user created the proposal or has already moderated it
+    if request.user == proposal.created_by or request.user.moderation_requests.filter(proposal = proposal).first():
+        return redirect('review:proposal', pk = proposal.pk)
+
+    # if valid post...
     if request.method == "POST":
         form = ModerationRequestForm('proposal', request.POST)
         if form.is_valid():
@@ -162,7 +166,6 @@ def moderate_proposal(request, pk):
             # notify that moderation is required
             moderation_request.notify_staff()
             
-            # return to the referring entity
             return redirect("review:proposal", pk = pk)
     else:
         form = ModerationRequestForm('proposal')
@@ -173,53 +176,50 @@ def moderate_proposal(request, pk):
     
 @login_required
 def amendment(request, pk):
-    # get the amendment and moderation request
     amendment = get_object_or_404(Amendment, pk = pk)
-    user_requested_moderation = request.user.moderation_requests.filter(amendment = amendment).first()
-    
-    # create the form
-    form = AmendmentForm(instance = amendment)
-    
-    # if this is a post...
+    moderation = request.user.moderation_requests.filter(amendment = amendment).first()
+     
+    # if valid post...
     if request.method == 'POST':
-        
-        # silent redirect back to amendment as the user must have crafted/cached a URL to get here
-        if not amendment.proposal.theme.track.submissions_currently_allowed():
-            return redirect('review:amendment', pk = amendment.pk)
-        
-        # if the form is valid...
         form = AmendmentForm(request.POST)
         if form.is_valid():        
-                                
-            # cancel the moderation request
-            if 'cancel_moderation' in request.POST and user_requested_moderation:
-                user_requested_moderation.delete()
+                                        
+            # cancel moderation if moderation request exists
+            if moderation:
+                moderation.delete()
                     
-            return redirect('review:amendment', pk = amendment.pk)
+            return redirect('review:amendment', pk = amendment.pk)        
+    else:
+        form = AmendmentForm(instance = amendment) 
     
     return render(request, 'review/amendments/amendment.html', { 
         'amendment' : amendment,
-        'user_requested_moderation': user_requested_moderation,
+        'moderation': moderation,
         'form': form })
 
 @login_required
 def new_amendment(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
-    if not proposal.theme.track.submissions_currently_allowed():
+    # redirect if submissions are not allowed
+    if not proposal.theme.track.nominations_currently_allowed():
         return redirect('review:proposal', pk = proposal.pk)
 
+    # if valid post...
     if request.method == "POST":
         form = EditAmendmentForm(request.POST)
         if form.is_valid():
+            
+            # save the amendment
             amendment = form.save(commit = False)
             amendment.proposal = proposal
             amendment.created_by = request.user
             amendment.save()
+            
             return redirect('review:proposal', pk = proposal.pk)
     else:
         form = EditAmendmentForm()
+        
     return render(request, 'review/amendments/new_amendment.html', { 
         'proposal' : proposal,
         'form' : form })
@@ -228,17 +228,22 @@ def new_amendment(request, pk):
 def edit_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
-    # silent redirect back to amendment as the user must have crafted/cached a URL to get here
-    if not amendment.proposal.theme.track.submissions_currently_allowed():
+    # redirect if moderated, submissions are not allowed or incorrect user
+    if amendment.moderated or not amendment.proposal.theme.track.submissions_currently_allowed() or request.user != amendment.created_by:
         return redirect('review:amendment', pk = amendment.pk)
 
-    if amendment.created_by == request.user and request.method == "POST":
+    # if valid post...
+    if request.method == "POST":
         form = EditAmendmentForm(request.POST, instance = amendment)
         if form.is_valid():
+            
+            # save the amendment
             amendment = form.save()
+            
             return redirect('review:amendment', pk = amendment.pk)
     else:
         form = EditAmendmentForm(instance = amendment)
+        
     return render(request, 'review/amendments/edit_amendment.html', { 
         'amendment' : amendment,
         'form' : form })
@@ -247,17 +252,21 @@ def edit_amendment(request, pk):
 def delete_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
-    # silent redirect back to amendment as the user must have crafted/cached a URL to get here
-    if not amendment.proposal.theme.track.submissions_currently_allowed():
+    # redirect if submissions are not allowed or incorrect user
+    if not amendment.proposal.theme.track.submissions_currently_allowed() or request.user != amendment.created_by:
         return redirect('review:amendment', pk = amendment.pk)
 
-    if amendment.created_by == request.user and request.method == "POST":
+    # if valid post...
+    if request.method == "POST":
         form = DeleteAmendmentForm(request.POST, instance = amendment)
         if form.is_valid():
+            
+            # delete the amendment
             amendment.delete()
             return redirect('review:proposal', pk = amendment.proposal.pk)
     else:
         form = DeleteAmendmentForm(instance = amendment)
+        
     return render(request, 'review/amendments/delete_amendment.html', { 
         'amendment' : amendment,
         'form' : form })
@@ -267,6 +276,10 @@ def moderate_amendment(request, pk):
     # get the amendment
     amendment = get_object_or_404(Amendment, pk = pk)
         
+    # redirect if user created the amendment or has already moderated it
+    if request.user == amendment.created_by or request.user.moderation_requests.filter(amendment = amendment).first():
+        return redirect('review:amendment', pk = amendment.pk)
+
     # if this is a valid post...
     if request.method == "POST":
         form = ModerationRequestForm('amendment', request.POST)
@@ -292,42 +305,41 @@ def moderate_amendment(request, pk):
     
 @login_required
 def comment(request, pk):    
-    # get the comment and moderation request
     comment = get_object_or_404(Comment, pk = pk)
-    user_requested_moderation = request.user.moderation_requests.filter(comment = comment).first()
+    moderation = request.user.moderation_requests.filter(comment = comment).first()
     
-    # create the form
-    form = CommentForm(instance = comment)
-    
-    # if this is a post...
+    # if valid post...
     if request.method == 'POST':
-        
-        # if the form is valid...
         form = CommentForm(request.POST)
         if form.is_valid():        
                                 
-            # cancel the moderation request
-            if 'cancel_moderation' in request.POST and user_requested_moderation:
-                user_requested_moderation.delete()
+            # cancel moderation if moderation request exists
+            if moderation:
+                moderation.delete()
                     
             return redirect('review:comment', pk = comment.pk)
+    else:
+        form = CommentForm(instance = comment)
     
     return render(request, 'review/comments/comment.html', { 
         'comment' : comment,
-        'user_requested_moderation': user_requested_moderation,
+        'moderation': moderation,
         'form': form })
 
 @login_required
 def new_comment(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
-    # silent redirect back to proposal as the user must have crafted/cached a URL to get here
+    # redirect if comments are not allowed
     if not proposal.theme.track.allow_comments:
         return redirect('review:proposal', pk = proposal.pk)
 
+    # if valid post...
     if request.method == "POST":
         form = EditCommentForm(request.POST)
         if form.is_valid():
+            
+            # save the comment
             comment = form.save(commit = False)
             comment.proposal = proposal
             comment.created_by = request.user
@@ -341,9 +353,12 @@ def new_comment(request, pk):
 
 @login_required
 def moderate_comment(request, pk):
-    # get the comment
     comment = get_object_or_404(Comment, pk = pk)
         
+    # redirect if user created the comment or has already moderated it
+    if request.user == comment.created_by or request.user.moderation_requests.filter(comment = comment).first():
+        return redirect('review:comment', pk = comment.pk)
+
     # if this is a valid post...
     if request.method == "POST":
         form = ModerationRequestForm('comment', request.POST)
