@@ -16,7 +16,7 @@
         "pk": 3,
         "fields": {
             "email": "ncg@peoplesmomentum.com",
-            "name": "National Coordinating Group",
+            "name": "National Co-ordinating Group",
             "is_active": "True",
             "is_ncg": "True" }},
     {   "model" : "members.Member",

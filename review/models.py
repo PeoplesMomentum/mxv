@@ -7,6 +7,7 @@ from django.urls.base import reverse
 
 # field sizes
 name_length = 100
+summary_length = 500
 description_length = 1000
 text_length = 4000
 short_length = 100
@@ -62,13 +63,17 @@ class Proposal(models.Model):
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='proposals')
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
+    summary = models.CharField(max_length=summary_length, default='')
     text = models.TextField(max_length=text_length)
     
     def __str__(self):
         return self.name
     
     def short_text(self):
-        return Truncator(self.text).chars(short_length, '...')
+        if self.summary != '':
+            return Truncator(self.summary).chars(short_length, '...')
+        else:
+            return Truncator(self.text).chars(short_length, '...')
     
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
@@ -78,6 +83,7 @@ class ProposalHistory(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='history')
     created_at = models.DateTimeField()    
     name = models.CharField(max_length=name_length)
+    summary = models.CharField(max_length=summary_length, default='')
     text = models.TextField(max_length=text_length)
 
 # proposal URLs
