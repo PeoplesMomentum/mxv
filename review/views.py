@@ -22,7 +22,7 @@ def theme(request, pk):
     user_proposal = theme.proposals.filter(created_by = request.user).first()
     return render(request, 'review/themes/theme.html', { 
         'theme' : theme, 
-        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', '-created_at'),
+        'proposals': theme.proposals.annotate(nomination_count = Count('nominations')).order_by('-nomination_count', '-created_at', 'pk'),
         'user_proposal': user_proposal })
 
 @login_required
@@ -57,6 +57,7 @@ def proposal(request, pk):
 
     return render(request, 'review/proposals/proposal.html', { 
         'proposal' : proposal,
+        'proposal_urls' : proposal.urls.order_by('pk'),
         'amendments' : proposal.amendments.order_by('-created_at'),
         'comments' : proposal.comments.order_by('-created_at'),
         'user_nominated': request.user.nominations.filter(proposal = proposal).exists(),
