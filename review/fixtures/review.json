@@ -79,7 +79,7 @@
             "name": "CLP Governance",
             "description": "The Governance of CLPs including the composition of CLP Executives and the training of CLP officers and members.",
             "display_order": 1,
-            "guidance": "If possible, please try and propose submissions which will be nationally relevant and appropriate." }},
+            "guidance": "Before submitting, please check out the recommendations made by the <a href=\"http://127.0.0.1:8000/review/proposal/4\">Members’ Council</a> and suggest amendments and comments!" }},
     {   "model" : "review.Theme",
         "pk": 5,
         "fields": {
@@ -91,8 +91,8 @@
         "pk": 6,
         "fields": {
             "track": 2,
-            "name": "Disability Labour and LGBT Labour",
-            "description": "Disability Labour represents people with disabililties in the Labour Party and LGBT Labour represents members who self-identify as Lesbian, Gay, Bisexual or Transgender (LGBT).",
+            "name": "Socialist Societies including Disability and LGBT Labour",
+            "description": "The functioning of associated bodies like Disability Labour, LGBT Labour, Socialist Health Association, etc.",
             "display_order": 3 }},
     {   "model" : "review.Theme",
         "pk": 7,
@@ -194,8 +194,9 @@
         "pk": 4,
         "fields": {
             "theme": 4,
-            "name": "Members' Council recommendations",
-            "text": "The document listed below contains the Members' Council recommendations for this theme.",
+            "name": "Members' Council Recommendations to Improve CLP Governance",
+            "summary": "Momentum’s Members’ Council met on the 2nd December to develop recommendations for the Democracy Review. Their recommendations put a strong focus on improving transparency over key documents such as standing orders, increasing clarity over data rules (which may be altered in line with upcoming legislation), and improving accessibility for people with disabilities and people unable to attend meetings, including through online voting, which was widely popular.",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 4,
             "created_at": "2018-01-25" }},
                         
