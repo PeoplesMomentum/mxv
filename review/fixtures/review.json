@@ -34,7 +34,7 @@
         "fields": {
             "name": "Track 3",
             "display_order": 3,
-            "description": "Local government; Leadership Elections; Freeze Dates; NEC composition; Trade Union Link; Regional Structures; and Policymaking; Conference and Rule Changes",
+            "description": "Local government; Leadership Elections; Freeze Dates; NEC composition; Trade Union Link; Regional Structures; and Policymaking, Conference and Rule Changes",
             "guidance": "This Track will be opening for submissions on Friday 2 February.",
             "urgent": "False",
             "show_amendments": "True",
@@ -165,6 +165,13 @@
             "name": "Regional Structures",
             "description": "The role, accountability and transparency of regional structures.",
             "display_order": 6 }},
+    {   "model" : "review.Theme",
+        "pk": 17,
+        "fields": {
+            "track": 3,
+            "name": "Policymaking, Conference, and Rule Changes",
+            "description": "Developing democratic policy-making procedures, including strengthening the role of Constituency Labour Parties (CLPs) and of Party Conference, the role of contemporary motions and the development of local and regional plans.",
+            "display_order": 7 }},
                         
     {   "model" : "review.Proposal",
         "pk": 1,
@@ -228,6 +235,15 @@
             "summary": "This proposal argues for the creation of the role of an ombudsperson to enforce the Charter of Rights and Code of Ethics. It is essential that the ombudsperson is accountable to the NEC and that their work does not cut across other NEC functions. However, the ombudsperson must personally be truly independent and command widespread support and command widespread support across the party as a whole.",
             "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
             "created_by": 3,
+            "created_at": "2018-01-25" }},
+    {   "model" : "review.Proposal",
+        "pk": 8,
+        "fields": {
+            "theme": 17,
+            "name": "Members’ Council Recommendations for the National Policy Forum",
+            "summary": "The Members’ Council met on December 2nd. They developed recommendations to radically reform the National Policy Forum, so that there continues to be a rolling body of policymaking, but that it is more responsive to party members, has more support to develop meaningful policy, and is able to feed back into CLPs to ensure party members are able to engage with it effectively, as well as changes made to democratise and strengthen Conference as the party’s sovereign decision-making body.",
+            "text": "The document listed below contains Momentum's submission to the Labour Party Democracy Review for this theme.  Please read it and let us know what you think in the comments section below.",
+            "created_by": 4,
             "created_at": "2018-01-25" }},
                         
     {   "model" : "review.ProposalURL",
@@ -297,5 +313,11 @@
         "fields": {
             "proposal": 7,
             "url": "/static/review/Labour_Party_Ombudsperson_Proposal.pdf",
-            "display_text": "Momentum NCG Proposal for a Labour Party Ombudsperson." }}
+            "display_text": "Momentum NCG Proposal for a Labour Party Ombudsperson." }},
+    {   "model" : "review.ProposalURL",
+        "pk": 12,
+        "fields": {
+            "proposal": 8,
+            "url": "/static/review/Members_Council_Recommendations_for_the_National_Policy_Forum.pdf",
+            "display_text": "Members’ Council Recommendations for the National Policy Forum." }}
 ]
