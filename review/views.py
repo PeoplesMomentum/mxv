@@ -101,7 +101,7 @@ def edit_proposal(request, pk):
     proposal = get_object_or_404(Proposal, pk = pk)
     
     # redirect if moderated, submissions are not allowed or incorrect user
-    if proposal.moderated or not proposal.theme.track.submissions_currently_allowed() or request.user != proposal.created_by:
+    if proposal.moderated() or not proposal.theme.track.submissions_currently_allowed() or request.user != proposal.created_by:
         return redirect('review:proposal', pk = proposal.pk)
 
     # if valid post...
@@ -229,7 +229,7 @@ def edit_amendment(request, pk):
     amendment = get_object_or_404(Amendment, pk = pk)
     
     # redirect if moderated, submissions are not allowed or incorrect user
-    if amendment.moderated or not amendment.proposal.theme.track.submissions_currently_allowed() or request.user != amendment.created_by:
+    if amendment.moderated() or not amendment.proposal.theme.track.submissions_currently_allowed() or request.user != amendment.created_by:
         return redirect('review:amendment', pk = amendment.pk)
 
     # if valid post...
