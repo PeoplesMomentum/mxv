@@ -396,10 +396,6 @@ def faq(request):
     return render(request, 'review/support/faq.html')
 
 @login_required
-def recommendations(request):
-    return render(request, 'review/support/recommendations.html')
-
-@login_required
 def moderation(request):
     return render(request, 'review/support/moderation.html')
 

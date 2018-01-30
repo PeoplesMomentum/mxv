@@ -31,7 +31,6 @@ urlpatterns = [
     url(r'^help/$', views.help, name = 'help'),
     url(r'^rules/$', views.rules, name = 'rules'),
     url(r'^faq/$', views.faq, name = 'faq'),
-    url(r'^recommendations/$', views.recommendations, name = 'recommendations'),
     url(r'^moderation/$', views.moderation, name = 'moderation'),
     url(r'^guide/$', views.guide, name = 'guide'),
 ]
