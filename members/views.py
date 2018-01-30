@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse
 from mxv.settings import JOIN_URL
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render
 
@@ -189,10 +189,8 @@ def activate(request, activation_key):
     if member.is_active:
         return HttpResponseRedirect(reverse('login'))
 
-    # if POST...
+    # if valid post...
     if request.method == 'POST':
-        
-        # and the form is valid...
         form = SetPasswordForm(member, request.POST)
         if form.is_valid():
             
@@ -202,13 +200,14 @@ def activate(request, activation_key):
             
             # log the member in
             update_session_auth_hash(request, member)
+            authenticate(request)
+            login(request, member)
             messages.success(request, 'Your password was successfully set!')
             return HttpResponseRedirect('/')
         else:
             #show errors
             messages.error(request, 'Please correct the error below.')
     else:
-        # GET
         form = SetPasswordForm(member)
 
     return render(request, 'members/activate.html', { 
