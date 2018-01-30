@@ -63,7 +63,7 @@ class MemberAdmin(BaseUserAdmin):
     # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_superuser')
+    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
         (None, {'fields': ('email', 'password', 'activation_key', 'is_active')}),
