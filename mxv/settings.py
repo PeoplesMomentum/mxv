@@ -184,3 +184,6 @@ DATETIME_FORMAT = 'd/m/Y H:i:s'
 # close the session when the browser closes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# whether to allow requests to the error URL (for testing error handling)
+ALLOW_ERROR_URL = True if os.environ.get('MXV_ALLOW_ERROR_URL', 'False') == 'True' else False
+

@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.views import PasswordResetView
-from .settings import SITE_NAME_SHORT, SITE_NAME_LONG
+from .settings import SITE_NAME_SHORT, SITE_NAME_LONG, ALLOW_ERROR_URL
+from django.http import Http404
+
 
 # landing page
 def index(request):
@@ -15,3 +17,11 @@ class ExtraContextPasswordResetView(PasswordResetView):
          'site_name_short': SITE_NAME_SHORT,
          'site_name_long': SITE_NAME_LONG,
          }
+
+# raises an error if allowed
+def error(request):
+    if ALLOW_ERROR_URL:
+        raise Exception('error test')
+    else:
+        raise Http404('not found')
+        
