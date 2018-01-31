@@ -9,7 +9,7 @@
 
 {% block content %}
     <p>The Labour Party’s Democracy Review is an unprecedented opportunity for ordinary members to input into the culture, rules and structure of the Labour Party.  We’re inviting our members to collaborate on forming Momentum’s submissions to the review.</p>
-    <p>Click below to read, submit and discuss proposals. You can make one proposal per theme, and then nominate your favourite in each. Get started now, or visit <a href="{% url 'review:help' %}">Help</a> to read our <a href="{% url 'review:rules' %}">guide to the platform</a>.</p>
+    <p>There are three Tracks, with Track 2 currently live. Each Track contains themes, and you can make one proposal per theme, and then nominate your favourite in each. Get started now, or visit <a href="{% url 'review:help' %}">Help</a> to read our <a href="{% url 'review:rules' %}">guide to the platform</a>.</p>
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm d-flex align-items-stretch pt-4">
@@ -31,6 +31,6 @@
             </div>
         {% endfor %}
     </div>
-    <br/>
+    <br/><br/>
     <p>We acknowledge that the deadlines for Track 2 are extremely tight, and would like to apologise for this. The reason is the importance of being able to circulate finalised submissions in time for activists to be able to pass them through CLPs before the 23rd March deadline.</p>
 {% endblock %}
