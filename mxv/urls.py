@@ -11,7 +11,6 @@ urlpatterns = [
     url(r'^members/password_reset/$', views.ExtraContextPasswordResetView.as_view(), name='password_reset'),
     url(r'^members/', include('django.contrib.auth.urls')),
     
-    
     # admin
     url(r'^admin/', include('members.adminurls')),
     url(r'^tinymce/', include('tinymce.urls')),
@@ -19,4 +18,7 @@ urlpatterns = [
     
     # democracy review
     url(r'^review/', include('review.urls')),
+    
+    # error testing
+    url(r'^error/$', views.error, name='error'),
 ]
