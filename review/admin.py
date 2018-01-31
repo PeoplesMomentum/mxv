@@ -1,5 +1,5 @@
 from django.contrib import admin
-from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification
+from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification, Amendment
 from django.urls.base import reverse
 from django.utils.safestring import mark_safe
 
@@ -72,6 +72,7 @@ class ModerationRequestAdmin(admin.ModelAdmin):
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
+admin.site.register(Amendment)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(ModerationRequest, ModerationRequestAdmin)
 admin.site.register(ModerationRequestNotification)
