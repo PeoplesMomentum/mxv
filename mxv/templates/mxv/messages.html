@@ -1,10 +1,11 @@
 {% load static %}
 {% block messages %}
     {% if messages %}
-    <ul class="messagelist">
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                {{ message }}
+            </div>
         {% endfor %}
-    </ul>
     {% endif %}
 {% endblock messages %}

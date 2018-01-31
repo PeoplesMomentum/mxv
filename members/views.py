@@ -206,7 +206,7 @@ def activate(request, activation_key):
             return HttpResponseRedirect('/')
         else:
             #show errors
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = SetPasswordForm(member)
 

@@ -38,9 +38,9 @@
             {% else %}
                 {% if proposal.created_by != user %}
                     {% if user_nominated %}
-                        <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
+                        <button type="submit" name="clear_nomination" class="btn btn-primary mr-4">Stop nominating this proposal</button>
                     {% else %}
-                        <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
+                        <button type="submit" name="nominate" class="btn btn-success mr-4">Nominate this proposal</button>
                     {% endif %}
                 {% endif %}
             {% endif %}
@@ -68,7 +68,7 @@
     {% if proposal.theme.track.submissions_currently_allowed and proposal.created_by == user %}
         <br/>
         {% if not proposal.moderated %}
-            <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
+            <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success mr-4">Edit</a>
         {% endif %}
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
@@ -87,7 +87,7 @@
     <div class="row card-text text-muted">
         {% if proposal.theme.track.show_comments %}
             <div class="col-sm">
-                <h6>Comments</h6>
+                <h4>Comments</h4>
                 {% if proposal.theme.track.allow_comments %}
                     <p class="small">Please comment on the above proposal but be aware that comments cannot be deleted or edited once made.</p>
                     <a href="{% url 'review:new_comment' proposal.pk %}" class="btn btn-success">New comment</a>
@@ -112,12 +112,13 @@
                         </div>
                     </div>
                 {% endfor %}
+                <br/><br/>
             </div>
         {% endif %}
         
         {% if proposal.theme.track.show_amendments %}
             <div class="col-sm">
-                <h6>Amendments</h6>
+                <h4>Amendments</h4>
                 {% if proposal.theme.track.submissions_currently_allowed %}
                     <p class="small">Please suggest amendments to constructively develop the above proposal. You can edit or delete your own amendments while submissions are open.</p>
                     <a href="{% url 'review:new_amendment' proposal.pk %}" class="btn btn-success">New amendment</a>

@@ -78,7 +78,7 @@
             "name": "CLP Governance",
             "description": "The Governance of CLPs including the composition of CLP Executives and the training of CLP officers and members.",
             "display_order": 1,
-            "guidance": "Before submitting, please check out the recommendations made by the <a href=\"http://127.0.0.1:8000/review/proposal/4\">Members’ Council</a> and suggest amendments and comments!" }},
+            "guidance": "Before submitting, please check out the recommendations made by the <a href=\"/review/proposal/4\">Members’ Council</a> and suggest amendments and comments!" }},
     {   "model" : "review.Theme",
         "pk": 5,
         "fields": {
@@ -251,18 +251,21 @@
         "fields": {
             "proposal": 1,
             "url": "/static/review/Democracy_Review_Submission_Reforming_BAME_Labour.pdf",
+            "external": "True",
             "display_text": "Democracy Review: Submissions to Reform BAME Labour" }},
     {   "model" : "review.ProposalURL",
         "pk": 2,
         "fields": {
             "proposal": 1,
             "url": "/static/review/BAME_Labour_Survey_Results_Summary.pdf",
+            "external": "True",
             "display_text": "To see the results of our consultation survey, please see the BAME Labour Consultation Results" }},
     {   "model" : "review.ProposalURL",
         "pk": 3,
         "fields": {
             "proposal": 1,
             "url": "/static/review/The_Seema_Chandwani_Guide_to_Debating_BAME_Labour_in_your_CLP.pdf",
+            "external": "True",
             "display_text": "The Seema Chandwani Guide to Debating BAME Labour in your CLP" }},
     {   "model" : "review.ProposalURL",
         "pk": 4,
@@ -276,6 +279,7 @@
         "fields": {
             "proposal": 2,
             "url": "/static/review/Young_Labour_Proposal_for_the_Democracy_Review.pdf",
+            "external": "True",
             "display_text": "Democracy Review: Submission to Reform Young Labour" }},
     {   "model" : "review.ProposalURL",
         "pk": 6,
@@ -289,35 +293,41 @@
         "fields": {
             "proposal": 3,
             "url": "/static/review/Submission_to_Labour_Party_Democracy_Review_on_Annual_Women_Conference.pdf",
+            "external": "True",
             "display_text": "Women's Conference: Submission to Reform Women's Conference" }},
     {   "model" : "review.ProposalURL",
         "pk": 8,
         "fields": {
             "proposal": 4,
             "url": "/static/review/Members_Council_Recommendations_for_CLP_Governance.pdf",
+            "external": "True",
             "display_text": "The Members' Council has made the following recommendations to improve CLP governance." }},
     {   "model" : "review.ProposalURL",
         "pk": 9,
         "fields": {
             "proposal": 5,
             "url": "/static/review/Charter_of_Members_Rights.pdf",
+            "external": "True",
             "display_text": "Momentum NCG Proposal for a Charter of Members’ Rights." }},
     {   "model" : "review.ProposalURL",
         "pk": 10,
         "fields": {
             "proposal": 6,
             "url": "/static/review/Code_of_Ethics_2017.pdf",
+            "external": "True",
             "display_text": "Momentum NCG Proposal for a Code of Ethics." }},
     {   "model" : "review.ProposalURL",
         "pk": 11,
         "fields": {
             "proposal": 7,
             "url": "/static/review/Labour_Party_Ombudsperson_Proposal.pdf",
+            "external": "True",
             "display_text": "Momentum NCG Proposal for a Labour Party Ombudsperson." }},
     {   "model" : "review.ProposalURL",
         "pk": 12,
         "fields": {
             "proposal": 8,
             "url": "/static/review/Members_Council_Recommendations_for_the_National_Policy_Forum.pdf",
+            "external": "True",
             "display_text": "Members’ Council Recommendations for the National Policy Forum." }}
 ]
