@@ -38,9 +38,9 @@
             {% else %}
                 {% if proposal.created_by != user %}
                     {% if user_nominated %}
-                        <button type="submit" name="clear_nomination" class="btn btn-primary">Stop nominating this proposal</button>
+                        <button type="submit" name="clear_nomination" class="btn btn-primary mr-4">Stop nominating this proposal</button>
                     {% else %}
-                        <button type="submit" name="nominate" class="btn btn-success">Nominate this proposal</button>
+                        <button type="submit" name="nominate" class="btn btn-success mr-4">Nominate this proposal</button>
                     {% endif %}
                 {% endif %}
             {% endif %}
@@ -68,7 +68,7 @@
     {% if proposal.theme.track.submissions_currently_allowed and proposal.created_by == user %}
         <br/>
         {% if not proposal.moderated %}
-            <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success">Edit</a>
+            <a href="{% url 'review:edit_proposal' proposal.pk %}" class="btn btn-success mr-4">Edit</a>
         {% endif %}
         <a href="{% url 'review:delete_proposal' proposal.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
@@ -112,6 +112,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                <br/><br/>
             </div>
         {% endif %}
         
