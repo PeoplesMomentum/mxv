@@ -165,7 +165,7 @@ ANYMAIL = {
     "MAILGUN_API_KEY": os.environ.get('MXV_MAILGUN_API_KEY', "mxv"),
     'MAILGUN_SENDER_DOMAIN': os.environ.get('MXV_MAILGUN_SENDER_DOMAIN', "mxv")
 }
-DEFAULT_FROM_EMAIL = "noreply@peoplesmomentum.com"
+DEFAULT_FROM_EMAIL = "My Momentum <mymomentum@peoplesmomentum.com>"
 
 # join page
 JOIN_URL = "https://join.peoplesmomentum.com"
