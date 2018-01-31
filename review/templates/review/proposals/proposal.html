@@ -17,7 +17,7 @@
         {% if proposal.theme.track.allow_nominations %}<tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>{% endif %}
         {% if proposal.theme.track.allow_submissions %}<tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>{% endif %}
         <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
-        <tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>
+        {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council %}<tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>{% endif %}
     </table>
     <br>
     
