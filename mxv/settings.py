@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -187,3 +188,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # whether to allow requests to the error URL (for testing error handling)
 ALLOW_ERROR_URL = True if os.environ.get('MXV_ALLOW_ERROR_URL', 'False') == 'True' else False
 
+# change error into danger for bootstrap
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}

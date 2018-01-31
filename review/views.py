@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Track, Theme, Proposal, Amendment, Comment
 from django.db.models import Count
 from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm, ModerationRequestForm, CommentForm
+from django.contrib import messages
 
 @login_required
 def index(request):
@@ -52,6 +53,9 @@ def proposal(request, pk):
                 moderation.delete()
                     
             return redirect('review:proposal', pk = proposal.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = ProposalForm(instance = proposal)
 
@@ -84,6 +88,9 @@ def new_proposal(request, pk):
             proposal.save()
             
             return redirect('review:proposal_submitted', pk = theme.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = EditProposalForm()
         
@@ -114,6 +121,9 @@ def edit_proposal(request, pk):
             proposal = form.save()
             
             return redirect('review:proposal', pk = proposal.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = EditProposalForm(instance = proposal)
         
@@ -138,6 +148,9 @@ def delete_proposal(request, pk):
             proposal.delete()
             
             return redirect('review:theme', pk = proposal.theme.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = DeleteProposalForm(instance = proposal)
         
@@ -168,6 +181,9 @@ def moderate_proposal(request, pk):
             moderation_request.notify_staff(request)
             
             return redirect("review:proposal", pk = pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = ModerationRequestForm('proposal')
     
@@ -190,6 +206,9 @@ def amendment(request, pk):
                 moderation.delete()
                     
             return redirect('review:amendment', pk = amendment.pk)        
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = AmendmentForm(instance = amendment) 
     
@@ -218,6 +237,9 @@ def new_amendment(request, pk):
             amendment.save()
             
             return redirect('review:proposal', pk = proposal.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = EditAmendmentForm()
         
@@ -242,6 +264,9 @@ def edit_amendment(request, pk):
             amendment = form.save()
             
             return redirect('review:amendment', pk = amendment.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = EditAmendmentForm(instance = amendment)
         
@@ -265,6 +290,9 @@ def delete_amendment(request, pk):
             # delete the amendment
             amendment.delete()
             return redirect('review:proposal', pk = amendment.proposal.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = DeleteAmendmentForm(instance = amendment)
         
@@ -297,6 +325,9 @@ def moderate_amendment(request, pk):
             
             # return to the referring entity
             return redirect("review:amendment", pk = pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = ModerationRequestForm('amendment')
     
@@ -319,6 +350,9 @@ def comment(request, pk):
                 moderation.delete()
                     
             return redirect('review:comment', pk = comment.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CommentForm(instance = comment)
     
@@ -346,6 +380,9 @@ def new_comment(request, pk):
             comment.created_by = request.user
             comment.save()
             return redirect('review:proposal', pk = proposal.pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = EditCommentForm()
     return render(request, 'review/comments/new_comment.html', { 
@@ -376,6 +413,9 @@ def moderate_comment(request, pk):
             
             # return to the referring entity
             return redirect("review:comment", pk = pk)
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = ModerationRequestForm('comment')
     
