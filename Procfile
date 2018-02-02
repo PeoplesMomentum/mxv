@@ -1,1 +1,1 @@
-web: gunicorn mxv.wsgi
+web: gunicorn mxv.wsgi --timeout 300
