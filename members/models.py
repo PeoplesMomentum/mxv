@@ -5,6 +5,7 @@ from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from django.db.models.deletion import SET_NULL
+from datetime import date
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -61,6 +62,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
     activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
+    last_invited_to_activate = models.DateField(blank=True, null=True, default=None)
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
 
@@ -89,6 +91,7 @@ class MemberActivationEmail(SingletonModel):
     html_content = HTMLField(default = '')
     text_content = models.TextField(default = '')
     test_email_address = models.EmailField(default = '')
+    send_count = models.PositiveIntegerField(default=1000)
     
     def __unicode__(self):
         return u"Member Activation Email"
@@ -109,8 +112,6 @@ class MemberActivationEmail(SingletonModel):
         # send the emails
         return self.send_to(request, { member.email for member in inactive_members })
         
-        pass
-
     # sends the activation email to the specified addresses
     def send_to(self, request, recipient_email_addresses):
         
@@ -136,13 +137,27 @@ class MemberActivationEmail(SingletonModel):
         # send the message to the recipients
         message.send()
         
+        # track when the members were last sent an activation email
+        for member in members:
+            member.last_invited_to_activate = date.today()
+            member.save()
+        
         # return the number of members emailed
         return members.count() 
-
     
     # replaces place-holders with Mailgun recipient variables
     def place_holders_to_Mailgun_recipient_variables(self, content):
         content = content.replace('[name]', '%recipient.name%')
         content = content.replace('[link]', '%recipient.link%')
         return content
+        
+    # sends the activation email to count inactive members who have not yet been invited
+    def send_to_count_uninvited(self, request):
+        
+        # get the inactive and uninvited members
+        uninvited_members = Member.objects.filter(is_active = False, last_invited_to_activate = None)
+        uninvited_members_to_send = uninvited_members[:self.send_count]
+        
+        # send the emails
+        return self.send_to(request, { member.email for member in uninvited_members_to_send })
         
