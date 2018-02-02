@@ -91,6 +91,7 @@ class MemberActivationEmail(SingletonModel):
     html_content = HTMLField(default = '')
     text_content = models.TextField(default = '')
     test_email_address = models.EmailField(default = '')
+    send_count = models.PositiveIntegerField(default=1000)
     
     def __unicode__(self):
         return u"Member Activation Email"
@@ -111,8 +112,6 @@ class MemberActivationEmail(SingletonModel):
         # send the emails
         return self.send_to(request, { member.email for member in inactive_members })
         
-        pass
-
     # sends the activation email to the specified addresses
     def send_to(self, request, recipient_email_addresses):
         
@@ -145,11 +144,20 @@ class MemberActivationEmail(SingletonModel):
         
         # return the number of members emailed
         return members.count() 
-
     
     # replaces place-holders with Mailgun recipient variables
     def place_holders_to_Mailgun_recipient_variables(self, content):
         content = content.replace('[name]', '%recipient.name%')
         content = content.replace('[link]', '%recipient.link%')
         return content
+        
+    # sends the activation email to count inactive members who have not yet been invited
+    def send_to_count_uninvited(self, request):
+        
+        # get the inactive and uninvited members
+        uninvited_members = Member.objects.filter(is_active = False, last_invited_to_activate = None)
+        uninvited_members_to_send = uninvited_members[:self.send_count]
+        
+        # send the emails
+        return self.send_to(request, { member.email for member in uninvited_members_to_send })
         

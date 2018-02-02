@@ -77,7 +77,7 @@ def send_member_activation_emails(request):
     # populate the form with the singleton activation email in case this is a GET
     member_activation_email = MemberActivationEmail.get_solo()
     form = SendMemberActivationEmailsForm(instance = member_activation_email)
-    
+
     # if sending a test email...
     if request.method == 'POST' and 'send_test' in request.POST:
         
@@ -100,6 +100,28 @@ def send_member_activation_emails(request):
             # redirect
             return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
         
+    # if sending to uninvited...
+    if request.method == 'POST' and 'send_to_count_uninvited' in request.POST:
+        
+        # .. and the posted form is valid...
+        form = SendMemberActivationEmailsForm(request.POST)
+        if form.is_valid():
+            
+            # update the send count
+            member_activation_email.send_count = form.cleaned_data['send_count']
+            member_activation_email.save()
+            
+            try:                
+                # send the activation email to uninvited members
+                sent = member_activation_email.send_to_count_uninvited(request)
+                messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            
+            except Exception as e:
+                messages.error(request, repr(e))
+
+            # redirect
+            return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
+        
     # if sending to inactive members...
     if request.method == 'POST' and 'send' in request.POST:
         
@@ -113,7 +135,7 @@ def send_member_activation_emails(request):
 
         # redirect
         return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
-        
+                
     # add the form to the context
     context['form'] = form
     
