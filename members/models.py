@@ -5,6 +5,7 @@ from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from django.db.models.deletion import SET_NULL
+from datetime import date
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -61,6 +62,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
     activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
+    last_invited_to_activate = models.DateField(blank=True, null=True, default=None)
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
 
@@ -135,6 +137,11 @@ class MemberActivationEmail(SingletonModel):
         
         # send the message to the recipients
         message.send()
+        
+        # track when the members were last sent an activation email
+        for member in members:
+            member.last_invited_to_activate = date.today()
+            member.save()
         
         # return the number of members emailed
         return members.count() 
