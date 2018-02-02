@@ -1,6 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from members.models import Member, MemberActivationEmail
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -8,26 +7,32 @@ from members.forms import EditMemberActivationEmailForm, SendMemberActivationEma
 from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse
-from mxv.settings import JOIN_URL
+from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render
 
+# signals that a conflict occurred
+class HttpResponseConflict(HttpResponse):
+    status_code = 409
+
 # creates an inactive member for the email and name (POST with email, name and secret)
 @csrf_exempt
 def create_inactive_member(request):
-    try:
-        
         # if it's a post and the secret is correct...
-        if request.method == 'POST' and request.POST['secret'] == settings.CREATE_INACTIVE_MEMBER_SECRET:
+        if request.method == 'POST' and request.POST['secret'] == CREATE_INACTIVE_MEMBER_SECRET:
             
-            # create the member
-            Member.objects.create_member(email = request.POST['email'], name = request.POST['name'])
-            return HttpResponse(content = 'Created inactive member for ' + request.POST['email'])
+            # if the member doesn't already exist...
+            if not Member.objects.filter(email = request.POST['email']).exists():
+
+                # create the member
+                Member.objects.create_member(email = request.POST['email'], name = request.POST['name'])
+                return HttpResponse(content = 'Created inactive member for ' + request.POST['email'])
+            else:
+                # signal that the member already exists
+                return HttpResponseConflict(content = 'Member with email %s already exists' % request.POST['email'])
         else:
             return HttpResponseForbidden()
-    except (KeyError):
-        return HttpResponseForbidden()
 
 # edits the member activation email
 @staff_member_required
