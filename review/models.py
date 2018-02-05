@@ -1,6 +1,5 @@
 from django.db import models
 from mxv.settings import AUTH_USER_MODEL
-from django.utils.text import Truncator
 from datetime import date
 from django.core.mail.message import EmailMultiAlternatives
 from django.urls.base import reverse
@@ -10,7 +9,6 @@ name_length = 100
 summary_length = 500
 description_length = 1000
 text_length = 4000
-short_length = 100
 
 # a track in the democracy review
 class Track(models.Model):
@@ -53,9 +51,6 @@ class Theme(models.Model):
     
     def __str__(self):
         return self.name
-    
-    def short_description(self):
-        return Truncator(self.description).chars(short_length, '...')
 
 # proposal in a theme
 class Proposal(models.Model):
@@ -68,12 +63,6 @@ class Proposal(models.Model):
     
     def __str__(self):
         return self.name
-    
-    def short_text(self):
-        if self.summary != '':
-            return Truncator(self.summary).chars(short_length, '...')
-        else:
-            return Truncator(self.text).chars(short_length, '...')
     
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
@@ -104,9 +93,6 @@ class Amendment(models.Model):
     def __str__(self):
         return self.name
     
-    def short_text(self):
-        return Truncator(self.text).chars(short_length, '...')
-
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
     
@@ -123,11 +109,8 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     text = models.TextField(max_length=text_length)
     
-    def short_text(self):
-        return Truncator(self.text).chars(short_length, '...')
-
     def __str__(self):
-        return self.short_text()
+        return self.text
     
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()

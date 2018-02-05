@@ -13,3 +13,7 @@ blockquote {
     padding-left: 15px;
     border-left: 2px solid #ccc;
 }
+
+.column-name {
+    width: 70px;
+}
