@@ -31,11 +31,19 @@ class ThemeAdmin(admin.ModelAdmin):
 class ProposalAdmin(admin.ModelAdmin):
     search_fields = ('name', 'text',)
     list_display = ('name', 'theme', )
+    readonly_fields = ('created_by',)
     
 # comment admin
 class CommentAdmin(admin.ModelAdmin):
     search_fields = ('text',)
-    list_display = ('short_text', 'proposal', )
+    list_display = ('text', 'proposal', )
+    readonly_fields = ('created_by',)
+     
+# amendment admin
+class AmendmentAdmin(admin.ModelAdmin):
+    search_fields = ('text',)
+    list_display = ('text', 'proposal', )
+    readonly_fields = ('created_by',)
      
 # moderation request admin
 class ModerationRequestAdmin(admin.ModelAdmin):
@@ -57,13 +65,13 @@ class ModerationRequestAdmin(admin.ModelAdmin):
         entity_text = ''
         if obj.proposal:
             entity_href = reverse('admin:review_proposal_change', args=(obj.proposal.pk,))
-            entity_text = obj.proposal.short_text()
+            entity_text = obj.proposal.text
         if obj.amendment:
             entity_href = reverse('admin:review_amendment_change', args=(obj.amendment.pk,))
-            entity_text = obj.amendment.short_text()
+            entity_text = obj.amendment.text
         if obj.comment:
             entity_href = reverse('admin:review_comment_change', args=(obj.comment.pk,))
-            entity_text = obj.proposal.short_text()
+            entity_text = obj.proposal.text
         return mark_safe('<a href="{}">{}</a>'.format(entity_href, entity_text))
     
     entity_link.short_description = 'moderated entity text'
@@ -72,7 +80,7 @@ class ModerationRequestAdmin(admin.ModelAdmin):
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
-admin.site.register(Amendment)
+admin.site.register(Amendment, AmendmentAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(ModerationRequest, ModerationRequestAdmin)
 admin.site.register(ModerationRequestNotification)

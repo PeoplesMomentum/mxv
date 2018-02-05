@@ -8,7 +8,7 @@
     <li class="breadcrumb-item"><a href="{% url 'review:track' comment.proposal.theme.track.pk %}">{{ comment.proposal.theme.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:theme' comment.proposal.theme.pk %}">{{ comment.proposal.theme.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:proposal' comment.proposal.pk %}">{{ comment.proposal.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'review:comment' comment.pk %}">{{ comment.short_text }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:comment' comment.pk %}">{{ comment.text|truncatechars:100 }}</a></li>
     <li class="breadcrumb-item active">Request moderation</li>
 {% endblock %}
 
