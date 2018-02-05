@@ -1,0 +1,6 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/mxv.css' %}" />
+{% endblock extrastyle %}

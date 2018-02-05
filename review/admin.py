@@ -3,54 +3,121 @@ from review.models import Track, Theme, Proposal, Comment, ModerationRequest, Mo
 from django.urls.base import reverse
 from django.utils.safestring import mark_safe
 
-# themes in a track
-class ThemeInline(admin.TabularInline):
-    model = Theme
-    extra = 0
-
-# track admin
+"""
+  - search all text fields and created_by name/email for member-created entities
+  - list display card fields followed by parent entity as link
+  - parent entity as first field
+  - group fields 
+  - member-created entity fields read-only (this prevents admins from creating these entities, could fix with separate add/change forms?)
+"""
+    
 class TrackAdmin(admin.ModelAdmin):
-    search_fields = ('name', )
-    list_display = ('name', 'display_order', )
-    inlines = (ThemeInline,)
+    search_fields = ('name', 'description', 'guidance')
+    list_display = ('name', 'description')
+    fields = (
+        ('name', 'display_order'),
+        'description', 
+        'guidance', 
+        'urgent',
+        ('show_amendments', 'show_comments'),
+        ('allow_submissions', 'allow_comments', 'allow_nominations'),
+        ('submission_start', 'submission_end'), 
+        ('nomination_start', 'nomination_end')
+    )
     
     def get_queryset(self, request):
         qs = super(TrackAdmin, self).get_queryset(request)
         return qs.order_by('display_order')
+
     
-# theme admin
 class ThemeAdmin(admin.ModelAdmin):
-    search_fields = ('name', 'description', 'guidance', )
-    list_display = ('name', 'description', 'guidance', 'track', 'display_order', )
+    search_fields = ('name', 'description', 'guidance')
+    list_display = ('name', 'description', 'track_link')
+    fields = (
+        'track_link', 
+        ('name', 'display_order'),
+        'description', 
+        'guidance'
+    )
+    readonly_fields = ('track_link',)
     
     def get_queryset(self, request):
         qs = super(ThemeAdmin, self).get_queryset(request)
         return qs.order_by('track__display_order', 'display_order')
     
-# proposal admin
-class ProposalAdmin(admin.ModelAdmin):
-    search_fields = ('name', 'text',)
-    list_display = ('name', 'theme', )
-    readonly_fields = ('created_by',)
+    def track_link(self, theme):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_track_change', args=(theme.track.pk,)), theme.track.name))
+    track_link.short_description = 'track'
     
-# comment admin
-class CommentAdmin(admin.ModelAdmin):
-    search_fields = ('text',)
-    list_display = ('text', 'proposal', )
-    readonly_fields = ('created_by',)
-     
-# amendment admin
+class ProposalAdmin(admin.ModelAdmin):
+    search_fields = ('name', 'summary', 'text', 'created_by__name', 'created_by__email')
+    list_display = ('name', 'summary', 'created_by_link', 'theme_link')
+    fields = (
+        'theme_link',
+        ('created_by_link', 'created_at'),
+        'name',
+        'summary',
+        'text'
+    )
+    readonly_fields = ('theme_link', 'created_by_link', 'created_at', 'name', 'summary', 'text')
+    
+    def theme_link(self, proposal):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_theme_change', args=(proposal.theme.pk,)), proposal.theme.name))
+    theme_link.short_description = 'theme'
+
+    def created_by_link(self, proposal):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:members_member_change', args=(proposal.created_by.pk,)), proposal.created_by.email))
+    created_by_link.short_description = 'created by'
+
 class AmendmentAdmin(admin.ModelAdmin):
-    search_fields = ('text',)
-    list_display = ('text', 'proposal', )
-    readonly_fields = ('created_by',)
+    search_fields = ('name', 'text', 'created_by__name', 'created_by__email')
+    list_display = ('name', 'created_by_link', 'proposal_link')
+    fields = (
+        'proposal_link',
+        ('created_by_link', 'created_at'),
+        'name',
+        'text'
+    )
+    readonly_fields = ('proposal_link', 'created_by_link', 'created_at', 'name', 'text')
+    
+    def proposal_link(self, amendment):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_proposal_change', args=(amendment.proposal.pk,)), amendment.proposal.name))
+    proposal_link.short_description = 'proposal'
+
+    def created_by_link(self, amendment):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:members_member_change', args=(amendment.created_by.pk,)), amendment.created_by.email))
+    created_by_link.short_description = 'created by'
      
-# moderation request admin
+class CommentAdmin(admin.ModelAdmin):
+    search_fields = ('text', 'created_by__name', 'created_by__email')
+    list_display = ('text', 'created_by_link', 'proposal_link')
+    fields = (
+        'proposal_link',
+        ('created_by_link', 'created_at'),
+        'text'
+    )
+    readonly_fields = ('proposal_link', 'created_by_link', 'created_at', 'text')
+    
+    def proposal_link(self, comment):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_proposal_change', args=(comment.proposal.pk,)), comment.proposal.name))
+    proposal_link.short_description = 'proposal'
+
+    def created_by_link(self, comment):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:members_member_change', args=(comment.created_by.pk,)), comment.created_by.email))
+    created_by_link.short_description = 'created by'
+     
 class ModerationRequestAdmin(admin.ModelAdmin):
-    search_fields = ('reason',)
-    list_display = ('reason', 'requested_by', 'moderated_entity_created_by', 'moderated')
-    readonly_fields = ('moderated_entity_type', 'entity_link', 'moderated_entity_created_by', 'requested_by', 'requested_at', 'reason')
-    exclude = ('proposal', 'amendment', 'comment')
+    search_fields = ('reason', 'requested_by__name', 'requested_by__email')
+    list_display = ('reason', 'requested_by_link', 'moderated_entity_link', 'moderated_entity_created_by_link', 'moderated')
+    fields = (
+        'moderated_entity_type',
+        'moderated_entity_link',
+        'moderated_entity_created_by_link',
+        ('requested_by_link', 'requested_at'),
+        'reason',
+        'moderated'
+    )
+    readonly_fields = ('moderated_entity_type', 'moderated_entity_link', 'moderated_entity_created_by_link', 'requested_by_link', 'requested_at', 'reason')
     
     def moderated_entity_type(self, obj):
         if obj.proposal:
@@ -60,23 +127,40 @@ class ModerationRequestAdmin(admin.ModelAdmin):
         if obj.comment:
             return 'comment'
     
-    def entity_link(self, obj):
+    def moderated_entity_link(self, obj):
         entity_href = ''
         entity_text = ''
         if obj.proposal:
             entity_href = reverse('admin:review_proposal_change', args=(obj.proposal.pk,))
-            entity_text = obj.proposal.text
+            entity_text = obj.proposal.name
         if obj.amendment:
             entity_href = reverse('admin:review_amendment_change', args=(obj.amendment.pk,))
-            entity_text = obj.amendment.text
+            entity_text = obj.amendment.name
         if obj.comment:
             entity_href = reverse('admin:review_comment_change', args=(obj.comment.pk,))
-            entity_text = obj.proposal.text
-        return mark_safe('<a href="{}">{}</a>'.format(entity_href, entity_text))
-    
-    entity_link.short_description = 'moderated entity text'
+            entity_text = obj.comment.text
+        return mark_safe('<a href="%s">%s</a>' % (entity_href, entity_text)) 
+    moderated_entity_link.short_description = 'moderated entity'
      
-# registration
+    def requested_by_link(self, moderationrequest):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:members_member_change', args=(moderationrequest.requested_by.pk,)), moderationrequest.requested_by.email))
+    requested_by_link.short_description = 'requested by'
+     
+    def moderated_entity_created_by_link(self, moderationrequest):
+        entity_href = ''
+        entity_text = ''
+        if moderationrequest.proposal:
+            entity_href = reverse('admin:members_member_change', args=(moderationrequest.proposal.created_by.pk,))
+            entity_text = moderationrequest.proposal.created_by.email
+        if moderationrequest.amendment:
+            entity_href = reverse('admin:members_member_change', args=(moderationrequest.amendment.created_by.pk,))
+            entity_text = moderationrequest.amendment.created_by.email
+        if moderationrequest.comment:
+            entity_href = reverse('admin:members_member_change', args=(moderationrequest.comment.created_by.pk,))
+            entity_text = moderationrequest.comment.created_by.email
+        return mark_safe('<a href="%s">%s</a>' % (entity_href, entity_text)) 
+    moderated_entity_created_by_link.short_description = 'moderated entity created by'
+     
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
