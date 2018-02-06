@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    <p>Posts or comments that breach Momentum's code of ethics, or are not relevant to the Democracy Review's remit, will be removed.</p>
+    {% include "review/includes/moderation_text.html" %}
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'mxv/includes/form.html' %}

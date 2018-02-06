@@ -55,11 +55,13 @@
                 <a href="{% url 'review:moderate_proposal' proposal.pk %}" class="btn btn-danger">Request moderation</a>
             {% else %}
                 <br/>
-                <p class="text-danger">You have requested moderation of this proposal:</p>
+                <p class="text-danger">You have requested moderation of this proposal for the following reason:</p>
                 <blockquote class="blockquote">
                     <p class="text-danger small">{{ moderation.reason }}</p>
-                </blockquote>     
-                <button type="submit" name="cancel_moderation" class="btn btn-danger">Cancel moderation request</button>
+                </blockquote>
+                <p class="text-danger">Only you and the moderator can see this moderation request.</p>
+                <button type="submit" name="turn_moderation_into_comment" class="btn btn-success mr-4">Turn this into a comment instead</button>
+                <button type="submit" name="cancel_moderation" class="btn btn-primary">Cancel moderation request</button>
             {% endif %}
         {% endif %}
     

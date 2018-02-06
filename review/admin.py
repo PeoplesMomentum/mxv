@@ -160,6 +160,40 @@ class ModerationRequestAdmin(admin.ModelAdmin):
             entity_text = moderationrequest.comment.created_by.email
         return mark_safe('<a href="%s">%s</a>' % (entity_href, entity_text)) 
     moderated_entity_created_by_link.short_description = 'moderated entity created by'
+    
+    def response_change(self, request, obj):
+        if 'turn_moderation_into_comment' in request.POST:
+            moderation = obj
+            
+            # moderated proposal
+            if moderation.proposal:
+                moderation.proposal.comments.create(
+                    proposal = moderation.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
+                
+            # moderated amendment
+            if moderation.amendment:
+                moderation.amendment.proposal.comments.create(
+                    proposal = moderation.amendment.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
+                
+            # moderated comment
+            if moderation.comment:
+                moderation.comment.proposal.comments.create(
+                    proposal = moderation.comment.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
+
+            # delete the moderation
+            moderation.delete()
+            
+        # call the inherited
+        return admin.ModelAdmin.response_change(self, request, obj)
      
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
