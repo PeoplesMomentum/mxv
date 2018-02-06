@@ -51,6 +51,15 @@ def proposal(request, pk):
             # cancel moderation if moderation request exists
             if 'cancel_moderation' in request.POST and moderation:
                 moderation.delete()
+                
+            # turn the moderation request into a comment
+            if 'turn_moderation_into_comment' in request.POST and moderation:
+                proposal.comments.create(
+                    proposal = moderation.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
+                moderation.delete()
                     
             return redirect('review:proposal', pk = proposal.pk)
         else:
@@ -202,7 +211,16 @@ def amendment(request, pk):
         if form.is_valid():        
                                         
             # cancel moderation if moderation request exists
-            if moderation:
+            if 'cancel_moderation' in request.POST and moderation:
+                moderation.delete()
+                    
+            # turn the moderation request into a comment
+            if 'turn_moderation_into_comment' in request.POST and moderation:
+                amendment.proposal.comments.create(
+                    proposal = moderation.amendment.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
                 moderation.delete()
                     
             return redirect('review:amendment', pk = amendment.pk)        
@@ -346,7 +364,16 @@ def comment(request, pk):
         if form.is_valid():        
                                 
             # cancel moderation if moderation request exists
-            if moderation:
+            if 'cancel_moderation' in request.POST and moderation:
+                moderation.delete()
+                    
+            # turn the moderation request into a comment
+            if 'turn_moderation_into_comment' in request.POST and moderation:
+                comment.proposal.comments.create(
+                    proposal = moderation.comment.proposal, 
+                    created_by = moderation.requested_by, 
+                    created_at = moderation.requested_at, 
+                    text = moderation.reason)
                 moderation.delete()
                     
             return redirect('review:comment', pk = comment.pk)
