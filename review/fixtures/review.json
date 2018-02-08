@@ -313,7 +313,7 @@
         "pk": 10,
         "fields": {
             "proposal": 6,
-            "url": "/static/review/Code_of_Ethics_2017.pdf",
+            "url": "/static/review/Code_of_Ethics_2018.pdf",
             "external": "True",
             "display_text": "Momentum NCG Proposal for a Code of Ethics." }},
     {   "model" : "review.ProposalURL",
