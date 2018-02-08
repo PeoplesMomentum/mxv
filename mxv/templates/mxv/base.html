@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{% static 'css/mxv.css' %}">
         <script src="https://use.fontawesome.com/fe32e441c1.js"></script>
         {% include "mxv/tracking_tags.html" %}
+        {% block extra_head %}{% endblock %}
     </head>
     <body>
         {% include "mxv/navbar.html" %}

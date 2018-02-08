@@ -10,15 +10,31 @@
     <li class="breadcrumb-item active">{{ proposal.name }}</li>
 {% endblock %}
 
+{% block extra_head %}
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{ proposal.name }}" />
+    <meta property="og:site_name" content="My Momentum" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'mxv/images/logo.png' %}" />
+{% endblock %}
+
 {% block content %}
-    <table class="card-text text-muted small">
-        <tr><td><b>Created by</b></td><td>{{ proposal.created_by.name }}</td></tr>
-        <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
-        {% if proposal.theme.track.allow_nominations %}<tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>{% endif %}
-        {% if proposal.theme.track.allow_submissions %}<tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>{% endif %}
-        <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
-        {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council %}<tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>{% endif %}
-    </table>
+    <div class="row">
+        <div class="col-sm">
+            <table class="card-text text-muted small">
+                <tr><td><b>Created by</b></td><td>{{ proposal.created_by.name }}</td></tr>
+                <tr><td><b>Created at</b></td><td>{{ proposal.created_at }}</td></tr>
+                {% if proposal.theme.track.allow_nominations %}<tr><td><b>Nominations</b></td><td>{{ proposal.nominations.count }}</td></tr>{% endif %}
+                {% if proposal.theme.track.allow_submissions %}<tr><td><b>Amendments</b></td><td>{{ proposal.amendments.count }}</td></tr>{% endif %}
+                <tr><td><b>Comments</b></td><td>{{ proposal.comments.count }}</td></tr>
+                {% if not proposal.created_by.is_ncg and not proposal.created_by.is_members_council %}<tr class="{% if proposal.moderation_requests.count > 0 %}text-danger{% endif %}"><td><b>Moderation requests</b></td><td>{{ proposal.moderation_requests.count }}</td></tr>{% endif %}
+            </table>
+        </div>
+        <div class="col-sm">
+            <a href="http://www.facebook.com/sharer.php?u={{ request.build_absolute_uri }}" class="pull-right" title="Share this proposal on Facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+            <p class="card-text text-muted small pull-right pt-2 mr-2">Share this proposal on Facebook</p>
+        </div>
+    </div>
     <br>
     
     <form method="post" novalidate>
