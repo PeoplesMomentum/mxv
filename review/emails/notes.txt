@@ -1,0 +1,2 @@
+- Log into mxv.herokuapp.com instead of my.peoplesmomentum.com to prevent the HTML editor replacing the URL with ../.. and breaking the links.
+- Copy and paste the email HTML into the 'member activation email' as HTML.
