@@ -157,6 +157,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
     'width' : 600,
     'height' : 300,
+    'convert_urls' : False,
+    'relative_urls' : False,
 }
 
 # Mailgun
