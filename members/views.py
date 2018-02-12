@@ -109,6 +109,7 @@ def send_member_activation_emails(request):
             
             # update the send count
             member_activation_email.send_count = form.cleaned_data['send_count']
+            member_activation_email.is_active = form.cleaned_data['is_active']
             member_activation_email.save()
             
             try:                
