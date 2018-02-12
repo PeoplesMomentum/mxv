@@ -14,7 +14,7 @@ class EditMemberActivationEmailForm(forms.ModelForm):
 class SendMemberActivationEmailsForm(forms.ModelForm):
     class Meta:
         model = MemberActivationEmail
-        fields = ['test_email_address', 'send_count']
+        fields = ['test_email_address', 'send_count', 'is_active']
         widgets = {
             'test_email_address': forms.TextInput(attrs={'size':65})}
 

@@ -92,6 +92,7 @@ class MemberActivationEmail(SingletonModel):
     text_content = models.TextField(default = '')
     test_email_address = models.EmailField(default = '')
     send_count = models.PositiveIntegerField(default=1000)
+    is_active = models.BooleanField(default=False)
     
     def __unicode__(self):
         return u"Member Activation Email"
@@ -155,7 +156,7 @@ class MemberActivationEmail(SingletonModel):
     def send_to_count_uninvited(self, request):
         
         # get the inactive and uninvited members
-        uninvited_members = Member.objects.filter(is_active = False, last_invited_to_activate = None)
+        uninvited_members = Member.objects.filter(is_active = self.is_active, last_invited_to_activate = None)
         uninvited_members_to_send = uninvited_members[:self.send_count]
         
         # send the emails
