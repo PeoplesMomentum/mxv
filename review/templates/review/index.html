@@ -22,7 +22,7 @@
                         </table>
                         <hr>
                         <p class="card-text">{{ track.description }}</p>
-                        <p class="card-text text-muted {{ track.guidance_class }}">{{ track.guidance }}</p>
+                        <p class="card-text {{ track.guidance_class }}">{{ track.guidance }}</p>
                         <div class="text-right align-bottom">
                             <a href="{% url 'review:track' track.pk %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>

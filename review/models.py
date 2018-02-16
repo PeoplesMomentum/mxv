@@ -106,7 +106,7 @@ class Track(models.Model):
         if self.earliest() != None and self.latest() != None and today >= self.earliest() and today <= self.latest():
             return 'text-danger'
         else:
-            return ''
+            return 'text-muted'
         
 # a theme in a track
 class Theme(models.Model):
