@@ -51,7 +51,7 @@ class ThemeAdmin(admin.ModelAdmin):
     
 class ProposalAdmin(admin.ModelAdmin):
     search_fields = ('name', 'summary', 'text', 'created_by__name', 'created_by__email')
-    list_display = ('name', 'summary', 'created_by_link', 'theme_link')
+    list_display = ('name', 'summary', 'created_by_link', 'created_at', 'theme_link')
     fields = (
         'theme_link',
         ('created_by_link', 'created_at'),
@@ -71,7 +71,7 @@ class ProposalAdmin(admin.ModelAdmin):
 
 class AmendmentAdmin(admin.ModelAdmin):
     search_fields = ('name', 'text', 'created_by__name', 'created_by__email')
-    list_display = ('name', 'created_by_link', 'proposal_link')
+    list_display = ('name', 'created_by_link', 'created_at', 'proposal_link')
     fields = (
         'proposal_link',
         ('created_by_link', 'created_at'),
@@ -90,7 +90,7 @@ class AmendmentAdmin(admin.ModelAdmin):
      
 class CommentAdmin(admin.ModelAdmin):
     search_fields = ('text', 'created_by__name', 'created_by__email')
-    list_display = ('text', 'created_by_link', 'proposal_link')
+    list_display = ('text', 'created_by_link', 'created_at', 'proposal_link')
     fields = (
         'proposal_link',
         ('created_by_link', 'created_at'),
@@ -108,7 +108,7 @@ class CommentAdmin(admin.ModelAdmin):
      
 class ModerationRequestAdmin(admin.ModelAdmin):
     search_fields = ('reason', 'requested_by__name', 'requested_by__email')
-    list_display = ('reason', 'requested_by_link', 'moderated_entity_link', 'moderated_entity_created_by_link', 'moderated')
+    list_display = ('reason', 'requested_by_link', 'requested_at', 'moderated_entity_link', 'moderated_entity_created_by_link', 'moderated')
     fields = (
         'moderated_entity_type',
         'moderated_entity_link',
