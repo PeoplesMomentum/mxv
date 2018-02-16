@@ -1,14 +1,25 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Track, Theme, Proposal, Amendment, Comment
-from django.db.models import Count
+from django.db.models import Count, Q
 from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm, ModerationRequestForm, CommentForm
 from django.contrib import messages
+from datetime import date
 
 @login_required
 def index(request):
+    today = date.today()
+    live_tracks = Track.objects.order_by('display_order').filter(
+        Q(submission_start__lte = today, submission_end__gte = today) | 
+        Q(nomination_start__lte = today, nomination_end__gte = today))
+    live_track_text = ''
+    if live_tracks.count() == 1:
+        live_track_text = ', with %s currently live' % live_tracks.first().name
+    elif live_tracks.count() > 1:
+        live_track_text = ', with %s currently live' % ' and '.join(track.name for track in live_tracks)
     return render(request, 'review/index.html', { 
-        'tracks' : Track.objects.all().order_by('display_order') })
+        'tracks' : Track.objects.all().order_by('display_order'),
+        'live_track_text': live_track_text })
 
 @login_required
 def track(request, pk):
