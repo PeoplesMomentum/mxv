@@ -10,13 +10,13 @@
 
 {% block content %}
     <table class="card-text text-muted small">
-        <tr><td><b>Submissions</b></td><td>{% if track.allow_submissions %} {{ track.submission_start }} - {{ track.submission_end }} {% else %} Completed {% endif %}</td></tr>
-        <tr><td><b>Nominations</b></td><td>{% if track.allow_nominations %} {{ track.nomination_start }} - {{ track.nomination_end }} {% else %} N/A {% endif %}</td></tr>
+        <tr><td><b>Submissions</b></td><td>{{ track.submission_date_text }}</td></tr>
+        <tr><td><b>Nominations</b></td><td>{{ track.nomination_date_text }}</td></tr>
     </table>
     <br/>
     <p class="card-text"><b>Themes:</b><i> {{ track.description }}</i></p>
-    <p class="card-text {% if track.urgent %}text-danger{% endif %}">{{ track.guidance }}</p>
     <p class="card-text">Before proceeding, you may like to check out these <a href="{% static 'review/Democracy_Review_Ideas_from_Grassroots_Activists.pdf' %}" target="_blank">Ideas from Grassroots Activists</a>.</p>
+    <p class="card-text {{ track.guidance_class }}">{{ track.guidance }}</p>
     <div class="row">
         {% for theme in themes %}
             <div class="col-sm d-flex align-items-stretch pt-4">

@@ -3,6 +3,7 @@ from mxv.settings import AUTH_USER_MODEL
 from datetime import date
 from django.core.mail.message import EmailMultiAlternatives
 from django.urls.base import reverse
+from django.utils import formats
 
 # field sizes
 name_length = 100
@@ -15,9 +16,7 @@ class Track(models.Model):
     # appearance
     name = models.CharField(max_length=name_length, unique=True)
     display_order = models.IntegerField(default = 1)
-    urgent = models.BooleanField(default=False)
     description = models.TextField(max_length=description_length, default='')
-    guidance = models.TextField(max_length=description_length, default='')
     # visibility
     show_amendments = models.BooleanField(default=True)
     show_comments = models.BooleanField(default=True)
@@ -25,7 +24,7 @@ class Track(models.Model):
     allow_submissions = models.BooleanField(default=True)
     allow_comments = models.BooleanField(default=True)
     allow_nominations = models.BooleanField(default=True)
-    # submissions
+    # submission dates
     submission_start = models.DateField(blank=True, null=True, default=None)
     submission_end = models.DateField(blank=True, null=True, default=None)
     # nomination dates
@@ -35,12 +34,80 @@ class Track(models.Model):
     def __str__(self):
         return self.name
     
+    def submissions_in_range(self):
+        today = date.today()
+        return self.submission_start != None and self.submission_end != None and today >= self.submission_start and today <= self.submission_end
+    
+    def nominations_in_range(self):
+        today = date.today()
+        return self.nomination_start != None and self.nomination_end != None and today >= self.nomination_start and today <= self.nomination_end
+    
+    # whether submissions are allowed today
     def submissions_currently_allowed(self):
-        return self.allow_submissions and date.today() >= self.submission_start <= self.submission_end
+        return self.allow_submissions and self.submissions_in_range()
 
+    # whether nominations are allowed today
     def nominations_currently_allowed(self):
-        return self.allow_nominations and date.today() >= self.nomination_start <= self.nomination_end
+        return self.allow_nominations and self.nominations_in_range()
+    
+    # description of submission dates
+    def submission_date_text(self):
+        if self.submissions_in_range():
+            return '%s - %s' % (formats.date_format(self.submission_start, 'd/m/Y'), formats.date_format(self.submission_end, 'd/m/Y'))
+        else:
+            return 'Completed'
+        
+    # description of nomination dates
+    def nomination_date_text(self):
+        if self.nomination_start == None and self.nomination_end == None:
+            return 'N/A'
+        elif self.nominations_in_range():
+            return '%s - %s' % (formats.date_format(self.nomination_start, 'd/m/Y'), formats.date_format(self.nomination_end, 'd/m/Y'))
+        else:
+            return 'Completed'
+        
+    # earliest track date
+    def earliest(self):
+        starts = []
+        if self.allow_submissions:
+            starts.append(self.submission_start)
+        if self.allow_nominations:
+            starts.append(self.nomination_start)
+        if len(starts) == 0:
+            return None
+        else:
+            return min(starts)
 
+    # latest track date
+    def latest(self):
+        ends = []
+        if self.allow_submissions:
+            ends.append(self.submission_end)
+        if self.allow_nominations:
+            ends.append(self.nomination_end)
+        if len(ends) == 0:
+            return None
+        else:
+            return max(ends)
+    
+    # track guidance
+    def guidance(self):
+        today = date.today()
+        if self.earliest() != None and self.latest() != None:
+            if today < self.earliest():
+                return 'This track will be opening for submissions on %s' % formats.date_format(self.earliest(), 'l jS F')
+            elif today >= self.earliest() and today <= self.latest():
+                return 'This track is now live - and closes at midnight on %s' % formats.date_format(self.latest(), 'l jS F')
+        return 'The official deadline has passed, but Momentum members can still provide feedback on the proposals submitted.'
+    
+    # track guidance CSS
+    def guidance_class(self):
+        today = date.today()        
+        if self.earliest() != None and self.latest() != None and today >= self.earliest() and today <= self.latest():
+            return 'text-danger'
+        else:
+            return 'text-muted'
+        
 # a theme in a track
 class Theme(models.Model):
     track = models.ForeignKey(Track, related_name='themes')    
