@@ -258,7 +258,7 @@ class TrackVoting(models.Model):
                 return 'Voting on this track will be starting on %s.' % formats.date_format(self.voting_start, 'l jS F')
             elif today >= self.voting_start and today <= self.voting_end:
                 return 'Voting on this track is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
-        return 'Voting on this track has ended and you can now view the results.'
+        return 'Voting on this track has ended.'
     
     # voting guidance CSS
     def guidance_class(self):
@@ -267,6 +267,16 @@ class TrackVoting(models.Model):
         else:
             return 'text-muted'
         
+    # voting button
+    def vote_button_text(self):
+        today = date.today()
+        if self.voting_start != None and self.voting_end != None:
+            if today < self.voting_start:
+                return 'View questions'
+            elif today >= self.voting_start and today <= self.voting_end:
+                return 'Vote now'
+        return 'View results'
+    
 # a question on a track voting page
 class Question(models.Model):
     track_voting = models.ForeignKey(TrackVoting, related_name='questions')

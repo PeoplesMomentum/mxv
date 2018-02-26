@@ -31,7 +31,8 @@ def question_and_choices(vote, question_id):
     # voting complete
     else:
         for choice in choices:
-            choice_html += '<label class="mt-4 mr-4">%s - %d votes</label>' % (choice.text, choice.answers.filter(question__pk = question_id).count())
+            choice_count = choice.answers.filter(question__pk = question_id).count()
+            choice_html += '<label class="mt-4 mr-4">%s - %d vote%s</label>' % (choice.text, choice_count, '' if choice_count == 1 else 's')
     
     # vote
     vote_html = '<button type="submit" name="vote" class="btn btn-primary">Update votes</button>' if vote.track_voting.voting_in_range() else ''
