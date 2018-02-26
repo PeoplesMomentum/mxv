@@ -18,7 +18,7 @@
     <p class="card-text">Before proceeding, you may like to check out these <a href="{% static 'review/Democracy_Review_Ideas_from_Grassroots_Activists.pdf' %}" target="_blank">Ideas from Grassroots Activists</a>.</p>
     <p class="card-text {{ track.guidance_class }}">{{ track.guidance }}</p>
 
-    {% if track_voting %}
+    {% if show_voting and track_voting %}
         <p class="card-text {{ track_voting.guidance_class }}">{{ track_voting.guidance }}</p>
         <a href="{% url 'review:track_voting' track_voting.pk %}" class="btn btn-primary">Voting</a>
     {% endif %}

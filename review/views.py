@@ -35,6 +35,7 @@ def track(request, pk):
     return render(request, 'review/tracks/track.html', { 
         'track' : track, 
         'themes': track.themes.order_by('display_order'),
+        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track_voting': track_voting })
     
 @login_required
