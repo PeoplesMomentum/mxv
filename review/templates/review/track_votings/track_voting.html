@@ -1,0 +1,16 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ track_voting.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' track_voting.track.pk %}">{{ track_voting.track.name }}</a></li>
+    <li class="breadcrumb-item active">{{ track_voting.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+    {% include track_voting.template %}
+
+{% endblock %}

@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Track, Theme, Proposal, Amendment, Comment
+from .models import Track, Theme, Proposal, Amendment, Comment, TrackVoting
 from django.db.models import Count, Q
 from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, AmendmentForm, EditAmendmentForm, DeleteAmendmentForm, EditCommentForm, ModerationRequestForm, CommentForm
 from django.contrib import messages
 from datetime import date
+from mxv.settings import TRACK_VOTING_VISIBLE_TO_NON_STAFF
+from django.core.exceptions import ObjectDoesNotExist
 
 @login_required
 def index(request):
@@ -19,14 +21,21 @@ def index(request):
         live_track_text = ', with %s currently live' % ' and '.join(track.name for track in live_tracks)
     return render(request, 'review/index.html', { 
         'tracks' : Track.objects.all().order_by('display_order'),
-        'live_track_text': live_track_text })
+        'live_track_text': live_track_text,
+        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'track_votings': TrackVoting.objects.all() })
 
 @login_required
 def track(request, pk):
     track = get_object_or_404(Track, pk = pk)
+    try:
+        track_voting = track.voting
+    except ObjectDoesNotExist:
+        track_voting = None
     return render(request, 'review/tracks/track.html', { 
         'track' : track, 
-        'themes': track.themes.order_by('display_order') })
+        'themes': track.themes.order_by('display_order'),
+        'track_voting': track_voting })
     
 @login_required
 def theme(request, pk):
@@ -481,3 +490,9 @@ def moderation(request):
 def guide(request):
     return render(request, 'review/support/guide.html')
 
+@login_required
+def track_voting(request, pk):
+    track_voting = get_object_or_404(TrackVoting, pk = pk)
+    return render(request, 'review/track_votings/track_voting.html', { 
+        'track_voting' : track_voting })
+    

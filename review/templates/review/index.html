@@ -10,6 +10,32 @@
 {% block content %}
     <p>The Labour Party’s Democracy Review is an unprecedented opportunity for ordinary members to input into the culture, rules and structure of the Labour Party.  We’re inviting our members to collaborate on forming Momentum’s submissions to the review.</p>
     <p>There are three tracks{{ live_track_text }}. Each track contains themes, and you can make one proposal per theme and then nominate your favourite in each. Get started now, or visit <a href="{% url 'review:help' %}">Help</a> to read our <a href="{% url 'review:rules' %}">guide to the platform</a>.</p>
+
+    {% if show_voting %}
+        <h3>Track voting</h3>
+        <p class="text-danger">Voting on composited proposals is now live!</p>
+        <div class="row mb-4">
+            {% for track_voting in track_votings %}
+                <div class="col-sm d-flex align-items-stretch pt-4">
+                    <div class="card bg-light border-secondary" style="width: 20rem;">
+                        <div class="card-body">
+                            <a href="{% url 'review:track_voting' track_voting.pk %}"><h4 class="card-title">{{ track_voting.name }}</h4></a>
+                            <table class="card-text text-muted small">
+                                <tr><td><b>Voting</b></td><td>{{ track_voting.voting_date_text }}</td></tr>
+                            </table>
+                            <hr>
+                            <p class="card-text {{ track_voting.guidance_class }}">{{ track_voting.guidance }}</p>
+                            <div class="text-right align-bottom">
+                                <a href="{% url 'review:track_voting' track_voting.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h3>Tracks</h3>
     <div class="row">
         {% for track in tracks %}
             <div class="col-sm d-flex align-items-stretch pt-4">
@@ -31,6 +57,4 @@
             </div>
         {% endfor %}
     </div>
-    <br/><br/>
-    <p>We acknowledge that the deadlines for Track 2 are extremely tight, and would like to apologise for this. The reason is the importance of being able to circulate finalised submissions in time for activists to be able to pass them through CLPs before the 23rd March deadline.</p>
 {% endblock %}

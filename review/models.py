@@ -224,5 +224,48 @@ class ModerationRequestNotification(models.Model):
     def __str__(self):
         return self.email_address
     
-    
+# voting on composite proposals
+class TrackVoting(models.Model):
+    track = models.OneToOneField(Track, on_delete=models.CASCADE, related_name='voting')
+    template = models.CharField(max_length=name_length, default='')
+    voting_start = models.DateField(blank=True, null=True, default=None)
+    voting_end = models.DateField(blank=True, null=True, default=None)
+        
+    def name(self):
+        return '%s voting' % self.track.name    
 
+    def __str__(self):
+        return self.name()    
+
+    # whether voting is currently allowed
+    def voting_in_range(self):
+        today = date.today()
+        return self.voting_start != None and self.voting_end != None and today >= self.voting_start and today <= self.voting_end
+    
+    # description of voting dates
+    def voting_date_text(self):
+        if self.voting_start == None and self.voting_end == None:
+            return 'N/A'
+        elif self.voting_in_range():
+            return '%s - %s' % (formats.date_format(self.voting_start, 'd/m/Y'), formats.date_format(self.voting_end, 'd/m/Y'))
+        else:
+            return 'Completed'
+        
+    # voting guidance
+    def guidance(self):
+        today = date.today()
+        if self.voting_start != None and self.voting_end != None:
+            if today < self.voting_start:
+                return 'Voting on this track will be starting on %s.' % formats.date_format(self.voting_start, 'l jS F')
+            elif today >= self.voting_start and today <= self.voting_end:
+                return 'Voting on this track is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
+        return 'Voting on this track has ended and you can now view the results.'
+    
+    # voting guidance CSS
+    def guidance_class(self):
+        today = date.today()        
+        if self.voting_start != None and self.voting_end != None and today >= self.voting_start and today <= self.voting_end:
+            return 'text-danger'
+        else:
+            return 'text-muted'
+        
