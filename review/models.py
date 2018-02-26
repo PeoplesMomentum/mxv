@@ -134,14 +134,6 @@ class Proposal(models.Model):
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
     
-# previous versions of a proposal
-class ProposalHistory(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='history')
-    created_at = models.DateTimeField()    
-    name = models.CharField(max_length=name_length)
-    summary = models.CharField(max_length=summary_length, default='')
-    text = models.TextField(max_length=text_length)
-
 # proposal URLs
 class ProposalURL(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='urls')
@@ -163,12 +155,6 @@ class Amendment(models.Model):
     def moderated(self):
         return self.moderation_requests.filter(moderated = True).exists()
     
-# previous versions of an amendment
-class AmendmentHistory(models.Model):
-    amendment = models.ForeignKey(Amendment, related_name='history')
-    created_at = models.DateTimeField()    
-    text = models.TextField(max_length=text_length)
-
 # a comment on a proposal
 class Comment(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='comments')
