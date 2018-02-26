@@ -26,7 +26,7 @@ def question_and_choices(vote, question_id):
     elif vote.track_voting.voting_in_range():
         current_answer = vote.answers.filter(question = question).first()
         for choice in choices:
-            choice_html += '<label class="radio-inline mt-4 mr-4"><input type="radio" name="answer" value="%d_%d" %s>%s</label>' % (question.id, choice.id, 'checked="checked"' if current_answer and current_answer.choice == choice else '', choice.text)
+            choice_html += '<label class="radio-inline mt-4 mr-4"><input type="radio" name="answer_%d" value="%d_%d" %s>%s</label>' % (question.id, question.id, choice.id, 'checked="checked"' if current_answer and current_answer.choice == choice else '', choice.text)
     
     # voting complete
     else:

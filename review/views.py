@@ -510,8 +510,10 @@ def track_voting(request, pk):
             if 'vote' in request.POST:
                 
                 # for each answer...
-                for post_answer in request.POST.getlist('answer'):
+                #for post_answer in request.POST.getlist('answer'):
+                for answer_key in [key for key in request.POST.keys() if key.startswith('answer_')]:
                     try:
+                        post_answer = request.POST[answer_key]
                         # get the question and choice
                         (question_id, choice_id) = post_answer.split('_')
                         question = track_voting.questions.filter(id = question_id).first()
