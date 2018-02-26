@@ -194,3 +194,7 @@ ALLOW_ERROR_URL = True if os.environ.get('MXV_ALLOW_ERROR_URL', 'False') == 'Tru
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# whether to show track voting-specific changes to just staff or anyone
+TRACK_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_TRACK_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+
