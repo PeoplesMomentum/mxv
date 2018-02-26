@@ -12,13 +12,11 @@ from django.utils.safestring import mark_safe
 """
     
 class TrackAdmin(admin.ModelAdmin):
-    search_fields = ('name', 'description', 'guidance')
+    search_fields = ('name', 'description')
     list_display = ('name', 'description')
     fields = (
         ('name', 'display_order'),
         'description', 
-        'guidance', 
-        'urgent',
         ('show_amendments', 'show_comments'),
         ('allow_submissions', 'allow_comments', 'allow_nominations'),
         ('submission_start', 'submission_end'), 
