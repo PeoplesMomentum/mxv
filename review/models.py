@@ -139,7 +139,6 @@ class ProposalURL(models.Model):
     proposal = models.ForeignKey(Proposal, related_name='urls')
     url = models.TextField(max_length=description_length)
     display_text = models.TextField(max_length=description_length)
-    external = models.BooleanField(default=False)
 
 # an amendment to a proposal
 class Amendment(models.Model):
@@ -224,18 +223,18 @@ class ModerationRequestNotification(models.Model):
     def __str__(self):
         return self.email_address
     
-# voting on composite proposals
+# a track voting page
 class TrackVoting(models.Model):
     track = models.OneToOneField(Track, on_delete=models.CASCADE, related_name='voting')
-    template = models.CharField(max_length=name_length, default='')
+    template = models.CharField(max_length=name_length)
     voting_start = models.DateField(blank=True, null=True, default=None)
     voting_end = models.DateField(blank=True, null=True, default=None)
         
     def name(self):
-        return '%s voting' % self.track.name    
+        return '%s voting' % self.track.name
 
     def __str__(self):
-        return self.name()    
+        return self.name()
 
     # whether voting is currently allowed
     def voting_in_range(self):
@@ -263,9 +262,46 @@ class TrackVoting(models.Model):
     
     # voting guidance CSS
     def guidance_class(self):
-        today = date.today()        
-        if self.voting_start != None and self.voting_end != None and today >= self.voting_start and today <= self.voting_end:
+        if self.voting_in_range():
             return 'text-danger'
         else:
             return 'text-muted'
         
+# a question on a track voting page
+class Question(models.Model):
+    track_voting = models.ForeignKey(TrackVoting, related_name='questions')
+    number = models.PositiveIntegerField()
+    text = models.TextField(max_length=description_length)
+
+    def __str__(self):
+        return self.text
+
+# a possible answer to a question
+class Choice(models.Model):
+    question = models.ForeignKey(Question, related_name='choices')
+    text = models.TextField(max_length=name_length)
+
+    def __str__(self):
+        return self.text
+
+class Vote(models.Model):
+    track_voting = models.ForeignKey(TrackVoting, related_name='votes')
+    member = models.ForeignKey(AUTH_USER_MODEL, related_name='votes')
+
+    def __str__(self):
+        return '%s / %s' % (self.track_voting, self.member)
+    
+# a member's answer to a question
+class Answer(models.Model):
+    vote = models.ForeignKey(Vote, related_name='answers')
+    question = models.ForeignKey(Question, related_name='answers')
+    choice = models.ForeignKey(Choice, related_name='answers')
+    answered_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return '%s / %s' % (self.question, self.choice)
+
+
+
+    
+

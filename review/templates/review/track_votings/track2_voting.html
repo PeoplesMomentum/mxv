@@ -1,1 +1,19 @@
-<h3>Test!</h3>
+{% load static %}
+{% load review_filters %}
+
+<h3>My Momentum Track 2 Ballot</h3>
+
+<p>Voting will be open from {{ track_voting.voting_start|date:'l jS F' }} until {{ track_voting.voting_end|date:'l jS F' }}. All the proposals in this ballot are based on proposals by Momentum’s National Coordinating Group, the Members’ Council, individual members via our online platform My Momentum, and allied campaigning organisations such as Campaign for Labour Party Democracy. </p>
+
+<h4>Constituency Labour Party Governance</h4>
+<p>SUMMARY: Labour should reform the governance of Constituency Labour Parties (CLPs). Key points include:
+<ul>
+    <li>CLP Executives to always include an Online Communications Officer, a Political Education and Training Officer and a Trade Union Liaison Officer (TULO), with full voting rights.</li>
+    <li>CLP Executives to always include representatives of BAME, LGBTQ and disabled people, with full voting rights, or a combined equalities officer if that isn’t possible.</li>
+    <li>CLP Executives to allow job shares for positions.</li>
+    <li>The Labour Party to increase funding to CLPs.</li>
+    <li>Efforts to ensure that all members of the CLP Exec are fully informed of guidance notes for CLPs produced by Disability Equalities Act Labour to improve accessibility.</li>
+</ul></p>
+<p>Read the <a href="{% static 'composited_proposals/Momentum_Proposal_on_CLP_Governance.pdf' %}" target="_blank">full proposal</a>.</p>
+<p>Source of proposal: This is based in part on proposals by the <a href="{% static 'review/Members_Council_Recommendations_for_CLP_Governance.pdf' %}" target="_blank">Members' Council</a>, <a href="{% url 'review:proposal' 16 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 25 %}" target="_blank">Lydia</a>, <a href="{% url 'review:proposal' 76 %}" target="_blank">Andy</a>, <a href="{% url 'review:proposal' 30 %}" target="_blank">Ian</a>, <a href="{% url 'review:proposal' 29 %}" target="_blank">Jessica</a>, as well as <a href="{% url 'review:proposal' 58 %}" target="_blank">Heather</a> on behalf of the Campaign for Labour Party Democracy.</p>
+{{ vote|question_and_choices:1 }}

@@ -20,7 +20,7 @@
 
     {% if show_voting and track_voting %}
         <p class="card-text {{ track_voting.guidance_class }}">{{ track_voting.guidance }}</p>
-        <a href="{% url 'review:track_voting' track_voting.pk %}" class="btn btn-primary">Voting</a>
+        <a href="{% url 'review:track_voting' track_voting.pk %}" class="btn btn-primary">Vote now</a>
     {% endif %}
 
     <div class="row">
