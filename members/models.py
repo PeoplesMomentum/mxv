@@ -6,6 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from django.db.models.deletion import SET_NULL
 from datetime import date
+from django.contrib.postgres.fields.citext import CIEmailField
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -58,7 +59,7 @@ class MomentumGroup(models.Model):
 # a member identified uniquely by their email address and publicly by their name 
 class Member(AbstractBaseUser, PermissionsMixin):
     momentum_group = models.ForeignKey(MomentumGroup, related_name = 'members', blank=True, null=True, on_delete=SET_NULL)
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    email = CIEmailField(verbose_name='email address', max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
     activation_key = models.CharField(max_length=activation_key_length, default=activation_key_default)
