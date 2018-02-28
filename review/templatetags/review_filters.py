@@ -11,7 +11,7 @@ def question_and_choices(vote, question_id):
     # question
     question_count = vote.track_voting.questions.count()
     question = vote.track_voting.questions.filter(pk=question_id).first()
-    question_html = 'Question %d of %d - %s' % (question.number, question_count, question.text)
+    question_html = '<strong>Question %d of %d</strong> - %s' % (question.number, question_count, question.text)
 
     # answer        
     current_answer = vote.answers.filter(question = question).first()
@@ -46,7 +46,7 @@ def question_and_choices(vote, question_id):
     # layout    
     return mark_safe("""
         <p><em>
-            %s
+            <span class="question-text">%s</span>
             <br/>
             <span class="ml-4">%s</span>
         </em></p>
