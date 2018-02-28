@@ -32,16 +32,10 @@ def question_and_choices(vote, question_id):
     
     # voting complete
     else:
-        # vote counts
-        for choice in choices:
-            choice_count = choice.answers.filter(question__pk = question_id).count()
-            choice_html += '<label class="mt-4 mr-4">%s - %d vote%s</label>' % (choice.text, choice_count, '' if choice_count == 1 else 's')
-        
-        # member's choice
         if current_answer:
-            choice_html += '<label class="mt-4 mr-4">(You voted %s)</label>' % current_answer.choice.text
+            choice_html += '<label class="mt-4 mr-4">You voted %s</label>' % current_answer.choice.text
         else:
-            choice_html += '<label class="mt-4 mr-4">(You didn''t vote on this question)</label>'
+            choice_html += '<label class="mt-4 mr-4">You didn''t vote on this question</label>'
           
     # layout    
     return mark_safe("""
