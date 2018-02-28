@@ -1,5 +1,5 @@
 from django import forms
-from .models import Proposal, Amendment, Comment, ModerationRequest, name_length, text_length, summary_length
+from .models import Proposal, Amendment, Comment, ModerationRequest, Vote, name_length, text_length, summary_length
 
 TEXT_FIELD_ROWS = 8
 
@@ -108,4 +108,9 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
+
+class VoteForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = []
 

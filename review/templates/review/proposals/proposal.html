@@ -80,7 +80,7 @@
         <h6 class="card-text text-muted">Related items</h6>
         <ul>
         {% for url in proposal_urls %}
-            <li><a href="{{ url.url }}" target="{% if url.external %}_blank{% else %}_self{% endif %}">{{ url.display_text }}</a></li>
+            <li><a href="{{ url.url }}" target="_blank">{{ url.display_text }}</a></li>
         {% endfor %}
         </ul>
     {% endif %}
