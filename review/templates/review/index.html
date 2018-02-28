@@ -12,8 +12,8 @@
     <p>There are three tracks{{ live_track_text }}. Each track contains themes, and you can make one proposal per theme and then nominate your favourite in each. Get started now, or visit <a href="{% url 'review:help' %}">Help</a> to read our <a href="{% url 'review:rules' %}">guide to the platform</a>.</p>
 
     {% if show_voting %}
-        <h3>Track voting</h3>
-        <p class="text-danger">Voting on composited proposals is now live!</p>
+        <h3>Voting</h3>
+        <p class="text-danger">Voting on proposals is now live!</p>
         <div class="row mb-4">
             {% for track_voting in track_votings %}
                 <div class="col-sm d-flex align-items-stretch pt-4">
