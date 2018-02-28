@@ -493,6 +493,12 @@ def guide(request):
     return render(request, 'review/support/guide.html')
 
 @login_required
+def voting(request):
+    return render(request, 'review/voting.html', { 
+        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'track_votings': TrackVoting.objects.all() })
+
+@login_required
 def track_voting(request, pk):
     track_voting = get_object_or_404(TrackVoting, pk = pk)
     

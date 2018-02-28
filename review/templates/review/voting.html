@@ -1,0 +1,35 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Democracy Review - Vote{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Democracy Review - Vote</li>
+{% endblock %}
+
+{% block content %}
+    <p>The Labour Party’s Democracy Review is an unprecedented opportunity for ordinary members to input into the culture, rules and structure of the Labour Party.  We’re inviting our members to collaborate on forming Momentum’s submissions to the review.</p>
+
+    <h3>Voting</h3>
+    <p class="text-danger">Voting on proposals is now live!</p>
+    <div class="row mb-4">
+        {% for track_voting in track_votings %}
+            <div class="col-sm d-flex align-items-stretch pt-4">
+                <div class="card bg-light border-secondary" style="width: 20rem;">
+                    <div class="card-body">
+                        <a href="{% url 'review:track_voting' track_voting.pk %}"><h4 class="card-title">{{ track_voting.name }}</h4></a>
+                        <table class="card-text text-muted small">
+                            <tr><td><b>Voting</b></td><td>{{ track_voting.voting_date_text }}</td></tr>
+                        </table>
+                        <hr>
+                        <p class="card-text {{ track_voting.guidance_class }}">{{ track_voting.guidance }}</p>
+                        <div class="text-right align-bottom">
+                            <a href="{% url 'review:track_voting' track_voting.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}

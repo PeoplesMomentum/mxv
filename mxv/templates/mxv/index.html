@@ -11,10 +11,24 @@
     <p>Welcome to My Momentum, the new digital platform that enables members to learn, organise and make decisions together. If you’re a member of Momentum, just check your email for your activation link.</p>
     <p>Not a member of Momentum yet? <a href="https://join.peoplesmomentum.com/" target="_blank">Sign up today</a> and join the discussion.</p>
     <div class="row">
+        {% if show_voting %}
+            <div class="col-sm d-flex align-items-stretch pt-4">
+                <div class="card bg-light border-secondary" style="width: 20rem;">               
+                    <div class="card-body">
+                        <a href="{% url 'review:voting' %}"><h4 class="card-title">Labour's Democracy Review - Vote</h4></a>
+                        <hr class="border-secondary">
+                        <p class="card-text">Help us draft proposals for the Labour Party's Democracy Review.</p>
+                        <div class="text-right align-bottom">
+                            <a href="{% url 'review:voting' %}">View <i class="fa fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="col-sm d-flex align-items-stretch pt-4">
             <div class="card bg-light border-secondary" style="width: 20rem;">               
                 <div class="card-body">
-                    <a href="{% url 'review:index' %}"><h4 class="card-title">Labour's Democracy Review</h4></a>
+                    <a href="{% url 'review:index' %}"><h4 class="card-title">Labour's Democracy Review - Discuss</h4></a>
                     <hr class="border-secondary">
                     <p class="card-text">Help us draft proposals for the Labour Party's Democracy Review.</p>
                     <div class="text-right align-bottom">
