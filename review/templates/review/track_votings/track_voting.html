@@ -4,7 +4,7 @@
 {% block title%}{{ track_voting.name }}{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:voting' %}">Democracy Review - Vote</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track' track_voting.track.pk %}">{{ track_voting.track.name }}</a></li>
     <li class="breadcrumb-item active">{{ track_voting.name }}</li>
 {% endblock %}
@@ -26,6 +26,9 @@
     <form method="post" novalidate>
         {% csrf_token %}
         {% include track_voting.template %}
+        {% if track_voting.voting_in_range %}
+            <button type="submit" name="vote" class="btn btn-primary">Vote</button>
+        {% endif %}
     </form>
 
 {% endblock %}

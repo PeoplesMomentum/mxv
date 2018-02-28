@@ -4,7 +4,7 @@
 {% block title%}Delete{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:index' %}">Democracy Review - Discuss</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track' amendment.proposal.theme.track.pk %}">{{ amendment.proposal.theme.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:theme' amendment.proposal.theme.pk %}">{{ amendment.proposal.theme.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:proposal' amendment.proposal.pk %}">{{ amendment.proposal.name }}</a></li>

@@ -17,3 +17,7 @@ blockquote {
 .column-name {
     width: 70px;
 }
+
+.question-text {
+    font-size: 115%;
+}

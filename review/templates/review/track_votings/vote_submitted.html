@@ -1,0 +1,20 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Thanks for voting!{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'review:voting' %}">Democracy Review - Vote</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track' track_voting.track.pk %}">{{ track_voting.track.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'review:track_voting' track_voting.pk %}">{{ track_voting.name }}</a></li>
+    <li class="breadcrumb-item active">Thanks for voting!</li>
+{% endblock %}
+
+{% block content %}
+
+    <h4>Thank you!</h4>
+    <p>By voting on these proposals, you’re making a real contribution to Momentum’s submissions to the Democracy Review and the further reform and democratisation of the Labour Party.</p>
+    <p>We’ve just hired a new <a href="{% static 'review/Digital_Officer_JD.pdf' %}">Digital Officer</a> to help develop Momentum’s digital platforms and projects, including My Momentum. We’re fundraising to help cover our costs - if you could <a href="https://momentum.nationbuilder.com/donate" target="_blank">contribute £10</a> towards it, we would appreciate the support.</p>
+    <a href="https://momentum.nationbuilder.com/donate" target="_blank" class="btn btn-success mr-4">I'll chip in</a><a href="{% url 'review:track_voting' track_voting.pk %}" class="btn btn-primary">Return to voting</a>
+
+{% endblock %}

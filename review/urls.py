@@ -34,5 +34,7 @@ urlpatterns = [
     url(r'^moderation/$', views.moderation, name = 'moderation'),
     url(r'^guide/$', views.guide, name = 'guide'),
     #track voting
+    url(r'^voting/$', views.voting, name = 'voting'),
     url(r'^track_voting/(?P<pk>\d+)/$', views.track_voting, name = 'track_voting'),
+    url(r'^track_voting/(?P<pk>\d+)/vote_submitted/$', views.vote_submitted, name = 'vote_submitted'),
 ]

@@ -231,7 +231,7 @@ class TrackVoting(models.Model):
     voting_end = models.DateField(blank=True, null=True, default=None)
         
     def name(self):
-        return '%s voting' % self.track.name
+        return 'Vote (%s)' % self.track.name
 
     def __str__(self):
         return self.name()
@@ -257,7 +257,7 @@ class TrackVoting(models.Model):
             if today < self.voting_start:
                 return 'Voting on this track will be starting on %s.' % formats.date_format(self.voting_start, 'l jS F')
             elif today >= self.voting_start and today <= self.voting_end:
-                return 'Voting on this track is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
+                return 'Voting on this set of proposals is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
         return 'Voting on this track has ended.'
     
     # voting guidance CSS
