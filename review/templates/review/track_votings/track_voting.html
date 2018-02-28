@@ -19,6 +19,10 @@
         </div>
     {% endif %}
     
+    <table class="card-text text-muted small mb-4">
+        <tr><td><b>Voting</b></td><td>{{ track_voting.voting_date_text }}</td></tr>
+    </table>
+    
     <form method="post" novalidate>
         {% csrf_token %}
         {% include track_voting.template %}
