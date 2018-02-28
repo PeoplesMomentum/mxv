@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^guide/$', views.guide, name = 'guide'),
     #track voting
     url(r'^track_voting/(?P<pk>\d+)/$', views.track_voting, name = 'track_voting'),
+    url(r'^track_voting/(?P<pk>\d+)/vote_submitted/$', views.vote_submitted, name = 'vote_submitted'),
 ]
