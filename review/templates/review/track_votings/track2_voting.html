@@ -2,10 +2,11 @@
 {% load review_filters %}
 
 <h3>My Momentum Track 2 Ballot</h3>
+<br/>
 
-<p>Voting will be open from {{ track_voting.voting_start|date:'l jS F' }} until {{ track_voting.voting_end|date:'l jS F' }}. All the proposals in this ballot are based on proposals by Momentum’s National Coordinating Group, the Members’ Council, individual members via our online platform My Momentum, and allied campaigning organisations such as Campaign for Labour Party Democracy. </p>
+<p>Voting runs from <strong>{{ track_voting.voting_start|date:'l jS F' }}</strong> to midnight <strong>{{ track_voting.voting_end|date:'l jS F' }}</strong>, and all proposals that get over 50% support will become Momentum’s campaigning position. All the proposals in this ballot are based on proposals by Momentum’s National Coordinating Group, the Members’ Council, individual members via our online platform My Momentum, and allied campaigning organisations such as Campaign for Labour Party Democracy. </p>
 
-<hr>
+<br/><hr><br/>
 <h4>Constituency Labour Party Governance</h4>
 <p>SUMMARY: Labour should reform the governance of Constituency Labour Parties (CLPs). Key points include:
 <ul>
@@ -15,35 +16,30 @@
     <li>The Labour Party to increase funding to CLPs.</li>
     <li>Efforts to ensure that all members of the CLP Exec are fully informed of guidance notes for CLPs produced by Disability Equalities Act Labour to improve accessibility.</li>
 </ul></p>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Proposal_on_CLP_Governance.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source of proposal: This is based in part on proposals by the <a href="{% static 'review/Members_Council_Recommendations_for_CLP_Governance.pdf' %}" target="_blank">Members' Council</a>, <a href="{% url 'review:proposal' 16 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 25 %}" target="_blank">Lydia</a>, <a href="{% url 'review:proposal' 76 %}" target="_blank">Andy</a>, <a href="{% url 'review:proposal' 30 %}" target="_blank">Ian</a>, <a href="{% url 'review:proposal' 29 %}" target="_blank">Jessica</a>, as well as <a href="{% url 'review:proposal' 58 %}" target="_blank">Heather</a> on behalf of the Campaign for Labour Party Democracy.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_CLP_Governance.pdf' %}" target="_blank">Full proposal</a> | Source: This is based in part on proposals by the <a href="{% static 'review/Members_Council_Recommendations_for_CLP_Governance.pdf' %}" target="_blank">Members' Council</a>, <a href="{% url 'review:proposal' 16 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 25 %}" target="_blank">Lydia</a>, <a href="{% url 'review:proposal' 76 %}" target="_blank">Andy</a>, <a href="{% url 'review:proposal' 30 %}" target="_blank">Ian</a>, <a href="{% url 'review:proposal' 29 %}" target="_blank">Jessica</a>, as well as <a href="{% url 'review:proposal' 58 %}" target="_blank">Heather</a> on behalf of the Campaign for Labour Party Democracy.</p>
 {{ vote|question_and_choices:1 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Membership Participation and Involvement</h4>
 
 <br/><h5>Charter of Members’ Rights</h5>
 <p>SUMMARY: Labour should adopt a <a href="{% static 'review/composited_proposals/Charter_of_Members_Rights.pdf' %}" target="_blank">Charter of Members’ Rights</a> to support and expand members’ rights by focusing on transparency, accountability, participation, capacity building, and disciplinary justice as set out in the Chakrabarti Report.</p>
-<p>Read the <a href="{% static 'review/composited_proposals/Charter_of_Members_Rights.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: Momentum’s National Coordinating Group, Chakrabarti Report.</p>
+<p><a href="{% static 'review/composited_proposals/Charter_of_Members_Rights.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum’s National Coordinating Group, Chakrabarti Report.</p>
 {{ vote|question_and_choices:2 }}
 
 <br/><h5>Code of Ethics</h5>
 <p>SUMMARY: Labour should adopt a <a href="{% static 'review/composited_proposals/Code_of_Ethics_2018.pdf' %}" target="_blank">Code of Ethics</a>, which aims to ensure that all members of the Labour Party uphold and abide by the values and principles it wishes to promote in society. It includes a commitment for all party staff to abide by the principle of impartiality and accountability to democratically elected representatives, as well as for all party actors to avoid actions which are detrimental to the party.</p>
-<p>Read the <a href="{% static 'review/composited_proposals/Code_of_Ethics_2018.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: Momentum’s National Coordinating Group.</p>
+<p><a href="{% static 'review/composited_proposals/Code_of_Ethics_2018.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum’s National Coordinating Group.</p>
 {{ vote|question_and_choices:3 }}
 
 <br/><h5>Labour Party Ombudsperson</h5>
 <p>SUMMARY: Labour should have an Ombudsperson, who would be in charge of ensuring the implementation of the Charter of Members’ Rights and Code of Ethics. The Ombudsperson would be independent and impartial, and would report to the NEC on the pattern of complaints received.</p>
-<p>Read the <a href="{% static 'review/composited_proposals/Labour_Party_Ombudsperson_Proposal.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: Momentum NCG.</p>
+<p><a href="{% static 'review/composited_proposals/Labour_Party_Ombudsperson_Proposal.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum NCG.</p>
 {{ vote|question_and_choices:4 }}
 
 <br/><h5>Membership of Other Organisations</h5>
 <p>SUMMARY: The existing wording on membership of organisations other than official Labour Party groups needs to be clarified, by clearly emphasising that only membership of organisations which have principles, values, objectives or methods of organising which are demonstrably incompatible with those of the Labour Party shall be considered problematic and grounds for making someone ineligible for membership status.</p>
-<p>Read the <a href="{% static 'review/composited_proposals/Membership_of_Organisations_Other_than_Official_Party_Units.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: Momentum NCG, based on proposals and representations made by members through My Momentum.</p>
+<p><a href="{% static 'review/composited_proposals/Membership_of_Organisations_Other_than_Official_Party_Units.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum NCG, based on proposals and representations made by members through My Momentum.</p>
 {{ vote|question_and_choices:5 }}
 
 <br/><h5>Parliamentary Selections</h5>
@@ -59,18 +55,16 @@
     <li>New candidates should be able to seek out nominations as well as the sitting MP.</li>
     <li>Sitting MPs should be required to receive nominations from branches representing over two thirds of the membership as well as over two thirds of affiliate branches in order to get reselected automatically.</li>
 </ul>
-<p>Read the <a href="{% static 'review/composited_proposals/A_democratic_selection_process_for_the_21st_century.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: A proposal by <a href="{% url 'review:proposal' 19 %}" target="_blank">Dan</a>, as well as a rule change passed by Brighton Pavillion, Worthing West and Bristol West CLPs, which is due to be debated at this year’s Labour Party Conference.</p>
+<p><a href="{% static 'review/composited_proposals/A_democratic_selection_process_for_the_21st_century.pdf' %}" target="_blank">Full proposal</a> | Source: A proposal by <a href="{% url 'review:proposal' 19 %}" target="_blank">Dan</a>, as well as a rule change passed by Brighton Pavillion, Worthing West and Bristol West CLPs, which is due to be debated at this year’s Labour Party Conference.</p>
 {{ vote|question_and_choices:10 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Socialist Societies</h4>
 <p>SUMMARY: Socialist Societies should have to demonstrate that their structures and processes are transparent and democratic as a condition for affiliation and for participating in internal Labour Party processes.</p>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Socialist_Societies.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: This is largely based on a proposal by <a href="{% url 'review:proposal' 122 %}" target="_blank">Jody</a>.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Socialist_Societies.pdf' %}" target="_blank">Full proposal</a> | Source: This is largely based on a proposal by <a href="{% url 'review:proposal' 122 %}" target="_blank">Jody</a>.</p>
 {{ vote|question_and_choices:11 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Disability Labour and the Representation of Disabled Members</h4>
 <p><em>Please only answer this question if you are disabled.</em></p>
 <p>SUMMARY: Labour should support reforms to Disability Labour and make additional reforms to improve the representation of disabled people in the party. Key points include:</p>
@@ -82,11 +76,10 @@
     <li>One staff member accountable to Disability Labour and responsible for promoting accessibility through the party.</li>
     <li>Disability Officers to be Executive Officers in CLPs with full voting rights.</li>
 </ul>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Proposal_for_Disability_Labour.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: It is based partly on proposals by <a href="{% url 'review:proposal' 14 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 154 %}" target="_blank">Fran</a>, <a href="{% url 'review:proposal' 126 %}" target="_blank">Adrie</a>, <a href="{% url 'review:proposal' 33 %}" target="_blank">Mick</a>, and <a href="{% url 'review:proposal' 20 %}" target="_blank">Ian</a>.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Proposal_for_Disability_Labour.pdf' %}" target="_blank">Full proposal</a> | Source: It is based partly on proposals by <a href="{% url 'review:proposal' 14 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 154 %}" target="_blank">Fran</a>, <a href="{% url 'review:proposal' 126 %}" target="_blank">Adrie</a>, <a href="{% url 'review:proposal' 33 %}" target="_blank">Mick</a>, and <a href="{% url 'review:proposal' 20 %}" target="_blank">Ian</a>.</p>
 {{ vote|question_and_choices:12 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Recruitment of Members</h4>
 <p>The Labour Party should support reforms to ensure high levels of recruitment of members in the future. Key points include:</p>
 <ul>
@@ -95,11 +88,10 @@
     <li>Integration of recruitment with community organising, in cooperation with the Community Organising Unit.</li>
     <li>Consultation with BAME Labour, LGBT Labour, and Disability Labour in the development of recruitment strategies.</li>
 </ul>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Recruitment_of_Members.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: This proposal is partly based on contributions from <a href="{% url 'review:proposal' 10 %}" target="_blank">Lee</a>, <a href="{% url 'review:proposal' 102 %}" target="_blank">Joshua</a> and <a href="{% url 'review:proposal' 49 %}" target="_blank">A Porter</a>.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Recruitment_of_Members.pdf' %}" target="_blank">Full proposal</a> | Source: This proposal is partly based on contributions from <a href="{% url 'review:proposal' 10 %}" target="_blank">Lee</a>, <a href="{% url 'review:proposal' 102 %}" target="_blank">Joshua</a> and <a href="{% url 'review:proposal' 49 %}" target="_blank">A Porter</a>.</p>
 {{ vote|question_and_choices:13 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Gender Representation</h4>
 <p>The Labour Party should support reforms to improve the representation of women in the party. Key points include:</p>
 <ul>
@@ -107,18 +99,16 @@
     <li>A standalone Women’s Conference to be held in Spring, to which each CLP shall be eligible to send at least one woman delegate.</li>
     <li>Annual Women’s Conference to elect a Women’s Committee, which shall be the institutional representative of female party members.</li>
 </ul>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Gender_Representation.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: The proposal is based on proposals by Labour Women Leading, the Campaign for Labour Party Democracy, <a href="{% url 'review:proposal' 86 %}" target="_blank">Jean</a> and <a href="{% url 'review:proposal' 124 %}" target="_blank">Jody</a>.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Gender_Representation.pdf' %}" target="_blank">Full proposal</a> | Source: The proposal is based on proposals by Labour Women Leading, the Campaign for Labour Party Democracy, <a href="{% url 'review:proposal' 86 %}" target="_blank">Jean</a> and <a href="{% url 'review:proposal' 124 %}" target="_blank">Jody</a>.</p>
 {{ vote|question_and_choices:14 }}
 
-<hr>
+<br/><hr><br/>
 <h4>Social Media</h4>
 <p>SUMMARY: The Labour Party should support efforts to improve the party’s social media operation. Key points include:</p>
 <ul>
     <li>Clearer guidelines for branch and CLP social media forums and pages.</li>
     <li>The renovation of Membersnet to convert it into an interactive hub.</li>
 </ul>
-<p>Read the <a href="{% static 'review/composited_proposals/Momentum_Momentum_Proposal_on_Social_Media.pdf' %}" target="_blank">full proposal</a>.</p>
-<p>Source: The proposal is based on proposals by <a href="{% url 'review:proposal' 40 %}" target="_blank">Andrew</a>, <a href="{% url 'review:proposal' 112 %}" target="_blank">Jamie</a> and <a href="{% url 'review:proposal' 63 %}" target="_blank">Edward</a>.</p>
+<p><a href="{% static 'review/composited_proposals/Momentum_Momentum_Proposal_on_Social_Media.pdf' %}" target="_blank">Full proposal</a> | Source: The proposal is based on proposals by <a href="{% url 'review:proposal' 40 %}" target="_blank">Andrew</a>, <a href="{% url 'review:proposal' 112 %}" target="_blank">Jamie</a> and <a href="{% url 'review:proposal' 63 %}" target="_blank">Edward</a>.</p>
 {{ vote|question_and_choices:15 }}
 

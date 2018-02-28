@@ -42,15 +42,12 @@ def question_and_choices(vote, question_id):
             choice_html += '<label class="mt-4 mr-4">(You voted %s)</label>' % current_answer.choice.text
         else:
             choice_html += '<label class="mt-4 mr-4">(You didn''t vote on this question)</label>'
-    
-    # vote
-    vote_html = '<button type="submit" name="vote" class="btn btn-primary">Update votes</button>' if vote.track_voting.voting_in_range() else ''
           
     # layout    
     return mark_safe("""
         <p><em>
             %s
             <br/>
-            <span class="ml-4">%s</span><span>%s</span>
+            <span class="ml-4">%s</span>
         </em></p>
-        """ % (question_html, choice_html, vote_html))
+        """ % (question_html, choice_html))
