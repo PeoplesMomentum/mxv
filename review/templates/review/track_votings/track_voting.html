@@ -26,7 +26,8 @@
         {% csrf_token %}
         {% include track_voting.template %}
         {% if track_voting.voting_in_range %}
-            <button type="submit" name="vote" class="btn btn-primary">Vote</button>
+            <br/>
+            <button type="submit" name="vote" class="btn btn-primary vote-button-text">Vote</button>
         {% endif %}
     </form>
 
