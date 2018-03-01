@@ -317,8 +317,8 @@
         "pk": 2,
         "fields": {
             "track": 2,
-            "voting_start": "2018-02-26",
-            "voting_end": "2018-03-05",
+            "voting_start": "2018-03-01",
+            "voting_end": "2018-03-12",
             "template": "review/track_votings/track2_voting.html" }},
 
     {   "model" : "review.Question",
