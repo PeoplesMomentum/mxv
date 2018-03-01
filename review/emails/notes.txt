@@ -1,2 +1,16 @@
-- Log into mxv.herokuapp.com instead of my.peoplesmomentum.com to prevent the HTML editor replacing the URL with ../.. and breaking the links.
-- Copy and paste the email HTML into the 'member activation email' as HTML.
+- update members_member set last_invited_to_activate = null;
+- copy email into html email and then from there into text email
+- send test email
+- 'send to 1000 uninvited [in]active members' until 0 members emailed (i.e. complete)
+
+
+Voting launch
+=============
+* test inactive email
+* test active email
+* make voting visible to members
+* test visible to misc
+* load active email
+* send to active members
+* load inactive email
+* send to inactive members
