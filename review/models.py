@@ -277,6 +277,15 @@ class TrackVoting(models.Model):
                 return 'Vote now'
         return 'View results'
     
+    # for results table and CSV
+    def distinct_choices(self):
+        choices = []
+        for question in self.questions.all():
+            for choice in question.choices.all():
+                if choices.count(choice.text) == 0:
+                    choices.append(choice.text)
+        return choices
+    
 # a question on a track voting page
 class Question(models.Model):
     track_voting = models.ForeignKey(TrackVoting, related_name='questions')

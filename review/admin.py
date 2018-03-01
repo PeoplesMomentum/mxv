@@ -3,6 +3,8 @@ from review.models import Track, Theme, Proposal, Comment, ModerationRequest, Mo
     TrackVoting
 from django.urls.base import reverse
 from django.utils.safestring import mark_safe
+from django.http.response import HttpResponse
+import csv
 
 """
   - search all text fields and created_by name/email for member-created entities
@@ -207,14 +209,11 @@ class TrackVotingAdmin(admin.ModelAdmin):
         return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_track_change', args=(track_voting.track.pk,)), track_voting.track.name))
     track_link.short_description = 'track'
     
+    # returns the results table as HTML
     def results_table(self, track_voting):
         
         # distinct choices
-        choices = []
-        for question in track_voting.questions.all():
-            for choice in question.choices.all():
-                if choices.count(choice.text) == 0:
-                    choices.append(choice.text)
+        choices = track_voting.distinct_choices()
                     
         # header
         header = '<tr><th>Question</th><th></th>'
@@ -240,9 +239,40 @@ class TrackVotingAdmin(admin.ModelAdmin):
         table += '</table>'
         
         return mark_safe(table)
-    
     results_table.short_description = 'results'
 
+    # returns the results table as a CSV response
+    def response_change(self, request, obj):
+        if 'export_results_as_csv' in request.POST:
+            track_voting = obj
+
+            # create the response and CSV
+            response = HttpResponse(content_type = 'text/csv')
+            response['Content-Disposition'] = 'attachment; filename=%s.csv' % track_voting.name()
+            writer = csv.writer(response, quoting = csv.QUOTE_ALL)
+            
+            # header
+            headers = ['question_number', 'question_text']
+            choices = track_voting.distinct_choices()
+            for choice in choices:
+                headers.append('%s_count' % choice)
+                headers.append('%s_percent' % choice)
+            writer.writerow(headers)
+            
+            # questions
+            for question in track_voting.questions.order_by('number'):
+                fields = [question.number, question.text]
+                total = question.answers.count()
+                for choice in choices:
+                    count = question.answers.filter(choice__text = choice).count()
+                    fields.append(count)
+                    fields.append(count / total * 100)
+                writer.writerow(fields)
+                
+            return response
+            
+        # call the inherited
+        return admin.ModelAdmin.response_change(self, request, obj)
 
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
