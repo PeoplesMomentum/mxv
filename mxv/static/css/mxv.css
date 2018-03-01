@@ -21,3 +21,7 @@ blockquote {
 .question-text {
     font-size: 115%;
 }
+
+.large-button-text {
+    font-size: 200%;
+}

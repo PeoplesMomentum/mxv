@@ -5,7 +5,6 @@
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:voting' %}">Democracy Review - Vote</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'review:track' track_voting.track.pk %}">{{ track_voting.track.name }}</a></li>
     <li class="breadcrumb-item active">{{ track_voting.name }}</li>
 {% endblock %}
 
@@ -27,7 +26,8 @@
         {% csrf_token %}
         {% include track_voting.template %}
         {% if track_voting.voting_in_range %}
-            <button type="submit" name="vote" class="btn btn-primary">Vote</button>
+            <br/>
+            <button type="submit" name="vote" class="btn btn-primary large-button-text">Vote</button>
         {% endif %}
     </form>
 
