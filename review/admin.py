@@ -1,5 +1,6 @@
 from django.contrib import admin
-from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification, Amendment
+from review.models import Track, Theme, Proposal, Comment, ModerationRequest, ModerationRequestNotification, Amendment,\
+    TrackVoting
 from django.urls.base import reverse
 from django.utils.safestring import mark_safe
 
@@ -193,6 +194,56 @@ class ModerationRequestAdmin(admin.ModelAdmin):
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
      
+class TrackVotingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'voting_start', 'voting_end')
+    fields = (        
+        'track_link',
+        ('voting_start', 'voting_end'),
+         'results_table'
+    )
+    readonly_fields = ('track_link', 'results_table')
+    
+    def track_link(self, track_voting):
+        return mark_safe('<a href="%s">%s</a>' % (reverse('admin:review_track_change', args=(track_voting.track.pk,)), track_voting.track.name))
+    track_link.short_description = 'track'
+    
+    def results_table(self, track_voting):
+        
+        # distinct choices
+        choices = []
+        for question in track_voting.questions.all():
+            for choice in question.choices.all():
+                if choices.count(choice.text) == 0:
+                    choices.append(choice.text)
+                    
+        # header
+        header = '<tr><th>Question</th><th></th>'
+        for choice in choices:
+            header += '<th>%s (%%)</th>' % choice
+        header += '</tr>'
+        
+        # question rows
+        rows = []
+        for question in track_voting.questions.order_by('number'):
+            row = '<tr><td>%d</td><td>%s</td>' % (question.number, question.text)
+            for choice in choices:
+                count = question.answers.filter(choice__text = choice).count()
+                total = question.answers.count()
+                row += '<td>%d (%d)</td>' % (count, count / total * 100)
+            row += '</tr>'
+            rows.append(row)
+        
+        # table
+        table = '<table>' + header
+        for row in rows:
+            table += row
+        table += '</table>'
+        
+        return mark_safe(table)
+    
+    results_table.short_description = 'results'
+
+
 admin.site.register(Track, TrackAdmin)
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(Proposal, ProposalAdmin)
@@ -200,3 +251,4 @@ admin.site.register(Amendment, AmendmentAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(ModerationRequest, ModerationRequestAdmin)
 admin.site.register(ModerationRequestNotification)
+admin.site.register(TrackVoting, TrackVotingAdmin)
