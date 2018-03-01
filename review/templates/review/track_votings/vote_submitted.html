@@ -5,7 +5,6 @@
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'review:voting' %}">Democracy Review - Vote</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'review:track' track_voting.track.pk %}">{{ track_voting.track.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'review:track_voting' track_voting.pk %}">{{ track_voting.name }}</a></li>
     <li class="breadcrumb-item active">Thanks for voting!</li>
 {% endblock %}
