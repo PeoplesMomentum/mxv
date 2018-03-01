@@ -392,7 +392,7 @@
         "fields": {
             "track_voting": 2,
             "number": 12,
-            "text": "Should Momentum adopt this proposal on improving the way Constituency Labour Parties (CLP) function?" }},
+            "text": "Should Momentum adopt this proposal to improve the way Constituency Labour Parties (CLP) function?" }},
     {   "model" : "review.Question",
         "pk": 13,
         "fields": {
