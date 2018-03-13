@@ -228,7 +228,7 @@ class TrackVotingAdmin(admin.ModelAdmin):
             for choice in choices:
                 count = question.answers.filter(choice__text = choice).count()
                 total = question.answers.count()
-                row += '<td>%d (%d)</td>' % (count, count / total * 100 if count > 0 else 0)
+                row += '<td>%d (%d)</td>' % (count, count / total * 100 if total > 0 else 0)
             row += '</tr>'
             rows.append(row)
         
@@ -266,7 +266,7 @@ class TrackVotingAdmin(admin.ModelAdmin):
                 for choice in choices:
                     count = question.answers.filter(choice__text = choice).count()
                     fields.append(count)
-                    fields.append(count / total * 100 if count > 0 else 0)
+                    fields.append(count / total * 100 if total > 0 else 0)
                 writer.writerow(fields)
                 
             return response

@@ -5,7 +5,7 @@
 <br/>
 
 <p>There are <strong>15 questions</strong>, covering 11 unique proposals, formed from contributions by Momentum’s National Coordinating Group (NCG), the Members’ Council, individual members on My Momentum, and allied groups such as the Campaign for Labour Party Democracy (CLPD).</p>
-<p>Just select your answers and <strong>click "Vote"</strong> at the bottom to submit your vote (or to <strong>save your answers</strong> and return later). Voting runs from {{ track_voting.voting_start|date:'l jS F' }} to midnight <strong>{{ track_voting.voting_end|date:'l jS F' }}</strong>, and all proposals that get over 50% support will become Momentum’s campaigning position.</p>
+<p>Just select your answers and <strong>click "Vote"</strong> at the bottom to submit your vote (or to <strong>save your answers</strong> and return later). Voting runs from {{ voting_context.track_voting.voting_start|date:'l jS F' }} to midnight <strong>{{ voting_context.track_voting.voting_end|date:'l jS F' }}</strong>, and all proposals that get over 50% support will become Momentum’s campaigning position.</p>
 
 <br/><hr><br/>
 <h4>A) Membership Participation and Involvement</h4>
@@ -17,7 +17,7 @@
 <p>SUMMARY: Labour should adopt a <a href="{% static 'review/composited_proposals/Charter_of_Members_Rights.pdf' %}" target="_blank">Charter of Members’ Rights</a> to support and expand members’ rights by focusing on transparency, accountability, participation, capacity building, and disciplinary justice as set out in the Chakrabarti Report.</p>
 <p><a href="{% static 'review/composited_proposals/Charter_of_Members_Rights.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum’s National Coordinating Group (NCG), Chakrabarti Report, the Campaign for Labour Party Democracy (CLPD), and Liz Davies (Momentum Hackney).</p>
 <br/>
-{{ vote|question_and_choices:1 }}
+{{ voting_context|question_and_choices:1 }}
 
 <br/>
 <br/>
@@ -26,7 +26,7 @@
 <p>SUMMARY: Labour should adopt a <a href="{% static 'review/composited_proposals/Code_of_Ethics_2018.pdf' %}" target="_blank">Code of Ethics</a>, for all members of the Labour Party to adhere to. This includes a commitment for party staff to be impartial and accountable to elected representatives, and for all party actors to avoid actions which are detrimental to the party.</p>
 <p><a href="{% static 'review/composited_proposals/Code_of_Ethics_2018.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum NCG, the CLPD, and Liz Davies (Momentum Hackney).</p>
 <br/>
-{{ vote|question_and_choices:2 }}
+{{ voting_context|question_and_choices:2 }}
 
 <br/>
 <br/>
@@ -35,7 +35,7 @@
 <p>SUMMARY: Labour should have an Ombudsperson, who would be in charge of ensuring the implementation of the Charter of Members’ Rights and Code of Ethics. The Ombudsperson would be independent and impartial, and would report to the NEC on the pattern of complaints received.</p>
 <p><a href="{% static 'review/composited_proposals/Labour_Party_Ombudsperson_Proposal.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum NCG, the CLPD, and Liz Davies (Momentum Hackney).</p>
 <br/>
-{{ vote|question_and_choices:3 }}
+{{ voting_context|question_and_choices:3 }}
 
 <br/>
 <br/>
@@ -44,7 +44,7 @@
 <p>SUMMARY: Labour’s Rulebook says membership of organisations other than the Labour Party can make people ineligible for membership, but the wording is imprecise. It should be clarified that this applies only to organisations whose objectives or methods are clearly incompatible with Labour’s.</p>
 <p><a href="{% static 'review/composited_proposals/Membership_of_Organisations_Other_than_Official_Party_Units.pdf' %}" target="_blank">Full proposal</a> | Source: Momentum NCG, based on proposals and representations made by members through My Momentum.</p>
 <br/>
-{{ vote|question_and_choices:4 }}
+{{ voting_context|question_and_choices:4 }}
 
 <br/>
 <br/>
@@ -52,13 +52,13 @@
 <br/>
 <p>We have also received a number of representations from members that parliamentary selections are a key area that needs to be addressed to improve accountability. On this basis, we would like members to give us their views on the following key questions:</p>
 <br/>
-{{ vote|question_and_choices:5 }}
+{{ voting_context|question_and_choices:5 }}
 <br/>
-{{ vote|question_and_choices:6 }}
+{{ voting_context|question_and_choices:6 }}
 <br/>
-{{ vote|question_and_choices:7 }}
+{{ voting_context|question_and_choices:7 }}
 <br/>
-{{ vote|question_and_choices:8 }}
+{{ voting_context|question_and_choices:8 }}
 
 <br/>
 <br/>
@@ -71,14 +71,14 @@
 </ul>
 <p><a href="{% static 'review/composited_proposals/A_democratic_selection_process_for_the_21st_century.pdf' %}" target="_blank">Full proposal</a> | Source: A proposal by <a href="{% url 'review:proposal' 19 %}" target="_blank">Dan</a>, as well as a rule change passed by Brighton Hove, Worthing West and Bristol West CLPs, which is due to be debated at this year’s Labour Party Conference.</p>
 <br/>
-{{ vote|question_and_choices:9 }}
+{{ voting_context|question_and_choices:9 }}
 
 <br/><hr><br/>
 <h4>B) Socialist Societies</h4>
 <p>SUMMARY: In order to affiliate to the Labour Party, Socialist Societies should have to be transparent and democratic.</p>
 <p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Socialist_Societies.pdf' %}" target="_blank">Full proposal</a> | Source: This is largely based on a proposal by <a href="{% url 'review:proposal' 122 %}" target="_blank">Jody</a>.</p>
 <br/>
-{{ vote|question_and_choices:10 }}
+{{ voting_context|question_and_choices:10 }}
 
 <br/><hr><br/>
 <h4>C) Disability Labour and the Representation of Disabled Members</h4>
@@ -93,7 +93,7 @@
 </ul>
 <p><a href="{% static 'review/composited_proposals/Momentum_Proposal_for_Disability_Labour.pdf' %}" target="_blank">Full proposal</a> | Source: It is based partly on proposals by <a href="{% url 'review:proposal' 14 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 154 %}" target="_blank">Fran</a>, <a href="{% url 'review:proposal' 126 %}" target="_blank">Adrie</a>, <a href="{% url 'review:proposal' 33 %}" target="_blank">Mick</a>, and <a href="{% url 'review:proposal' 20 %}" target="_blank">Ian</a>.</p>
 <br/>
-{{ vote|question_and_choices:11 }}
+{{ voting_context|question_and_choices:11 }}
 
 <br/><hr><br/>
 <h4>D) Constituency Labour Party Governance</h4>
@@ -106,7 +106,7 @@
 </ul></p>
 <p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_CLP_Governance.pdf' %}" target="_blank">Full proposal</a> | Source: This is based in part on proposals by the <a href="{% static 'review/Members_Council_Recommendations_for_CLP_Governance.pdf' %}" target="_blank">Members' Council</a>, <a href="{% url 'review:proposal' 16 %}" target="_blank">Caroline</a>, <a href="{% url 'review:proposal' 25 %}" target="_blank">Lydia</a>, <a href="{% url 'review:proposal' 76 %}" target="_blank">Andy</a>, <a href="{% url 'review:proposal' 30 %}" target="_blank">Ian</a>, <a href="{% url 'review:proposal' 29 %}" target="_blank">Jessica</a>, as well as <a href="{% url 'review:proposal' 58 %}" target="_blank">Heather</a> on behalf of the CLPD.</p>
 <br/>
-{{ vote|question_and_choices:12 }}
+{{ voting_context|question_and_choices:12 }}
 
 <br/><hr><br/>
 <h4>E) Recruitment of Members</h4>
@@ -118,7 +118,7 @@
 </ul>
 <p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Recruitment_of_Members.pdf' %}" target="_blank">Full proposal</a> | Source: This proposal is partly based on contributions from <a href="{% url 'review:proposal' 10 %}" target="_blank">Lee</a>, <a href="{% url 'review:proposal' 102 %}" target="_blank">Joshua</a> and <a href="{% url 'review:proposal' 49 %}" target="_blank">A Porter</a>.</p>
 <br/>
-{{ vote|question_and_choices:13 }}
+{{ voting_context|question_and_choices:13 }}
 
 <br/><hr><br/>
 <h4>F) Gender Representation</h4>
@@ -130,7 +130,7 @@
 </ul>
 <p><a href="{% static 'review/composited_proposals/Momentum_Proposal_on_Gender_Representation.pdf' %}" target="_blank">Full proposal</a> | Source: The proposal is based on contributions by Labour Women Leading, the CLPD, <a href="{% url 'review:proposal' 86 %}" target="_blank">Jean</a> and <a href="{% url 'review:proposal' 124 %}" target="_blank">Jody</a>.</p>
 <br/>
-{{ vote|question_and_choices:14 }}
+{{ voting_context|question_and_choices:14 }}
 
 <br/><hr><br/>
 <h4>G) Social Media</h4>
@@ -141,5 +141,5 @@
 </ul>
 <p><a href="{% static 'review/composited_proposals/Momentum_Momentum_Proposal_on_Social_Media.pdf' %}" target="_blank">Full proposal</a> | Source: The proposal is based on contributions by <a href="{% url 'review:proposal' 40 %}" target="_blank">Andrew</a>, <a href="{% url 'review:proposal' 112 %}" target="_blank">Jamie</a> and <a href="{% url 'review:proposal' 63 %}" target="_blank">Edward</a>.</p>
 <br/>
-{{ vote|question_and_choices:15 }}
+{{ voting_context|question_and_choices:15 }}
 
