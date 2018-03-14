@@ -492,60 +492,74 @@ def moderation(request):
 def guide(request):
     return render(request, 'review/support/guide.html')
 
-@login_required
 def voting(request):
     return render(request, 'review/voting.html', { 
-        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track_votings': TrackVoting.objects.all() })
 
-@login_required
+# encapsulates request, vote and track voting for when there is no vote (i.e. anonymous user)
+class VotingContext:
+    request = None
+    vote = None
+    track_voting = None
+
 def track_voting(request, pk):
     track_voting = get_object_or_404(TrackVoting, pk = pk)
     
-    # ensure there is a vote for the member
-    vote = request.user.votes.filter(track_voting = track_voting).first()
-    if not vote:
-        vote = track_voting.votes.create(member = request.user)
-    
-    # if valid post CRSF token and voting is currently allowed...
-    if request.method == 'POST' and track_voting.voting_in_range():
-        form = VoteForm(request.POST)
-        if form.is_valid():
-            
-            # and it's a vote ...
-            if 'vote' in request.POST:
-                
-                # for each answer...
-                for answer_key in [key for key in request.POST.keys() if key.startswith('answer_')]:
-                    try:
-                        post_answer = request.POST[answer_key]
-                        
-                        # get the question and choice
-                        (question_id, choice_id) = post_answer.split('_')
-                        question = track_voting.questions.filter(id = question_id).first()
-                        choice = question.choices.filter(id = choice_id).first()
-                            
-                        # ensure there is an answer for the question and only for the new choice
-                        answer = vote.answers.filter(question__id = question_id).first()
-                        if not answer:
-                            answer = vote.answers.create(question = question, choice = choice)
-                        else:
-                            answer.choice = choice
-                            answer.answered_at = timezone.now()
-                            answer.save()
-                    except:
-                        pass                    
-            
-            return redirect('review:vote_submitted', pk = track_voting.pk)
-        else:
-            #show errors
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = VoteForm(instance = vote)
+    # if there is a logged-in member...
+    if not request.user.is_anonymous():
 
+        # ensure there is a vote for the member
+        vote = request.user.votes.filter(track_voting = track_voting).first()
+        if not vote:
+            vote = track_voting.votes.create(member = request.user)
+        
+        # if valid post CRSF token and voting is currently allowed...
+        if request.method == 'POST' and track_voting.voting_in_range():
+            form = VoteForm(request.POST)
+            if form.is_valid():
+                
+                # and it's a vote ...
+                if 'vote' in request.POST:
+                    
+                    # for each answer...
+                    for answer_key in [key for key in request.POST.keys() if key.startswith('answer_')]:
+                        try:
+                            post_answer = request.POST[answer_key]
+                            
+                            # get the question and choice
+                            (question_id, choice_id) = post_answer.split('_')
+                            question = track_voting.questions.filter(id = question_id).first()
+                            choice = question.choices.filter(id = choice_id).first()
+                                
+                            # ensure there is an answer for the question and only for the new choice
+                            answer = vote.answers.filter(question__id = question_id).first()
+                            if not answer:
+                                answer = vote.answers.create(question = question, choice = choice)
+                            else:
+                                answer.choice = choice
+                                answer.answered_at = timezone.now()
+                                answer.save()
+                        except:
+                            pass                    
+                
+                return redirect('review:vote_submitted', pk = track_voting.pk)
+            else:
+                #show errors
+                messages.error(request, 'Please correct the errors below.')
+        else:
+            # get or invalid post
+            form = VoteForm(instance = vote)
+    else:
+        # not logged in
+        vote = None
+        form = VoteForm()
+
+    voting_context = VotingContext()
+    voting_context.request = request
+    voting_context.vote = vote
+    voting_context.track_voting = track_voting
     return render(request, 'review/track_votings/track_voting.html', { 
-        'track_voting' : track_voting,
-        'vote': vote,
+        'voting_context': voting_context, 
         'form': form })
     
 @login_required
