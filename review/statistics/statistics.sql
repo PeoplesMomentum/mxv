@@ -71,3 +71,5 @@ from    review_vote v
         inner join review_track tr on tv.track_id = tr.id 
 where   tr.name = 'Track 2') query;
 
+\copy (select distinct m.name, m.email from members_member m inner join review_vote v on m.id = v.member_id inner join review_answer a on v.id = a.vote_id inner join review_trackvoting tv on v.track_voting_id = tv.id inner join review_track tr on tv.track_id = tr.id where tr.name = 'Track 2') to 'track 2 voters.csv' with CSV
+
