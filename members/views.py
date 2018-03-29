@@ -123,6 +123,29 @@ def send_member_activation_emails(request):
             # redirect
             return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
         
+    # if sending to targeted...
+    if request.method == 'POST' and 'send_to_count_targeted' in request.POST:
+        
+        # .. and the posted form is valid...
+        form = SendMemberActivationEmailsForm(request.POST)
+        if form.is_valid():
+            
+            # update the send count and active
+            member_activation_email.send_count = form.cleaned_data['send_count']
+            member_activation_email.is_active = form.cleaned_data['is_active']
+            member_activation_email.save()
+            
+            try:                
+                # send the activation email to targeted members
+                sent = member_activation_email.send_to_count_targeted(request)
+                messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            
+            except Exception as e:
+                messages.error(request, repr(e))
+
+            # redirect
+            return HttpResponseRedirect(reverse('membersadmin:send_member_activation_emails'))
+        
     # if sending to inactive members...
     if request.method == 'POST' and 'send' in request.POST:
         

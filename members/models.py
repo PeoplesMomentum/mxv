@@ -163,3 +163,28 @@ class MemberActivationEmail(SingletonModel):
         # send the emails
         return self.send_to(request, { member.email for member in uninvited_members_to_send })
         
+    # sends the activation email to count (in)active members who are email targets
+    def send_to_count_targeted(self, request):
+        
+        # get the (in)active members
+        members = Member.objects.filter(is_active = self.is_active)
+        
+        # filter to those targeted but not yet sent (only send count)
+        targets = EmailTarget.objects.filter(sent = None)[:self.send_count]
+        target_emails = { target.email for target in targets }
+        targeted_members = members.filter(email__in=target_emails)
+        
+        # mark the targets as sent
+        for target in targets:
+            target.sent = True
+            target.save()
+        
+        # send the emails
+        count = self.send_to(request, { member.email for member in targeted_members })
+        
+        return count
+        
+# populate this table with email addresses to receive targeted emails
+class EmailTarget(models.Model):
+    email = CIEmailField(max_length=255, unique=True)
+    sent = models.NullBooleanField(default=None)

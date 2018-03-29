@@ -14,3 +14,14 @@ Voting launch
 * send to active members
 * load inactive email
 * send to inactive members
+
+
+Email targets
+=============
+- process NationBuilder export with 'Email targets.R' into 'targets.csv'
+- psql
+  - delete from members_emailtarget;
+  - \copy members_emailtarget(email) from '~/Desktop/Momentum/email_targets/targets.csv' delimiter ',' CSV
+- admin
+  - set 'send count', 'is_active'
+  - click 'Send email to [send count] targeted [is active] members' button until 0 members emailed (i.e. complete)
