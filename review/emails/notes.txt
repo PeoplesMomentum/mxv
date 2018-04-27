@@ -22,6 +22,7 @@ Email targets
 - psql
   - delete from members_emailtarget;
   - \copy members_emailtarget(email) from '~/Desktop/Momentum/email_targets/targets.csv' delimiter ',' CSV
+  - before changing is_active: update members_emailtarget set sent = null;
 - admin
   - set 'send count', 'is_active'
   - click 'Send email to [send count] targeted [is active] members' button until 0 members emailed (i.e. complete)
