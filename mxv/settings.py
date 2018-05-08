@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import dj_database_url
 from django.contrib import messages
+from datetime import date
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -197,4 +198,7 @@ MESSAGE_TAGS = {
 
 # whether to show track voting-specific changes to just staff or anyone
 TRACK_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_TRACK_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+
+# when the site was launched to the members
+LAUNCH_DATE = date(2018, 2, 2)
 

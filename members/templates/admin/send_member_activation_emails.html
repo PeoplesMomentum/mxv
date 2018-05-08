@@ -12,14 +12,12 @@
 <form action="{% url 'membersadmin:send_member_activation_emails' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="send_test" value="Send test email (and save test email address)" />
-    <input type="submit" name="cancel" value="Cancel changes to test email address" />
+    <input type="submit" name="send_test" value="Send test email" />
+    <input type="submit" name="cancel" value="Cancel changes to email settings" />
     <br />
-    <input type="submit" name="send" value="Send email to all inactive members" />
+    <input type="submit" name="send" value="Send activation email to all inactive members" />
     <br />
-    <input type="submit" name="send_to_count_uninvited" value="Send email to [send count] uninvited [is active] members" />
-    <br />
-    <input type="submit" name="send_to_count_targeted" value="Send email to [send count] targeted [is active] members" />
+    <input type="submit" name="send_to_count_uninvited" value="Send activation email to [send count] uninvited [is active] members" />
 </form>
 
 {% endblock %}
