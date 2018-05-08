@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, MemberActivationEmail, MomentumGroup
+from members.models import Member, MomentumGroup
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 
@@ -123,7 +123,6 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
 # register the new admin classes
 admin.site.register(Member, MemberAdmin)
 admin.site.register(MomentumGroup, MomentumGroupAdmin)
-admin.site.register(MemberActivationEmail, MemberActivationEmailModelAdmin)
 
 # not using builtin permissions
 admin.site.unregister(Group)
