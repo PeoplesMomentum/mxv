@@ -3,13 +3,17 @@ from django.template import loader
 from django.contrib.auth.views import PasswordResetView
 from .settings import SITE_NAME_SHORT, SITE_NAME_LONG, ALLOW_ERROR_URL
 from django.http import Http404
-from mxv.settings import TRACK_VOTING_VISIBLE_TO_NON_STAFF
+from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF
+from review.models import TrackVoting
 
 
 # landing page
 def index(request):
     template = loader.get_template('mxv/index.html')
-    context = {'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,}
+    context = {
+        'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'track3_voting': TrackVoting.objects.filter(pk=3).first(),
+    }
     return HttpResponse(template.render(context, request))
 
 # pass the site names to the password reset context
