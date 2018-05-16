@@ -418,6 +418,78 @@
             "track_voting": 2,
             "number": 15,
             "text": "Should Momentum campaign for this proposal to improve the Labour Party’s social media operation?" }},
+    {   "model" : "review.Question",
+        "pk": 16,
+        "fields": {
+            "track_voting": 3,
+            "number": 1,
+            "text": "Should Momentum adopt this proposal on improving accountability and democracy in local government?" }},
+    {   "model" : "review.Question",
+        "pk": 17,
+        "fields": {
+            "track_voting": 3,
+            "number": 2,
+            "text": "Should Momentum adopt this proposal to improve the way the leader is elected?" }},
+    {   "model" : "review.Question",
+        "pk": 18,
+        "fields": {
+            "track_voting": 3,
+            "number": 3,
+            "text": "Do you think the General Secretary of the Labour Party should be elected by a One Member One Vote ballot of party members?" }},
+    {   "model" : "review.Question",
+        "pk": 19,
+        "fields": {
+            "track_voting": 3,
+            "number": 4,
+            "text": "Should Momentum adopt this proposal to improve the way freeze dates are set?" }},
+    {   "model" : "review.Question",
+        "pk": 20,
+        "fields": {
+            "track_voting": 3,
+            "number": 5,
+            "text": "Do you think that all representatives on the NEC should have a mandate from members, trade unions or both?" }},
+    {   "model" : "review.Question",
+        "pk": 21,
+        "fields": {
+            "track_voting": 3,
+            "number": 6,
+            "text": "Do you think there should be parity between members and trade unions on the NEC and other party committees?" }},
+    {   "model" : "review.Question",
+        "pk": 22,
+        "fields": {
+            "track_voting": 3,
+            "number": 7,
+            "text": "Do you think disabled members should be represented on the NEC?" }},
+    {   "model" : "review.Question",
+        "pk": 23,
+        "fields": {
+            "track_voting": 3,
+            "number": 8,
+            "text": "Should Momentum adopt this proposal to make the NEC fully representative of members and trade unions?" }},
+    {   "model" : "review.Question",
+        "pk": 24,
+        "fields": {
+            "track_voting": 3,
+            "number": 9,
+            "text": "Should Momentum adopt this proposal to defend and strengthen the trade union link?" }},
+    {   "model" : "review.Question",
+        "pk": 25,
+        "fields": {
+            "track_voting": 3,
+            "number": 10,
+            "text": "Should the Labour Party have an institution that allows representatives of members and trades unions to help develop party policy on a rolling basis?" }},
+    {   "model" : "review.Question",
+        "pk": 26,
+        "fields": {
+            "track_voting": 3,
+            "number": 11,
+            "text": "Should voting rights on that institution be limited to representatives of members and trade unions?" }},
+    {   "model" : "review.Question",
+        "pk": 27,
+        "fields": {
+            "track_voting": 3,
+            "number": 12,
+            "text": "Should Momentum adopt this proposal to reform Party Conference?" }},
 
     {   "model" : "review.Choice",
         "pk": 1,
@@ -643,5 +715,125 @@
         "pk": 45,
         "fields": {
             "question": 15, 
-            "text": "Abstain" }}
+            "text": "Abstain" }},
+    {   "model" : "review.Choice",
+        "pk": 46,
+        "fields": {
+            "question": 16, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 47,
+        "fields": {
+            "question": 16, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 48,
+        "fields": {
+            "question": 17, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 49,
+        "fields": {
+            "question": 17, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 50,
+        "fields": {
+            "question": 18, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 51,
+        "fields": {
+            "question": 18, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 52,
+        "fields": {
+            "question": 19, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 53,
+        "fields": {
+            "question": 19, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 54,
+        "fields": {
+            "question": 20, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 55,
+        "fields": {
+            "question": 20, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 56,
+        "fields": {
+            "question": 21, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 57,
+        "fields": {
+            "question": 21, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 58,
+        "fields": {
+            "question": 22, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 59,
+        "fields": {
+            "question": 22, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 60,
+        "fields": {
+            "question": 23, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 61,
+        "fields": {
+            "question": 23, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 62,
+        "fields": {
+            "question": 24, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 63,
+        "fields": {
+            "question": 24, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 64,
+        "fields": {
+            "question": 25, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 65,
+        "fields": {
+            "question": 25, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 66,
+        "fields": {
+            "question": 26, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 67,
+        "fields": {
+            "question": 26, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 68,
+        "fields": {
+            "question": 27, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 69,
+        "fields": {
+            "question": 27, 
+            "text": "No" }}
 ]

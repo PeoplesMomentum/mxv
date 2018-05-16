@@ -491,6 +491,7 @@ def moderation(request):
 def guide(request):
     return render(request, 'review/support/guide.html')
 
+@login_required
 def voting(request):
     return render(request, 'review/voting.html', { 
         'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
