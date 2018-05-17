@@ -10,6 +10,7 @@
     <!-- extra buttons on entity admin pages (override response_change on model admin class to handle submit) -->
     {% if opts.model_name == "email" %}<input type="submit" value="Send to all active members" name="send_to_all_active_members" style="background: green"/>{% endif %}
     {% if opts.model_name == "email" %}<input type="submit" value="Send to all inactive members" name="send_to_all_inactive_members" style="background: green"/>{% endif %}
+    {% if opts.model_name == "member" %}<input type="submit" value="Send activation email" name="send_activation_email" style="background: green"/>{% endif %}
     
     {% if show_save_as_new %}<input type="submit" value="{% trans 'Save as new' %}" name="_saveasnew" />{% endif %}
     {% if show_save_and_add_another %}<input type="submit" value="{% trans 'Save and add another' %}" name="_addanother" />{% endif %}

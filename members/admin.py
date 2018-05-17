@@ -1,10 +1,11 @@
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from members.models import Member, MomentumGroup
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
+from mxv.models import EmailSettings
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -83,6 +84,31 @@ class MemberAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
     readonly_fields = ('activation_key', 'last_login', 'last_emailed', )
+
+    # sends the activation email to the member
+    def response_change(self, request, obj):
+        member = obj
+        settings = EmailSettings.get_solo()
+        sent = 0
+        
+        # if a post requesting the activation email to be sent...
+        if request.method == 'POST' and 'send_activation_email' in request.POST:
+            
+            # and there is an activation email...
+            activation_email = settings.activation_email
+            if activation_email:
+                try:
+                    
+                    # send the activation email
+                    sent += activation_email.send_to(request, [member.email])
+                except Exception as e:
+                    messages.error(request, repr(e))
+
+            messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            
+        # call the inherited
+        return admin.ModelAdmin.response_change(self, request, obj)
+
 
 # Momentum group admin
 class MemberInline(admin.TabularInline):
