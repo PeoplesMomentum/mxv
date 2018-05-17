@@ -15,10 +15,10 @@
 {% if app_list %}
     {% for app in app_list %}
                 
-        <!-- member activation -->
+        <!-- member emails -->
         {% if app.name == "Members" %}
         <div class="app-members module">
-            <h2>Member activation tools</h2>
+            <h2>Member email tools</h2>
             <ul class="actionlist">
                 <li class="changelink"><a href="{% url 'membersadmin:send_member_activation_emails' %}">Send member activation emails</a></li>
             </ul>

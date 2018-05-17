@@ -6,7 +6,7 @@ from review.forms import EditProposalForm, ProposalForm, DeleteProposalForm, Ame
 from django.contrib import messages
 from datetime import date
 from django.utils import timezone
-from mxv.settings import TRACK_VOTING_VISIBLE_TO_NON_STAFF
+from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF
 from django.core.exceptions import ObjectDoesNotExist
 
 @login_required
@@ -23,7 +23,6 @@ def index(request):
     return render(request, 'review/index.html', { 
         'tracks' : Track.objects.all().order_by('display_order'),
         'live_track_text': live_track_text,
-        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track_votings': TrackVoting.objects.all() })
 
 @login_required
@@ -36,7 +35,7 @@ def track(request, pk):
     return render(request, 'review/tracks/track.html', { 
         'track' : track, 
         'themes': track.themes.order_by('display_order'),
-        'show_voting': TRACK_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'show_voting': track_voting and track_voting.pk == 3 and (TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff),
         'track_voting': track_voting })
     
 @login_required
@@ -492,8 +491,10 @@ def moderation(request):
 def guide(request):
     return render(request, 'review/support/guide.html')
 
+@login_required
 def voting(request):
     return render(request, 'review/voting.html', { 
+        'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track_votings': TrackVoting.objects.all() })
 
 # encapsulates request, vote and track voting for when there is no vote (i.e. anonymous user)
@@ -504,6 +505,10 @@ class VotingContext:
 
 def track_voting(request, pk):
     track_voting = get_object_or_404(TrackVoting, pk = pk)
+    
+    # redirect if track 3 voting requested but not allowed
+    if track_voting.pk == 3 and not (TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff):
+        return redirect('index')
     
     # if there is a logged-in member...
     if not request.user.is_anonymous():

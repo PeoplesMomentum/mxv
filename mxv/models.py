@@ -59,9 +59,9 @@ class Email(models.Model):
         # send the message to the recipients
         message.send()
         
-        # track when the members were last sent an activation email
+        # track when the members were last sent an email
         for member in members:
-            member.last_invited_to_activate = date.today()
+            member.last_emailed = date.today()
             member.save()
         
         # return the number of members emailed

@@ -197,7 +197,7 @@ MESSAGE_TAGS = {
 }
 
 # whether to show track voting-specific changes to just staff or anyone
-TRACK_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_TRACK_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+TRACK3_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_TRACK3_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
 
 # when the site was launched to the members
 LAUNCH_DATE = date(2018, 2, 2)

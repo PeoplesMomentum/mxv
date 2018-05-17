@@ -1,10 +1,11 @@
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from members.models import Member, MomentumGroup
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
+from mxv.models import EmailSettings
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -46,7 +47,7 @@ class MemberChangeForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_invited_to_activate', 'is_superuser', 'is_ncg', 'is_members_council')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser', 'is_ncg', 'is_members_council')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -63,10 +64,10 @@ class MemberAdmin(BaseUserAdmin):
     # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_invited_to_activate', 'is_superuser')
+    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_invited_to_activate')}),
+        (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_emailed')}),
         ('Personal info', {'fields': ('name', 'momentum_group', )}),
         ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
@@ -82,7 +83,32 @@ class MemberAdmin(BaseUserAdmin):
     search_fields = ('email', 'name')
     ordering = ('email',)
     filter_horizontal = ()
-    readonly_fields = ('activation_key', 'last_login', 'last_invited_to_activate', )
+    readonly_fields = ('activation_key', 'last_login', 'last_emailed', )
+
+    # sends the activation email to the member
+    def response_change(self, request, obj):
+        member = obj
+        settings = EmailSettings.get_solo()
+        sent = 0
+        
+        # if a post requesting the activation email to be sent...
+        if request.method == 'POST' and 'send_activation_email' in request.POST:
+            
+            # and there is an activation email...
+            activation_email = settings.activation_email
+            if activation_email:
+                try:
+                    
+                    # send the activation email
+                    sent += activation_email.send_to(request, [member.email])
+                except Exception as e:
+                    messages.error(request, repr(e))
+
+            messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            
+        # call the inherited
+        return admin.ModelAdmin.response_change(self, request, obj)
+
 
 # Momentum group admin
 class MemberInline(admin.TabularInline):
