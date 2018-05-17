@@ -46,7 +46,7 @@ class MemberChangeForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_invited_to_activate', 'is_superuser', 'is_ncg', 'is_members_council')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser', 'is_ncg', 'is_members_council')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -63,10 +63,10 @@ class MemberAdmin(BaseUserAdmin):
     # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_invited_to_activate', 'is_superuser')
+    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_invited_to_activate')}),
+        (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_emailed')}),
         ('Personal info', {'fields': ('name', 'momentum_group', )}),
         ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
@@ -82,7 +82,7 @@ class MemberAdmin(BaseUserAdmin):
     search_fields = ('email', 'name')
     ordering = ('email',)
     filter_horizontal = ()
-    readonly_fields = ('activation_key', 'last_login', 'last_invited_to_activate', )
+    readonly_fields = ('activation_key', 'last_login', 'last_emailed', )
 
 # Momentum group admin
 class MemberInline(admin.TabularInline):
