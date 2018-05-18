@@ -1,0 +1,8 @@
+Per-email member variables:
+  - [name]	Full name
+  - [link]	Activation link
+
+Site-wide variables:
+  - [months_since_launch]	currently 4
+  - [active_member_count]	currently 9,148
+  - [proposal_count]		currently 167
