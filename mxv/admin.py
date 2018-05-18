@@ -16,7 +16,7 @@ class EmailAdmin(admin.ModelAdmin):
         'text_content'
     )
     
-    # sends the email to (in)active members
+    # sends the email to (in)active members (last_emailed needs to be manually set to null for the target members first)
     def response_change(self, request, obj):
         email = obj
         settings = EmailSettings.get_solo()
@@ -27,27 +27,22 @@ class EmailAdmin(admin.ModelAdmin):
             
             # get the members to send to
             if 'send_to_all_active_members' in request.POST:
-                members = Member.objects.filter(is_active = True)
+                members = Member.objects.filter(is_active = True, last_emailed = None)
             if 'send_to_all_inactive_members' in request.POST:
-                members = Member.objects.filter(is_active = False)
+                members = Member.objects.filter(is_active = False, last_emailed = None)
             if 'send_to_test_address' in request.POST:
                 members = Member.objects.filter(email = settings.test_email_address)
             
-            # while there are members to send the email to...
-            while (len(members) > 0):
+            # only send to a few to avoid timeouts
+            members_to_send = members[:settings.send_count]
             
-                # get the next group to send
-                members_to_send = members[:settings.send_count]
-                members = [member for member in members if not member in members_to_send]
-                
-                # send the email
-                try:
-                    sent += email.send_to(request, { member.email for member in members_to_send })
-                except Exception as e:
-                    messages.error(request, repr(e))                
-                
-            messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
-            
+            # send the email
+            try:
+                sent = email.send_to(request, { member.email for member in members_to_send })
+                messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+            except Exception as e:
+                messages.error(request, repr(e))                
+                            
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
 
