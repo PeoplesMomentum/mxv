@@ -13,6 +13,7 @@ from review.models import Proposal
 place_holder_text = 'Available place-holders: [name], [link], [months_since_launch], [proposal_count] and [active_member_count]. '
 logo_text = 'Use https://d3n8a8pro7vhmx.cloudfront.net/momentum/pages/92/attachments/original/1518443729/Momentum_logo_for_emails.png?1518443729 as the URL of an image to insert the Momentum logo.'
 class Email(models.Model):
+    name = models.CharField(max_length = 255, default = '')
     subject = models.CharField(max_length = 255)
     html_content = HTMLField(default = '', help_text = place_holder_text + logo_text )
     text_content = models.TextField(default = '', help_text = place_holder_text)
