@@ -8,9 +8,10 @@ admin.site.site_header = 'My Momentum - Administration'
 
 # emails
 class EmailAdmin(admin.ModelAdmin):
-    search_fields = ('subject', 'html_content', 'text_content')
-    list_display = ('subject',)
+    search_fields = ('name', 'subject', 'html_content', 'text_content')
+    list_display = ('name', 'subject')
     fields = (
+        'name',
         'subject', 
         'html_content', 
         'text_content'
