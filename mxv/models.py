@@ -76,8 +76,8 @@ class Email(models.Model):
     # replaces place-holders with site variables
     def place_holders_to_site_variables(self, content):
         content = content.replace('[months_since_launch]', '%d' % round((date.today() - LAUNCH_DATE).days / 30))   # months (kind of)
-        content = content.replace('[active_member_count]', '%d' % Member.objects.filter(is_active=True).count())
-        content = content.replace('[proposal_count]', '%d' % Proposal.objects.count())
+        content = content.replace('[active_member_count]', '{:,}'.format(Member.objects.filter(is_active=True).count()))
+        content = content.replace('[proposal_count]', '{:,}'.format(Proposal.objects.count()))
         return content
         
     # sends the email to count inactive members who have not yet been invited
