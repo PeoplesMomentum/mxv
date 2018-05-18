@@ -489,6 +489,12 @@
         "fields": {
             "track_voting": 3,
             "number": 12,
+            "text": "Should Momentum adopt this proposal to make the National Policy Forum fully accountable to members and trade unions?" }},
+    {   "model" : "review.Question",
+        "pk": 28,
+        "fields": {
+            "track_voting": 3,
+            "number": 13,
             "text": "Should Momentum adopt this proposal to reform Party Conference?" }},
 
     {   "model" : "review.Choice",
@@ -835,5 +841,15 @@
         "pk": 69,
         "fields": {
             "question": 27, 
+            "text": "No" }},
+    {   "model" : "review.Choice",
+        "pk": 70,
+        "fields": {
+            "question": 28, 
+            "text": "Yes" }},
+    {   "model" : "review.Choice",
+        "pk": 71,
+        "fields": {
+            "question": 28, 
             "text": "No" }}
 ]
