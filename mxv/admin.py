@@ -23,13 +23,15 @@ class EmailAdmin(admin.ModelAdmin):
         members = []
         sent = 0
         
-        if request.method == 'POST' and ('send_to_all_active_members' in request.POST or 'send_to_all_inactive_members' in request.POST):
+        if request.method == 'POST' and ('send_to_all_active_members' in request.POST or 'send_to_all_inactive_members' in request.POST or 'send_to_test_address' in request.POST):
             
             # get the members to send to
             if 'send_to_all_active_members' in request.POST:
                 members = Member.objects.filter(is_active = True)
             if 'send_to_all_inactive_members' in request.POST:
                 members = Member.objects.filter(is_active = False)
+            if 'send_to_test_address' in request.POST:
+                members = Member.objects.filter(email = settings.test_email_address)
             
             # while there are members to send the email to...
             while (len(members) > 0):

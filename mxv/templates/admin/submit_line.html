@@ -10,6 +10,7 @@
     <!-- extra buttons on entity admin pages (override response_change on model admin class to handle submit) - affects all apps -->
     {% if opts.model_name == "email" %}<input type="submit" value="Send to all active members" name="send_to_all_active_members" style="background: green"/>{% endif %}
     {% if opts.model_name == "email" %}<input type="submit" value="Send to all inactive members" name="send_to_all_inactive_members" style="background: green"/>{% endif %}
+    {% if opts.model_name == "email" %}<input type="submit" value="Send to test address" name="send_to_test_address" style="background: green"/>{% endif %}
     {% if opts.model_name == "member" %}<input type="submit" value="Send activation email" name="send_activation_email" style="background: green"/>{% endif %}
     {% if opts.model_name == "moderationrequest" %}<input type="submit" value="{% trans 'Turn this into a comment instead' %}" name="turn_moderation_into_comment" style="background: green"/>{% endif %}
     {% if opts.model_name == "trackvoting" %}<input type="submit" value="{% trans 'Export results as CSV' %}" name="export_results_as_csv" style="background: green"/>{% endif %}
