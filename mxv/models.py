@@ -85,7 +85,7 @@ class Email(models.Model):
         settings = EmailSettings.get_solo()
         
         # get the inactive and uninvited members
-        uninvited_members = Member.objects.filter(is_active = settings.is_active, last_invited_to_activate = None)
+        uninvited_members = Member.objects.filter(is_active = settings.is_active, last_emailed = None)
         uninvited_members_to_send = uninvited_members[:settings.send_count]
         
         # send the emails
