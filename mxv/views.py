@@ -72,22 +72,29 @@ def reconsent(request):
             messages.error(request, 'Please correct the errors below.')
             
     else:
-        # check for an email parameter
+        # if there is an email parameter...
         email = request.GET.get('email', None)
-        
         if email:
-            # set the email to be read-only if specified
-            reconsent = Reconsent()
-            reconsent.email = email
-            form = ReconsentForm(instance = reconsent)
-            form.fields['email'].widget.attrs['readonly'] = True
+            
+            # if the email does not already exist...
+            exists = Reconsent.objects.filter(email = email)
+            if not exists:
+                
+                # save the email and IP
+                reconsent = Reconsent()
+                reconsent.email = email
+                reconsent.ip_address = ip_from_request(request)
+                reconsent.save()
+            
+            # complete
+            return redirect('reconsent_complete')
         else:
+            # no parameter so allow user to enter an email
             form = ReconsentForm()
     
     return render(request, 'mxv/new_reconsent.html', { 
         'title' : 'Re-consent',
         'form' : form})
-    
     
 # re-consent complete page
 def reconsent_complete(request):
