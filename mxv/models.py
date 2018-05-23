@@ -125,3 +125,12 @@ class EmailSettings(SingletonModel):
 class EmailTarget(models.Model):
     email = CIEmailField(max_length=255, unique=True)
     sent = models.NullBooleanField(default=None)
+
+# stores members that have re-consented to receive emails
+class Reconsent(models.Model):
+    email = CIEmailField(max_length=255, unique=True, help_text ='Enter your email address to receive emails from Momentum')
+    reconsented_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField()
+    
+    def __str__(self):
+        return self.email
