@@ -128,7 +128,7 @@ class EmailTarget(models.Model):
 
 # stores members that have re-consented to receive emails
 class Reconsent(models.Model):
-    email = CIEmailField(max_length=255, unique=True, help_text ='Enter your email address to receive emails from Momentum')
+    email = CIEmailField(max_length=255, unique=True)
     reconsented_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField()
     
