@@ -1,0 +1,19 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item active">{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+    
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'mxv/includes/form.html' %}
+        <button type="submit" class="btn btn-success">Re-consent to receive emails from Momentum</button>
+    </form>
+
+{% endblock %}

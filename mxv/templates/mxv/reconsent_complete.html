@@ -1,0 +1,16 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item active">{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+    
+    <br/>
+    <h4>Thank you for agreeing to continue receiving our emails!</h4>
+
+{% endblock %}
