@@ -85,7 +85,7 @@ def reconsent(request):
             form = ReconsentForm()
     
     return render(request, 'mxv/new_reconsent.html', { 
-        'title' : 'Re-consent to receive email from Momentum',
+        'title' : 'Re-consent',
         'form' : form})
     
     
