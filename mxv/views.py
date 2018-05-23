@@ -5,6 +5,7 @@ from .settings import SITE_NAME_SHORT, SITE_NAME_LONG, ALLOW_ERROR_URL
 from django.http import Http404
 from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF
 from review.models import TrackVoting
+from django.shortcuts import render
 
 
 # landing page
@@ -30,3 +31,7 @@ def error(request):
     else:
         raise Http404('not found')
         
+# reconsent to receive emails page
+def reconsent(request, email = None):
+    return render(request, 'mxv/reconsent.html', { 
+        'title' : 'Re-consent to receive email from Momentum' })

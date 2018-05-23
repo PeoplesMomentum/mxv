@@ -21,4 +21,7 @@ urlpatterns = [
     
     # error testing
     url(r'^error/$', views.error, name='error'),
+    
+    # GDPR
+    url(r'^reconsent/$', views.reconsent, name='reconsent'),
 ]
