@@ -28,9 +28,12 @@ def question_and_choices(voting_context, question_id):
         choice_html = '<label class="mt-4">[Voting not yet started]</label>'
         
     # voting in progress
-    elif voting_context.track_voting.voting_in_range() and not voting_context.request.user.is_anonymous():
-        for choice in choices:
-            choice_html += '<label class="radio-inline mt-4 mr-4"><input type="radio" name="answer_%d" value="%d_%d" %s>%s</label>' % (question.id, question.id, choice.id, 'checked="checked"' if current_answer and current_answer.choice == choice else '', choice.text)
+    elif voting_context.track_voting.voting_in_range():
+        if not voting_context.request.user.is_anonymous():
+            for choice in choices:
+                choice_html += '<label class="radio-inline mt-4 mr-4"><input type="radio" name="answer_%d" value="%d_%d" %s>%s</label>' % (question.id, question.id, choice.id, 'checked="checked"' if current_answer and current_answer.choice == choice else '', choice.text)
+        else:
+            choice_html = '<label class="mt-4">[Log in to vote]</label>'
     
     # voting complete
     else:
