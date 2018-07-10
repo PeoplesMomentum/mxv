@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'mxv.apps.MxvConfig',
     'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
+    'voting_intentions.apps.VotingIntentionsConfig',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

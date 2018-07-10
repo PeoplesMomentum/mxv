@@ -1,0 +1,39 @@
+[
+    {   "model" : "voting_intentions.Vote",
+        "pk": 1,
+        "fields": {
+            "name": "NEC Elections",
+            "redirect_url": "https://momentum.nationbuilder.com/donate2" }},
+
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "name": "donation_first_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "name": "donation_last_name" }},
+
+    {   "model" : "voting_intentions.Choice",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "text": "Already voted" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "text": "Whole slate" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 3,
+        "fields": {
+            "vote": 1,
+            "text": "Part of slate" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 4,
+        "fields": {
+            "vote": 1,
+            "text": "Against" }}
+]

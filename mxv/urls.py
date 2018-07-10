@@ -25,4 +25,7 @@ urlpatterns = [
     # GDPR
     url(r'^reconsent/$', views.reconsent, name='reconsent'),
     url(r'^reconsent_complete/$', views.reconsent_complete, name='reconsent_complete'),
+    
+    # voting intentions
+    url(r'^voting_intentions/', include('voting_intentions.urls')),
 ]
