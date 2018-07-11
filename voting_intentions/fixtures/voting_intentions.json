@@ -1,0 +1,127 @@
+[
+    {   "model" : "voting_intentions.Vote",
+        "pk": 1,
+        "fields": {
+            "name": "NEC Elections",
+            "redirect_url": "https://momentum.nationbuilder.com/donate2" }},
+
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "name": "donation_first_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "name": "donation_last_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 3,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_country_code" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 4,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address1" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 5,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address2" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 6,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address3" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 7,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_city" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 8,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_zip" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 9,
+        "fields": {
+            "vote": 1,
+            "name": "email",
+            "pass_on_name": "donation_email" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 10,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_phone_number" }},
+
+    {   "model" : "voting_intentions.Choice",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "text": "Pledge - all 9" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "text": "Voted - all 9" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 3,
+        "fields": {
+            "vote": 1,
+            "text": "Backing different candidates" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 4,
+        "fields": {
+            "vote": 1,
+            "text": "Not a Labour member" }},
+
+    {   "model" : "voting_intentions.VoteTag",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "text": "NEC18" }},
+    {   "model" : "voting_intentions.VoteTag",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "text": "NEC18_Email" }},
+
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 1,
+        "fields": {
+            "choice": 1,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 2,
+        "fields": {
+            "choice": 1,
+            "text": "NEC18_Pledge" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 3,
+        "fields": {
+            "choice": 2,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 4,
+        "fields": {
+            "choice": 2,
+            "text": "NEC18_Vote" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 5,
+        "fields": {
+            "choice": 3,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 6,
+        "fields": {
+            "choice": 3,
+            "text": "NEC18_Against" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 7,
+        "fields": {
+            "choice": 4,
+            "text": "LPN18NEC" }}
+]
