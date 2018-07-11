@@ -61,20 +61,67 @@
         "pk": 1,
         "fields": {
             "vote": 1,
-            "text": "Already voted" }},
+            "text": "Pledge - all 9" }},
     {   "model" : "voting_intentions.Choice",
         "pk": 2,
         "fields": {
             "vote": 1,
-            "text": "Whole slate" }},
+            "text": "Voted - all 9" }},
     {   "model" : "voting_intentions.Choice",
         "pk": 3,
         "fields": {
             "vote": 1,
-            "text": "Part of slate" }},
+            "text": "Backing different candidates" }},
     {   "model" : "voting_intentions.Choice",
         "pk": 4,
         "fields": {
             "vote": 1,
-            "text": "Against" }}
+            "text": "Not a Labour member" }},
+
+    {   "model" : "voting_intentions.VoteTag",
+        "pk": 1,
+        "fields": {
+            "vote": 1,
+            "text": "NEC18" }},
+    {   "model" : "voting_intentions.VoteTag",
+        "pk": 2,
+        "fields": {
+            "vote": 1,
+            "text": "NEC18_Email" }},
+
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 1,
+        "fields": {
+            "choice": 1,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 2,
+        "fields": {
+            "choice": 1,
+            "text": "NEC18_Pledge" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 3,
+        "fields": {
+            "choice": 2,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 4,
+        "fields": {
+            "choice": 2,
+            "text": "NEC18_Vote" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 5,
+        "fields": {
+            "choice": 3,
+            "text": "LPM18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 6,
+        "fields": {
+            "choice": 3,
+            "text": "NEC18_Against" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 7,
+        "fields": {
+            "choice": 4,
+            "text": "LPN18NEC" }}
 ]

@@ -17,9 +17,20 @@ class Choice(models.Model):
     vote = models.ForeignKey(Vote, related_name='choices')
     text = models.TextField()
 
+# NationBuilder tags that are set for a vote
+class VoteTag(models.Model):
+    vote = models.ForeignKey(Vote, related_name='vote_tags')
+    text = models.TextField()
+
+# NationBuilder tags that are set for a choice
+class ChoiceTag(models.Model):
+    choice = models.ForeignKey(Choice, related_name='choice_tags')
+    text = models.TextField()
+
 # a voting intention (associated with an email for now, eventually with a NationBuilder Id)
 class Intention(models.Model):
     vote = models.ForeignKey(Vote, related_name='intentions')
     choice = models.ForeignKey(Choice, related_name='intentions')
     email = CIEmailField(verbose_name='email address', max_length=255)
+    nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     recorded_at = models.DateTimeField(auto_now_add=True)

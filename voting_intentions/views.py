@@ -14,6 +14,10 @@ def index(request):
         # record a voting intention
         vote.intentions.create(vote = vote, choice = choice, email = email)
         
+        # if the email corresponds to a NationBuilder Id...
+        
+            # set the vote and choice tags
+        
         # for each URL parameter that is present in the request...
         url_parameters_present = []
         for url_parameter in vote.url_parameters.all():
