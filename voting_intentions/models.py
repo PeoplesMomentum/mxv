@@ -10,6 +10,7 @@ class Vote(models.Model):
 class UrlParameter(models.Model):
     vote = models.ForeignKey(Vote, related_name='url_parameters')
     name = models.TextField()
+    pass_on_name = models.TextField(default = '')
 
 # the possible voting intentions
 class Choice(models.Model):

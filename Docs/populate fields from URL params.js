@@ -1,7 +1,10 @@
 <script type="text/javascript">
   
   // only allow elements with an Id in this array to be set via URL parameters
-  var whiteListedIds = ["donation_first_name", "donation_last_name"];
+  var whiteListedIds = ["donation_first_name", "donation_last_name", "donation_billing_address_country_code",
+                        "donation_billing_address_address1", "donation_billing_address_address2",
+                        "donation_billing_address_address3", "donation_billing_address_city", 
+                        "donation_billing_address_zip", "donation_email", "donation_billing_address_phone_number"];
   
   $(document).ready(function()
   {

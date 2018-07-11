@@ -14,14 +14,20 @@ def index(request):
         # record a voting intention
         vote.intentions.create(vote = vote, choice = choice, email = email)
         
-        # build a URL parameter string from the URL parameters that are present
+        # for each URL parameter that is present in the request...
         url_parameters_present = []
         for url_parameter in vote.url_parameters.all():
             if url_parameter.name in request.GET:
-                url_parameters_present.append((url_parameter.name, request.GET[url_parameter.name]))
+                
+                # change its name if necessary
+                name = url_parameter.name if url_parameter.pass_on_name == '' else url_parameter.pass_on_name
+                value = request.GET[url_parameter.name]
+                url_parameters_present.append((name, value))
+                
+        # pass the parameters on
         url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
 
-        # redirect to the donation page
+        # redirect
         return redirect('?'.join([vote.redirect_url, url_parameter_string]))
     
     else:

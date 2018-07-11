@@ -15,6 +15,47 @@
         "fields": {
             "vote": 1,
             "name": "donation_last_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 3,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_country_code" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 4,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address1" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 5,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address2" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 6,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_address3" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 7,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_city" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 8,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_zip" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 9,
+        "fields": {
+            "vote": 1,
+            "name": "email",
+            "pass_on_name": "donation_email" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 10,
+        "fields": {
+            "vote": 1,
+            "name": "donation_billing_address_phone_number" }},
 
     {   "model" : "voting_intentions.Choice",
         "pk": 1,
