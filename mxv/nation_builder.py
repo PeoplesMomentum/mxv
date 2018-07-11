@@ -24,8 +24,11 @@ class NationBuilder:
         self.raise_for_status(response)
         record = response.json()
         
-        # return the requested fields
-        return({ field_name: record['person'][field_name] for field_name in field_names })
+        # return the requested fields if the person was found
+        if response.status_code == 200:
+            return({ field_name: record['person'][field_name] for field_name in field_names })
+        else:
+            return None
     
     # sets the field values for a person
     def SetPersonFields(self, person_id, fields):
@@ -49,5 +52,8 @@ class NationBuilder:
         self.raise_for_status(response)
         record = response.json()
         
-        # return the requested fields
-        return(record['person']['id'])
+        # return the requested fields if the person was found
+        if response.status_code == 200:
+            return(record['person']['id'])
+        else:
+            return None
