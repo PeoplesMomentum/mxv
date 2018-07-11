@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from voting_intentions.models import Vote, Choice
 from django.http.response import HttpResponseBadRequest
+from mxv.nation_builder import NationBuilder
 
 # records a voting intention from the URL parameters and redirects
 def index(request):
@@ -10,13 +11,18 @@ def index(request):
     choice = get_object_or_404(Choice, pk = request.GET['choice'])
     email = request.GET['email']
     if email:
-            
+        
+        # get the NB id for the email    
+        nb = NationBuilder()
+        nb_id = nb.IdFromEmail(email)
+
         # record a voting intention
-        vote.intentions.create(vote = vote, choice = choice, email = email)
+        vote.intentions.create(vote = vote, choice = choice, email = email, nation_builder_id = nb_id)
         
-        # if the email corresponds to a NationBuilder Id...
-        
-            # set the vote and choice tags
+        # set the vote and choice tags
+        if nb_id:        
+            tags = vote.vote_tags.all().union(choice.choice_tags.all())
+            nb.SetPersonTags(nb_id, [tag.text for tag in tags])
         
         # for each URL parameter that is present in the request...
         url_parameters_present = []

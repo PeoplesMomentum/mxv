@@ -203,3 +203,5 @@ TRACK3_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_TRACK3_VOTING_V
 # when the site was launched to the members
 LAUNCH_DATE = date(2018, 2, 2)
 
+# token for accessing NationBuilder
+NATIONBUILDER_API_TOKEN = os.environ.get('MXV_NATIONBUILDER_API_TOKEN', '')
