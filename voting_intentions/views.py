@@ -1,16 +1,18 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from voting_intentions.models import Vote, Choice
-from django.http.response import HttpResponseBadRequest
 from mxv.nation_builder import NationBuilder
+from mxv.settings import DEFAULT_DONATION_PAGE_URL
 
 # records a voting intention from the URL parameters and redirects
 def index(request):
     
     # if the email, vote and intention are in the URL parameters...
-    vote = get_object_or_404(Vote, pk = request.GET['vote'])
-    choice = get_object_or_404(Choice, pk = request.GET['choice'])
-    email = request.GET['email']
-    if email:
+    vote_id = request.GET.get('vote', None)
+    choice_id = request.GET.get('choice', None)
+    vote = Vote.objects.filter(id = vote_id).first()
+    choice = Choice.objects.filter(id = choice_id).first()
+    email = request.GET.get('email', None)
+    if vote and choice and email:
         
         # get the NB id for the email    
         nb = NationBuilder()
@@ -41,4 +43,8 @@ def index(request):
         return redirect('?'.join([vote.redirect_url, url_parameter_string]))
     
     else:
-        return HttpResponseBadRequest()
+        # malformed request so just redirect to thanks/donation page
+        if vote:
+            return redirect(vote.redirect_url)
+        else:
+            return redirect(DEFAULT_DONATION_PAGE_URL)
