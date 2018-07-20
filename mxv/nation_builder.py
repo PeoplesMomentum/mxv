@@ -32,16 +32,17 @@ class NationBuilder:
     
     # sets the field values for a person
     def SetPersonFields(self, person_id, fields):
-        
-        # update the person's NB record
         response = requests.put(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), json = { 'person':  fields }, timeout = 5)
         self.raise_for_status(response)
 
     # sets the tags for a person
     def SetPersonTags(self, person_id, tags):
-        
-        # set the tags
         response = requests.put(self.TAG_URL % (person_id, NATIONBUILDER_API_TOKEN), json = { 'tagging':  { 'tag': tags} }, timeout = 5)
+        self.raise_for_status(response)
+
+    # clears the tags for a person
+    def ClearPersonTags(self, person_id, tags):
+        response = requests.delete(self.TAG_URL % (person_id, NATIONBUILDER_API_TOKEN), json = { 'tagging':  { 'tag': tags} }, timeout = 5)
         self.raise_for_status(response)
 
     # returns the NB id for an email

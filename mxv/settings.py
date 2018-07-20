@@ -206,5 +206,5 @@ LAUNCH_DATE = date(2018, 2, 2)
 # token for accessing NationBuilder
 NATIONBUILDER_API_TOKEN = os.environ.get('MXV_NATIONBUILDER_API_TOKEN', '')
 
-# default donation page URL
-DEFAULT_DONATION_PAGE_URL = 'https://momentum.nationbuilder.com/donate2'
+# default redirect page URL
+DEFAULT_REDIRECT_PAGE_URL = 'https://peoplesmomentum.com'

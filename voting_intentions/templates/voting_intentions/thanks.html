@@ -1,0 +1,16 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Thanks for letting us know!{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item active">Thanks for voting!</li>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Thanks for letting us know!</h2>
+    <p>Click <a href="https://peoplesmomentum.com">here</a> to return to our main website.</p>
+
+{% endblock %}
