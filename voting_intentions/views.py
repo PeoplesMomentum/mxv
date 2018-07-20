@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from voting_intentions.models import Vote, Choice
 from mxv.nation_builder import NationBuilder
 from mxv.settings import DEFAULT_REDIRECT_PAGE_URL
@@ -59,5 +59,9 @@ def index(request):
                 return redirect(vote.redirect_url)
             else:
                 return redirect(DEFAULT_REDIRECT_PAGE_URL)
-    except:
+    except Exception as ex:
         return redirect(DEFAULT_REDIRECT_PAGE_URL)
+   
+# renders the thanks page 
+def thanks(request):
+    return render(request, 'voting_intentions/thanks.html')
