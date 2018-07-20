@@ -37,16 +37,21 @@ def index(request):
             for url_parameter in vote.url_parameters.all():
                 if url_parameter.name in request.GET:
                     
-                    # change its name if necessary
+                    # change its name if necessary and add it to the list of parameters present
                     name = url_parameter.name if url_parameter.pass_on_name == '' else url_parameter.pass_on_name
                     value = request.GET[url_parameter.name]
                     url_parameters_present.append((name, value))
                     
-            # pass the parameters on
+            # build the parameter string
             url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
     
+            # get the redirect URL (choice overrides vote if set)
+            redirect_url = vote.redirect_url
+            if choice.redirect_url != '':
+                redirect_url = choice.redirect_url
+    
             # redirect
-            return redirect('?'.join([vote.redirect_url, url_parameter_string]))
+            return redirect('?'.join([redirect_url, url_parameter_string]))
         
         else:
             # malformed request so just redirect to thanks/donation page
