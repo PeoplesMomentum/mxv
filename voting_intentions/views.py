@@ -23,8 +23,13 @@ def index(request):
         
         # set the vote and choice tags
         if nb_id:        
-            tags = vote.vote_tags.all().union(choice.choice_tags.all())
-            nb.SetPersonTags(nb_id, [tag.text for tag in tags])
+            # add tags
+            add_tags = vote.vote_tags.filter(add=True).union(choice.choice_tags.filter(add=True))
+            nb.SetPersonTags(nb_id, [tag.text for tag in add_tags])
+            
+            # remove tags
+            remove_tags = vote.vote_tags.filter(add=False).union(choice.choice_tags.filter(add=False))
+            nb.ClearPersonTags(nb_id, [tag.text for tag in remove_tags])
         
         # for each URL parameter that is present in the request...
         url_parameters_present = []

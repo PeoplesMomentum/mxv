@@ -4,6 +4,11 @@
         "fields": {
             "name": "NEC Elections",
             "redirect_url": "https://momentum.nationbuilder.com/donate2" }},
+    {   "model" : "voting_intentions.Vote",
+        "pk": 2,
+        "fields": {
+            "name": "Labour Party Membership",
+            "redirect_url": "https://my.peoplesmomentum.com/voting_intentions/thanks" }},
 
     {   "model" : "voting_intentions.UrlParameter",
         "pk": 1,
@@ -77,6 +82,16 @@
         "fields": {
             "vote": 1,
             "text": "Not a Labour member" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 5,
+        "fields": {
+            "vote": 2,
+            "text": "Yes, I am a Labour Party member" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 6,
+        "fields": {
+            "vote": 2,
+            "text": "No, I am not a Labour Party member" }},
 
     {   "model" : "voting_intentions.VoteTag",
         "pk": 1,
@@ -123,5 +138,37 @@
         "pk": 7,
         "fields": {
             "choice": 4,
-            "text": "LPN18NEC" }}
+            "text": "LPN18NEC" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 8,
+        "fields": {
+            "choice": 5,
+            "text": "LPM" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 9,
+        "fields": {
+            "choice": 5,
+            "text": "LPM18MyMomentum" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 10,
+        "fields": {
+            "choice": 5,
+            "text": "LPN",
+            "add": "False" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 11,
+        "fields": {
+            "choice": 6,
+            "text": "LPN" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 12,
+        "fields": {
+            "choice": 6,
+            "text": "LPN18MyMomentum" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 13,
+        "fields": {
+            "choice": 6,
+            "text": "LPM",
+            "add": "False" }}
 ]
