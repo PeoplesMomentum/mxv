@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
     'voting_intentions.apps.VotingIntentionsConfig',    
+    'consultations.apps.ConsultationsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

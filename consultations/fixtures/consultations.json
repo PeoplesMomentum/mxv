@@ -1,0 +1,42 @@
+[
+    {   "model" : "consultations.Consultation",
+        "pk": 1,
+        "fields": {
+            "template": "consultations/consultation1.html",
+            "name": "Brexit",
+            "description": "What are your views on Brexit?",
+            "voting_start": "2018-09-04",
+            "voting_end": "2018-09-11" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 1,
+        "fields": {
+            "consultation": 1,
+            "number": 1,
+            "text": "Do you think Brexit is more likely to make things better or worse for your friends, family and community?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 1,
+        "fields": {
+            "question": 1, 
+            "display_order": 1, 
+            "text": "Brexit will make things better" }},
+    {   "model" : "consultations.Choice",
+        "pk": 2,
+        "fields": {
+            "question": 1, 
+            "display_order": 2, 
+            "text": "Brexit will make things worse" }},
+    {   "model" : "consultations.Choice",
+        "pk": 3,
+        "fields": {
+            "question": 1, 
+            "display_order": 3, 
+            "text": "No change" }},
+    {   "model" : "consultations.Choice",
+        "pk": 4,
+        "fields": {
+            "question": 1, 
+            "display_order": 4, 
+            "text": "Don't know" }}
+]
