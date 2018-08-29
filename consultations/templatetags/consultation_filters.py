@@ -22,6 +22,8 @@ def question_and_choices(voting_context, question_id):
     question_count = voting_context.consultation.questions.count()
     question = voting_context.consultation.questions.filter(pk=question_id).first()
     question_html = '<strong>Question %d of %d</strong> - %s' % (question.number, question_count, question.text)
+    if voting_context.consultation.guidance != "":
+        question_html += '<br/><p class="ml-4">%s</p>' % question.guidance
 
     # answers
     current_answers = []
@@ -29,24 +31,24 @@ def question_and_choices(voting_context, question_id):
         current_answers = voting_context.vote.answers.filter(question = question).all()
 
     # choices
-    choices = question.choices.all()
+    choices = question.choices.all().order_by('display_order')
     today = date.today()
     choice_html = ''
     
     # voting not started
     if voting_context.consultation.voting_start > today:
-        choice_html = '<label class="mt-4">[Voting not yet started]</label>'
+        choice_html = '<label>[Voting not yet started]</label>'
         
     # voting in progress
     elif voting_context.consultation.voting_in_range():
         if not voting_context.request.user.is_anonymous():
             for choice in choices:
                 if question.multipleAnswersAllowed:
-                    choice_html += '<label class="checkbox-inline mt-4 mr-4"><input type="checkbox" class="mr-2" name="answer_%d" value="%d_%d" %s>%s</label>' % (question.id, question.id, choice.id, 'checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
+                    choice_html += '<label class="checkbox-inline ml-4"><input type="checkbox" class="mr-4" name="answer_%d" value="%d_%d" %s>%s</label><br/>' % (question.id, question.id, choice.id, 'checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
                 else:
-                    choice_html += '<label class="radio-inline mt-4 mr-4"><input type="radio" class="mr-2" name="answer_%d" value="%d_%d" %s>%s</label>' % (question.id, question.id, choice.id, 'checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
+                    choice_html += '<label class="radio-inline ml-4"><input type="radio" class="mr-4" name="answer_%d" value="%d_%d" %s>%s</label><br/>' % (question.id, question.id, choice.id, 'checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
         else:
-            choice_html = '<label class="mt-4">[Log in to vote]</label>'
+            choice_html = '<label class="ml-4">[Log in to vote]</label>'
     
     # voting complete
     else:
@@ -54,19 +56,19 @@ def question_and_choices(voting_context, question_id):
         for choice in choices:
             count = question.answers.filter(choice = choice).count()
             total = question.answers.count()
-            choice_html += '<label class="mt-4 mr-4">%d voted %s (%d%%)</label>' % (count, choice.text, count / total * 100 if total > 0 else 0)
+            choice_html += '<label class="ml-4">%d voted %s (%d%%)</label><br/>' % (count, choice.text, count / total * 100 if total > 0 else 0)
         
         # answers
         if len(current_answers) > 0:
-            choice_html += '<label class="mt-4 mr-4">(You voted %s)</label>' % comma_and([answer.choice.text for answer in current_answers])
+            choice_html += '<label class="ml-4">(You voted %s)</label><br/>' % comma_and([answer.choice.text for answer in current_answers])
         elif not voting_context.request.user.is_anonymous():
-            choice_html += '<label class="mt-4 mr-4">(You didn\'t vote on this question)</label>'
+            choice_html += '<label class="ml-4">(You didn\'t vote on this question)</label><br/>'
           
     # layout    
     return mark_safe("""
         <p><em>
             <span class="question-text">%s</span>
             <br/>
-            <span class="ml-4">%s</span>
+            %s
         </em></p>
         """ % (question_html, choice_html))

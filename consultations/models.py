@@ -62,6 +62,7 @@ class Question(models.Model):
     consultation = models.ForeignKey(Consultation, related_name='questions')
     number = models.PositiveIntegerField()
     text = models.TextField(max_length=description_length)
+    guidance = models.TextField(max_length=description_length, default='')
     multipleAnswersAllowed = models.BooleanField()
 
     def __str__(self):

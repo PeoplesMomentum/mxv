@@ -49,15 +49,17 @@ def consultation(request, pk):
                     # for each answer...
                     for answer_key in [key for key in request.POST.keys() if key.startswith('answer_')]:
                         try:
-                            post_answer = request.POST[answer_key]
+                            # for each choice...
+                            post_answers = request.POST.getlist(answer_key)
+                            for post_answer in post_answers:
                             
-                            # get the question and choice
-                            (question_id, choice_id) = post_answer.split('_')
-                            question = consultation.questions.filter(id = question_id).first()
-                            choice = question.choices.filter(id = choice_id).first()
-                                
-                            # add new answer
-                            vote.answers.create(question = question, choice = choice)
+                                # get the question and choice
+                                (question_id, choice_id) = post_answer.split('_')
+                                question = consultation.questions.filter(id = question_id).first()
+                                choice = question.choices.filter(id = choice_id).first()
+                                    
+                                # add new answer
+                                vote.answers.create(question = question, choice = choice)
                         except:
                             pass                    
                 
