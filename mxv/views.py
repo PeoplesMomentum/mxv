@@ -3,7 +3,7 @@ from django.template import loader
 from django.contrib.auth.views import PasswordResetView
 from .settings import SITE_NAME_SHORT, SITE_NAME_LONG, ALLOW_ERROR_URL
 from django.http import Http404
-from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF
+from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF, CONSULTATIONS_VISIBLE_TO_NON_STAFF
 from review.models import TrackVoting
 from django.shortcuts import render, redirect
 from mxv.models import Reconsent
@@ -17,6 +17,7 @@ def index(request):
     context = {
         'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track3_voting': TrackVoting.objects.filter(pk=3).first(),
+        'show_consultations': CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
     }
     return HttpResponse(template.render(context, request))
 

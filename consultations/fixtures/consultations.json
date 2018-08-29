@@ -1,0 +1,203 @@
+[
+    {   "model" : "consultations.Consultation",
+        "pk": 1,
+        "fields": {
+            "template": "consultations/consultation1.html",
+            "name": "Brexit",
+            "description": "What are your views on Brexit?",
+            "voting_start": "2018-08-29",
+            "voting_end": "2018-09-07" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 1,
+        "fields": {
+            "consultation": 1,
+            "number": 1,
+            "text": "Do you think Brexit is more likely to make things better or worse for your friends, family and community?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 1,
+        "fields": {
+            "question": 1, 
+            "display_order": 1, 
+            "text": "Brexit will make things better" }},
+    {   "model" : "consultations.Choice",
+        "pk": 2,
+        "fields": {
+            "question": 1, 
+            "display_order": 2, 
+            "text": "Brexit will make things worse" }},
+    {   "model" : "consultations.Choice",
+        "pk": 3,
+        "fields": {
+            "question": 1, 
+            "display_order": 3, 
+            "text": "No change" }},
+    {   "model" : "consultations.Choice",
+        "pk": 4,
+        "fields": {
+            "question": 1, 
+            "display_order": 4, 
+            "text": "Don't know" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 2,
+        "fields": {
+            "consultation": 1,
+            "number": 2,
+            "text": "In your view, which of the three possible outcomes of the Brexit process would be more helpful to a future Corbyn government in achieving our economic and social goals?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 5,
+        "fields": {
+            "question": 2, 
+            "display_order": 1, 
+            "text": "Hard Brexit – i.e. no deal is agreed and the UK leaves the EU to remain on WTO terms" }},
+    {   "model" : "consultations.Choice",
+        "pk": 6,
+        "fields": {
+            "question": 2, 
+            "display_order": 2, 
+            "text": "Soft Brexit – i.e. an arrangement in which the UK has a close partnership with the EU including full Single Market access" }},
+    {   "model" : "consultations.Choice",
+        "pk": 7,
+        "fields": {
+            "question": 2, 
+            "display_order": 3, 
+            "text": "Staying in the EU" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 3,
+        "fields": {
+            "consultation": 1,
+            "number": 3,
+            "text": "Do you support or oppose the Labour Party holding a full debate on Brexit - including a vote at annual conference - to give the membership, unions and affiliated organisations an opportunity to discuss and agree our position in light of developments?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 8,
+        "fields": {
+            "question": 3, 
+            "display_order": 1, 
+            "text": "Yes, I support holding a full conference debate on Brexit" }},
+    {   "model" : "consultations.Choice",
+        "pk": 9,
+        "fields": {
+            "question": 3, 
+            "display_order": 2, 
+            "text": "No, I oppose holding a full conference debate on Brexit" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 4,
+        "fields": {
+            "consultation": 1,
+            "number": 4,
+            "text": "Do you think Labour should stick to its six tests on Brexit - bearing in mind that Tory proposals look unlikely to meet these tests?",
+            "guidance": "(Labour’s tests say that Brexit must deliver for all nations and regions of the UK; defend rights and protections and prevent a race to the bottom; deliver the exact same benefits as the single market and customs union; protect our security; ensure fair management of migration; and ensure a strong and collaborative future relationship.)",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 10,
+        "fields": {
+            "question": 4, 
+            "display_order": 1, 
+            "text": "Yes, Labour should measure any proposed Tory Brexit deal against its six tests" }},
+    {   "model" : "consultations.Choice",
+        "pk": 11,
+        "fields": {
+            "question": 4, 
+            "display_order": 2, 
+            "text": "No, Labour must develop different measures in light of developments" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 5,
+        "fields": {
+            "consultation": 1,
+            "number": 5,
+            "text": "Do you think Labour should vote down the final Tory Brexit deal in Parliament if it does not meet these six tests and does not have the support of our party’s membership and unions?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 12,
+        "fields": {
+            "question": 5, 
+            "display_order": 1, 
+            "text": "Yes" }},
+    {   "model" : "consultations.Choice",
+        "pk": 13,
+        "fields": {
+            "question": 5, 
+            "display_order": 2, 
+            "text": "No" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 6,
+        "fields": {
+            "consultation": 1,
+            "number": 6,
+            "text": "Would you support or oppose Labour calling for a General Election and proposing a different plan on Brexit as part of our manifesto?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 14,
+        "fields": {
+            "question": 6, 
+            "display_order": 1, 
+            "text": "Support" }},
+    {   "model" : "consultations.Choice",
+        "pk": 15,
+        "fields": {
+            "question": 6, 
+            "display_order": 2, 
+            "text": "Oppose" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 7,
+        "fields": {
+            "consultation": 1,
+            "number": 7,
+            "text": "If there is no General Election before Brexit, would you support giving the people the final say on the terms of the Tories’ deal through a public vote?",
+            "multipleAnswersAllowed": "False" }},
+    {   "model" : "consultations.Choice",
+        "pk": 16,
+        "fields": {
+            "question": 7, 
+            "display_order": 1, 
+            "text": "Support" }},
+    {   "model" : "consultations.Choice",
+        "pk": 17,
+        "fields": {
+            "question": 7, 
+            "display_order": 2, 
+            "text": "Oppose" }},
+
+    {   "model" : "consultations.Question",
+        "pk": 8,
+        "fields": {
+            "consultation": 1,
+            "number": 8,
+            "text": "If Theresa May's Brexit deal fails our tests, Labour defeats it in Parliament, and there is a public vote on the deal - rather than a general election - which of these options would you support?",
+            "guidance": "(you can select more than one)",
+            "multipleAnswersAllowed": "True" }},
+    {   "model" : "consultations.Choice",
+        "pk": 18,
+        "fields": {
+            "question": 8, 
+            "display_order": 1, 
+            "text": "Vote for a hard, ‘no deal’ Brexit" }},
+    {   "model" : "consultations.Choice",
+        "pk": 19,
+        "fields": {
+            "question": 8, 
+            "display_order": 2, 
+            "text": "Vote to stay in and lead the fight to reform the EU" }},
+    {   "model" : "consultations.Choice",
+        "pk": 20,
+        "fields": {
+            "question": 8, 
+            "display_order": 3, 
+            "text": "Vote to endorse the Tories' proposed Brexit deal after all" }},
+    {   "model" : "consultations.Choice",
+        "pk": 21,
+        "fields": {
+            "question": 8, 
+            "display_order": 4, 
+            "text": "Try to extend Article 50 to give more time for negotiations" }}
+
+]

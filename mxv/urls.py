@@ -28,4 +28,7 @@ urlpatterns = [
     
     # voting intentions
     url(r'^voting_intentions/', include('voting_intentions.urls')),
+    
+    # consultations
+    url(r'^consultations/', include('consultations.urls')),
 ]

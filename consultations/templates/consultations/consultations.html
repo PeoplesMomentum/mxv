@@ -1,0 +1,35 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Consultations{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item active">Consultations</li>
+{% endblock %}
+
+{% block content %}
+    <p>We're running a series of consultations on subjects that are important to our members. Take part here.</p>
+
+    <div class="row mb-4">
+        {% for consultation in consultations %}
+            <div class="col-sm d-flex align-items-stretch pt-4">
+                <div class="card bg-light border-secondary" style="width: 20rem;">
+                    <div class="card-body">
+                        <a href="{% url 'consultations:consultation' consultation.pk %}"><h4 class="card-title">{{ consultation.name }}</h4></a>
+                        <table class="card-text text-muted small">
+                            <tr><td><b>Voting</b></td><td>{{ consultation.voting_date_text }}</td></tr>
+                        </table>
+                        <hr>
+                        <p class="card-text">{{ consultation.description }}</p>
+                        <p class="card-text {{ consultation.guidance_class }}">{{ consultation.guidance }}</p>
+                        <div class="text-right align-bottom">
+                            <a href="{% url 'consultations:consultation' consultation.pk %}">View <i class="fa fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}
