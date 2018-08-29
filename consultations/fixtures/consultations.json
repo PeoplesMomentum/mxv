@@ -5,8 +5,8 @@
             "template": "consultations/consultation1.html",
             "name": "Brexit",
             "description": "What are your views on Brexit?",
-            "voting_start": "2018-08-29",
-            "voting_end": "2018-09-11" }},
+            "voting_start": "2018-09-03",
+            "voting_end": "2018-09-07" }},
 
     {   "model" : "consultations.Question",
         "pk": 1,
@@ -172,7 +172,8 @@
         "fields": {
             "consultation": 1,
             "number": 8,
-            "text": "If Theresa May's Brexit deal fails our tests, Labour defeats it in Parliament, and there is a public vote on the deal - rather than a general election - which of these options would you support (you can select more than one)?",
+            "text": "If Theresa May's Brexit deal fails our tests, Labour defeats it in Parliament, and there is a public vote on the deal - rather than a general election - which of these options would you support?",
+            "guidance": "(you can select more than one)",
             "multipleAnswersAllowed": "True" }},
     {   "model" : "consultations.Choice",
         "pk": 18,
