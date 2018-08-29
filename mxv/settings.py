@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'solo',
+    'solo.apps.SoloAppConfig',
     'tinymce',
     'anymail',
     'widget_tweaks'
