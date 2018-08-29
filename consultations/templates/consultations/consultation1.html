@@ -1,0 +1,4 @@
+{% load static %}
+{% load consultation_filters %}
+
+{{ voting_context|question_and_choices:1 }}

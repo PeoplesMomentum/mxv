@@ -209,3 +209,7 @@ NATIONBUILDER_API_TOKEN = os.environ.get('MXV_NATIONBUILDER_API_TOKEN', '')
 
 # default redirect page URL
 DEFAULT_REDIRECT_PAGE_URL = 'https://peoplesmomentum.com'
+
+# whether to show consultations to just staff or anyone
+CONSULTATIONS_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_CONSULTATIONS_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+

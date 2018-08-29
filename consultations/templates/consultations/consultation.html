@@ -1,0 +1,43 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}{{ voting_context.consultation.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'consultations:index' %}">Consultations</a></li>
+    <li class="breadcrumb-item active">{{ voting_context.consultation.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+                <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <table class="card-text text-muted small mb-4">
+        <tr><td><b>Voting</b></td><td>{{ voting_context.consultation.voting_date_text }}</td></tr>
+    </table>
+    
+    <h3>{{ voting_context.consultation.name }}</h3>
+    <br/>
+    
+    <p>{{ voting_context.consultation.description }}</p>
+    <p class="{{ voting_context.consultation.guidance_class }}">{{ voting_context.consultation.guidance }}</p>
+    
+    <br/><hr><br/>
+    
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include voting_context.consultation.template %}
+        {% if not request.user.is_anonymous and voting_context.consultation.voting_in_range %}
+            <br/>
+            <button type="submit" name="vote" class="btn btn-primary large-button-text">Vote</button>
+        {% endif %}
+    </form>
+
+{% endblock %}

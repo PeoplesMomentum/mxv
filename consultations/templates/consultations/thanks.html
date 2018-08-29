@@ -1,0 +1,23 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Thanks for voting!{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'consultations:index' %}">Consultations</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'consultations:consultation' consultation.pk %}">{{ consultation.name }}</a></li>
+    <li class="breadcrumb-item active">Thanks for voting!</li>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Thank you for voting!</h2>
+    <p>Your answers have been saved.  We're developing Momentum's digital democracy, and more election-winning digital tools like last year's MyNearestMarginal. <strong>Lots of volunteers are chipping in their time</strong>, but digital work is still expensive. Could you <a href="https://momentum.nationbuilder.com/donate7" target="_blank">chip in £10</a> to <strong>help us cover the costs?</strong> Thank you!</p>
+
+    <br/>
+    <a href="https://momentum.nationbuilder.com/donate7" target="_blank" class="btn btn-success large-button-text">I'll chip in</a>
+    <br/><br/><br/>
+    <a href="{% url 'consultations:consultation' consultation.pk %}" class="btn btn-primary mr-4">Edit my votes</a><a href="{% url 'index' %}" class="btn btn-primary">Return to My Momentum</a>
+
+{% endblock %}

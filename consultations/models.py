@@ -1,5 +1,7 @@
 from django.db import models
 from mxv.settings import AUTH_USER_MODEL
+from datetime import date
+from django.utils import formats
 
 # field sizes
 name_length = 255
@@ -14,8 +16,47 @@ class Consultation(models.Model):
     voting_end = models.DateField()
 
     def __str__(self):
-        return self.template
+        return self.name
 
+    # whether voting is currently allowed
+    def voting_in_range(self):
+        today = date.today()
+        return today >= self.voting_start and today <= self.voting_end
+    
+    # description of voting dates
+    def voting_date_text(self):
+        if self.voting_in_range():
+            return '%s - %s' % (formats.date_format(self.voting_start, 'd/m/Y'), formats.date_format(self.voting_end, 'd/m/Y'))
+        else:
+            return 'Completed'
+        
+    # voting guidance
+    def guidance(self):
+        today = date.today()
+        if today < self.voting_start:
+            return 'Voting on this consultation will be starting on %s.' % formats.date_format(self.voting_start, 'l jS F')
+        elif self.voting_in_range():
+            return 'Voting on this consultation is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
+        else:
+            return 'Voting on this consultation has ended.'
+    
+    # voting guidance CSS
+    def guidance_class(self):
+        if self.voting_in_range():
+            return 'text-danger'
+        else:
+            return 'text-muted'
+        
+    # voting button
+    def vote_button_text(self):
+        today = date.today()
+        if today < self.voting_start:
+            return 'View questions'
+        elif self.voting_in_range():
+            return 'Vote now'
+        else:
+            return 'View results'
+    
 # a question on a consultation
 class Question(models.Model):
     consultation = models.ForeignKey(Consultation, related_name='questions')

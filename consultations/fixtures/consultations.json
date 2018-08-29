@@ -5,7 +5,7 @@
             "template": "consultations/consultation1.html",
             "name": "Brexit",
             "description": "What are your views on Brexit?",
-            "voting_start": "2018-09-04",
+            "voting_start": "2018-08-29",
             "voting_end": "2018-09-11" }},
 
     {   "model" : "consultations.Question",
