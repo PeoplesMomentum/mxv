@@ -12,7 +12,7 @@ def comma_and(elements):
     if len(elements) == 2:
         return ' and '.join(elements)
     else:
-        return ' and '.join(', '.join(elements[:-1]), elements[-1])
+        return ' and '.join([', '.join(elements[:-1]), elements[-1]])
 
 # returns the requested question and choice HTML
 @register.filter()
