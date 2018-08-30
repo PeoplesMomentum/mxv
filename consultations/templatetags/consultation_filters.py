@@ -43,6 +43,8 @@ def question_and_choices(voting_context, question_id):
     elif voting_context.consultation.voting_in_range():
         if not voting_context.request.user.is_anonymous():
             for choice in choices:
+                if question.guidance == "" and choice.display_order == 1:
+                    choice_html += '<br/>'
                 if question.multipleAnswersAllowed:
                     choice_html += '<label class="checkbox-inline ml-4"><input type="checkbox" class="mr-4" name="answer_%d" value="%d_%d" %s>%s</label><br/>' % (question.id, question.id, choice.id, 'checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
                 else:
