@@ -9,6 +9,11 @@
         "fields": {
             "name": "Labour Party Membership",
             "redirect_url": "https://my.peoplesmomentum.com/voting_intentions/thanks" }},
+    {   "model" : "voting_intentions.Vote",
+        "pk": 3,
+        "fields": {
+            "name": "Lab18 Petitions",
+            "redirect_url": "https://momentum.nationbuilder.com/donate10" }},
 
     {   "model" : "voting_intentions.UrlParameter",
         "pk": 1,
@@ -92,6 +97,21 @@
         "fields": {
             "vote": 2,
             "text": "No, I am not a Labour Party member" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 7,
+        "fields": {
+            "vote": 3,
+            "text": "Open Selections" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 8,
+        "fields": {
+            "vote": 3,
+            "text": "Threshold" }},
+    {   "model" : "voting_intentions.Choice",
+        "pk": 9,
+        "fields": {
+            "vote": 3,
+            "text": "Open Selections and Threshold" }},
 
     {   "model" : "voting_intentions.VoteTag",
         "pk": 1,
@@ -214,5 +234,26 @@
         "fields": {
             "choice": 6,
             "text": "LPM",
-            "add": "False" }}
+            "add": "False" }},
+            
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 22,
+        "fields": {
+            "choice": 7,
+            "text": "MMPetition_1_OpenSelections" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 23,
+        "fields": {
+            "choice": 8,
+            "text": "MMPetition_2_Threshold" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 24,
+        "fields": {
+            "choice": 9,
+            "text": "MMPetition_1_OpenSelections" }},
+    {   "model" : "voting_intentions.ChoiceTag",
+        "pk": 25,
+        "fields": {
+            "choice": 9,
+            "text": "MMPetition_2_Threshold" }}
 ]
