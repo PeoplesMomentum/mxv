@@ -76,6 +76,12 @@
         "fields": {
             "vote": 3,
             "name": "donation_last_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 13,
+        "fields": {
+            "vote": 3,
+            "name": "email",
+            "pass_on_name": "donation_email" }},
 
     {   "model" : "voting_intentions.Choice",
         "pk": 1,
