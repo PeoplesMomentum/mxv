@@ -53,6 +53,7 @@ class Intention(models.Model):
     email = CIEmailField(verbose_name='email address', max_length=255)
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     recorded_at = models.DateTimeField(auto_now_add=True)
+    tags_written_to_nation_builder = models.BooleanField(default=False)
     
     def __str__(self):
         return self.email
