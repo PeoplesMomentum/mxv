@@ -4,11 +4,20 @@ test
 127.0.0.1:8000/voting_intentions/?vote=1&choice=2&email=bob@example.com&donation_first_name=Bob&donation_last_name=Smith&donation_billing_address_country_code=GB&donation_billing_address_address1=Floor%203%20Room%20C303&donation_billing_address_address2=Cannon%20Wharf%20Pell%20Street%20&donation_billing_address_address3=Surrey%20Quays%20&donation_billing_address_city=London&donation_billing_address_zip=SE8%205EN&donation_billing_address_phone_number=07111%20111%20111
 https://my.peoplesmomentum.com/voting_intentions?vote=1&choice=1&email={{ recipient.email }}&donation_first_name={{ recipient.first_name }}&donation_last_name={{ recipient.last_name }}
 
-127.0.0.1:8000/voting_intentions/?vote=2&choice=5&email=bob@example.com
-127.0.0.1:8000/voting_intentions/?vote=2&choice=6&email=bob@example.com
+127.0.0.1:8000/voting_intentions/?vote=3&choice=7&email=bob@example.com
+127.0.0.1:8000/voting_intentions/?vote=3&choice=8&email=bob@example.com
+127.0.0.1:8000/voting_intentions/?vote=3&choice=9&email=bob@example.com
+
+&email={{ recipient.email }}&donation_first_name={{ recipient.first_name }}&donation_last_name={{ recipient.last_name }}
 
 
 result
 ======
 
 https://momentum.nationbuilder.com/donate2?donation_first_name=Bob&donation_last_name=Smith&donation_billing_address_country_code=GB&donation_billing_address_addradd1=Floor%203%20Room%20C303&donation_billing_address_address2=Cannon%20Wharf%20Pell%20Street%20&donation_billing_address_address3=Surrey%20Quays%20&donatiod_billing_address_city=London&donation_billing_address_zip=SE8%205EN&donation_emaie=bob@example.com&donation_billing_address_phone_number=07111%20111%20111
+
+vote 3 URLs
+===========
+https://my.peoplesmomentum.com/voting_intentions?vote=3&choice=7&email={{ recipient.email }}&donation_first_name={{ recipient.first_name }}&donation_last_name={{ recipient.last_name }}
+https://my.peoplesmomentum.com/voting_intentions?vote=3&choice=8&email={{ recipient.email }}&donation_first_name={{ recipient.first_name }}&donation_last_name={{ recipient.last_name }}
+https://my.peoplesmomentum.com/voting_intentions?vote=3&choice=9&email={{ recipient.email }}&donation_first_name={{ recipient.first_name }}&donation_last_name={{ recipient.last_name }}
