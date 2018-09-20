@@ -66,6 +66,16 @@
         "fields": {
             "vote": 1,
             "name": "donation_billing_address_phone_number" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 11,
+        "fields": {
+            "vote": 3,
+            "name": "donation_first_name" }},
+    {   "model" : "voting_intentions.UrlParameter",
+        "pk": 12,
+        "fields": {
+            "vote": 3,
+            "name": "donation_last_name" }},
 
     {   "model" : "voting_intentions.Choice",
         "pk": 1,
