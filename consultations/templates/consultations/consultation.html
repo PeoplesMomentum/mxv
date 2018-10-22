@@ -35,6 +35,7 @@
         {% csrf_token %}
         {% include voting_context.consultation.template %}
         {% if not request.user.is_anonymous and voting_context.consultation.voting_in_range %}
+            <br/>
             <button type="submit" name="vote" class="btn btn-primary large-button-text">Vote</button>
         {% endif %}
     </form>

@@ -73,6 +73,7 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, related_name='choices')
     display_order = models.PositiveIntegerField(default=1)
     text = models.CharField(max_length=name_length)
+    redirect_url = models.TextField(default='')
 
     def __str__(self):
         return self.text

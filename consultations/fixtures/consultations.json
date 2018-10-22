@@ -5,7 +5,7 @@
             "template": "consultations/consultation1.html",
             "name": "Brexit",
             "description": "What are your views on Brexit?",
-            "voting_start": "2018-10-17",
+            "voting_start": "2018-10-22",
             "voting_end": "2018-10-31" }},
 
     {   "model" : "consultations.Question",
@@ -13,20 +13,20 @@
         "fields": {
             "consultation": 1,
             "number": 1,
-            "text": "Do you think the emerging Brexit deal is more likely to make things better or worse for your friends, family and community?",
+            "text": "Do you think Brexit is more likely to make things better or worse for your friends, family and community?",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 1,
         "fields": {
             "question": 1, 
             "display_order": 1, 
-            "text": "Will make things better" }},
+            "text": "Brexit will make things better" }},
     {   "model" : "consultations.Choice",
         "pk": 2,
         "fields": {
             "question": 1, 
             "display_order": 2, 
-            "text": "Will make things worse" }},
+            "text": "Brexit will make things worse" }},
     {   "model" : "consultations.Choice",
         "pk": 3,
         "fields": {
@@ -124,25 +124,37 @@
         "fields": {
             "consultation": 1,
             "number": 5,
-            "text": "In the event that there is no General Election, Conference has said that Labour must support all options including campaigning for a public vote. Do you support a public vote?",
+            "text": "In the event that there is no General Election, Conference has said that Labour must support all options remaining on the table including campaigning for a public vote. Do you support a public vote and, if so, in which circumstances?",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 14,
         "fields": {
             "question": 5, 
             "display_order": 1, 
-            "text": "Yes – I support a public vote" }},
+            "text": "I support a public vote remaining on the table <u>as an option if there is no general election</u>" }},
     {   "model" : "consultations.Choice",
         "pk": 15,
         "fields": {
             "question": 5, 
             "display_order": 2, 
-            "text": "No  - I do not support a public vote" }},
+            "text": "I support committing now to a public vote <u>but only if there is no general election</u>" }},
     {   "model" : "consultations.Choice",
         "pk": 16,
         "fields": {
             "question": 5, 
             "display_order": 3, 
+            "text": "I support committing now to a public vote <u>in all circumstances</u>" }},
+    {   "model" : "consultations.Choice",
+        "pk": 17,
+        "fields": {
+            "question": 5, 
+            "display_order": 4, 
+            "text": "I do not support a public vote" }},
+    {   "model" : "consultations.Choice",
+        "pk": 18,
+        "fields": {
+            "question": 5, 
+            "display_order": 5, 
             "text": "Don't know" }},
 
     {   "model" : "consultations.Question",
@@ -150,53 +162,21 @@
         "fields": {
             "consultation": 1,
             "number": 6,
-            "text": "If Theresa May's Brexit deal fails our tests, Labour defeats it in Parliament, and there is a public vote on the deal - rather than a General Election - which of these options would you support?",
-            "guidance": "(you can select more than one)",
-            "multipleAnswersAllowed": "True" }},
-    {   "model" : "consultations.Choice",
-        "pk": 17,
-        "fields": {
-            "question": 6, 
-            "display_order": 1, 
-            "text": "Vote for a hard, ‘no deal’ Brexit" }},
-    {   "model" : "consultations.Choice",
-        "pk": 18,
-        "fields": {
-            "question": 6, 
-            "display_order": 2, 
-            "text": "Vote to endorse the Tories' proposed Brexit deal" }},
+            "text": "With less than 6 months to go before the date upon which the UK is to leave the EU, the rights and status of EU citizens living in the UK, and UK citizens living elsewhere in the EU, remain uncertain. Will you add your name to this statement from Momentum making clear that you believe this situation is unacceptable and should be addressed as a matter of urgency?",
+            "guidance": "\"Protecting the rights of both those British citizens who live in the EU and EU citizens who live in the UK - our family, friends, neighbours, colleagues and workers in public services upon which people across the UK rely - should be a priority for the UK Government. This should be achieved by jointly committing with the EU to implement the citizens’ rights part of the draft Withdrawal Agreement: unilateral assurances by all sides are not sufficient to secure their rights.<br/><br/>\"As members of the Labour Party committed to justice and human rights, we stand in solidarity with those EU citizens in the UK who are now facing uncertainty about their futures. We regret that the UK Government has not been able to resolve this issue before now and call upon it do so immediately as a matter of urgency\".",
+            "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 19,
         "fields": {
             "question": 6, 
-            "display_order": 3, 
-            "text": "Vote to stay in and lead the fight to reform the EU" }},
+            "display_order": 1, 
+            "text": "Yes – I would like to add my name to this statement",
+            "redirect_url": "https://momentum.nationbuilder.com/donatenow" }},
     {   "model" : "consultations.Choice",
         "pk": 20,
         "fields": {
             "question": 6, 
-            "display_order": 4, 
-            "text": "Don't know" }},
-
-    {   "model" : "consultations.Question",
-        "pk": 7,
-        "fields": {
-            "consultation": 1,
-            "number": 7,
-            "text": "With less than 6 months to go before the date upon which the UK is to leave the EU, the rights and status of EU citizens living in the UK, and UK citizens living elsewhere in the EU, remain uncertain. Momentum is an organisation committed to the principles of justice and human rights and wants to demonstrate its solidarity with EU citizens. Will you add your name to this statement from Momentum?",
-            "guidance": "\"Protecting the rights of both those British citizens who live in the EU and EU citizens who live in the UK - our family, friends, neighbours, colleagues and workers in public services upon which people across the UK rely - should be a priority for the UK Government. This should be achieved by jointly committing with the EU to implement the citizens’ rights part of the draft Withdrawal Agreement: unilateral assurances by all sides are not sufficient to secure their rights.<br/><br/>\"As members of the Labour Party committed to justice and human rights, we stand in solidarity with those EU citizens in the UK who are now facing uncertainty about their futures. We regret that the UK Government has not been able to resolve this issue before now and reiterate our view that this must now be done as a matter of urgency.\"",
-            "multipleAnswersAllowed": "False" }},
-    {   "model" : "consultations.Choice",
-        "pk": 21,
-        "fields": {
-            "question": 7, 
             "display_order": 2, 
-            "text": "Yes – I would like to add my name to this statement" }},
-    {   "model" : "consultations.Choice",
-        "pk": 22,
-        "fields": {
-            "question": 7, 
-            "display_order": 3, 
             "text": "No – I do not want to add my name to this statement" }}
 
 ]
