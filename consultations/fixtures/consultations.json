@@ -5,8 +5,8 @@
             "template": "consultations/consultation1.html",
             "name": "Brexit",
             "description": "What are your views on Brexit?",
-            "voting_start": "2018-08-29",
-            "voting_end": "2018-09-07" }},
+            "voting_start": "2018-10-22",
+            "voting_end": "2018-10-31" }},
 
     {   "model" : "consultations.Question",
         "pk": 1,
@@ -45,20 +45,21 @@
         "fields": {
             "consultation": 1,
             "number": 2,
-            "text": "Would you like there to be a full debate on Brexit at the Labour Party’s Annual Conference to give the membership, unions and affiliated organisations an opportunity to discuss and agree our position in light of developments?",
+            "text": "Do you agree with the motion passed at Conference that if the Government’s deal does not meet Labour’s tests, all Labour MPs should vote against it?",
+            "guidance": "(Labour’s tests say Brexit must: deliver for all nations and regions of the UK; defend rights and protections and prevent a race to the bottom; deliver the exact same benefits as the single market and customs union; protect our security; ensure fair management of migration; and ensure a strong and collaborative future relationship).",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 5,
         "fields": {
             "question": 2, 
             "display_order": 1, 
-            "text": "Yes, I would like to there to be a full conference debate on Brexit" }},
+            "text": "Yes - all Labour MPs should vote against any deal which does not meet Labour’s tests" }},
     {   "model" : "consultations.Choice",
         "pk": 6,
         "fields": {
             "question": 2, 
             "display_order": 2, 
-            "text": "No, I do not want there to be a full conference debate on Brexit" }},
+            "text": "No - Labour MPs should be free to vote for the deal" }},
     {   "model" : "consultations.Choice",
         "pk": 7,
         "fields": {
@@ -71,21 +72,20 @@
         "fields": {
             "consultation": 1,
             "number": 3,
-            "text": "Do you think Labour should stick to its six tests on Brexit - bearing in mind that Tory proposals look unlikely to meet these tests?",
-            "guidance": "(Labour’s tests say that Brexit must: deliver for all nations and regions of the UK; defend rights and protections and prevent a race to the bottom; deliver the exact same benefits as the single market and customs union; protect our security; ensure fair management of migration; and ensure a strong and collaborative future relationship).",
+            "text": "Do you agree with the motion passed at Conference that a no-deal Brexit should be rejected as a viable option?",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 8,
         "fields": {
             "question": 3, 
             "display_order": 1, 
-            "text": "Yes, Labour should measure any proposed Tory Brexit deal against its six tests" }},
+            "text": "Agree – no deal is not viable and must be rejected" }},
     {   "model" : "consultations.Choice",
         "pk": 9,
         "fields": {
             "question": 3, 
             "display_order": 2, 
-            "text": "No, Labour must develop different measures in light of developments" }},
+            "text": "Disagree – no deal is viable and an acceptable outcome" }},
     {   "model" : "consultations.Choice",
         "pk": 10,
         "fields": {
@@ -98,20 +98,20 @@
         "fields": {
             "consultation": 1,
             "number": 4,
-            "text": "Do you think Labour should vote down the final Tory Brexit deal in Parliament if it does not meet these six tests and does not have the support of our party’s membership and unions?",
+            "text": "Assuming that Tory Brexit is voted down in Parliament, the Labour Party has said that as a first priority, there should be a General Election – so that the public can judge whether to support the Government’s plan for Brexit. Do you agree that all Labour MPs should vote to maximise the possibility of a General Election?",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 11,
         "fields": {
             "question": 4, 
             "display_order": 1, 
-            "text": "Yes" }},
+            "text": "Agree – all Labour MPs should prioritise maximising the possibility of a GE" }},
     {   "model" : "consultations.Choice",
         "pk": 12,
         "fields": {
             "question": 4, 
             "display_order": 2, 
-            "text": "No" }},
+            "text": "Oppose – Labour MPs should have a free vote" }},
     {   "model" : "consultations.Choice",
         "pk": 13,
         "fields": {
@@ -124,25 +124,37 @@
         "fields": {
             "consultation": 1,
             "number": 5,
-            "text": "Would you support or oppose Labour calling for a General Election and proposing a different plan on Brexit as part of our manifesto?",
+            "text": "In the event that there is no General Election, Conference has said that Labour must support all options remaining on the table including campaigning for a public vote. Do you support a public vote and, if so, in which circumstances?",
             "multipleAnswersAllowed": "False" }},
     {   "model" : "consultations.Choice",
         "pk": 14,
         "fields": {
             "question": 5, 
             "display_order": 1, 
-            "text": "Support" }},
+            "text": "I support a public vote remaining on the table <u>as an option if there is no general election</u>" }},
     {   "model" : "consultations.Choice",
         "pk": 15,
         "fields": {
             "question": 5, 
             "display_order": 2, 
-            "text": "Oppose" }},
+            "text": "I support committing now to a public vote <u>but only if there is no general election</u>" }},
     {   "model" : "consultations.Choice",
         "pk": 16,
         "fields": {
             "question": 5, 
             "display_order": 3, 
+            "text": "I support committing now to a public vote <u>in all circumstances</u>" }},
+    {   "model" : "consultations.Choice",
+        "pk": 17,
+        "fields": {
+            "question": 5, 
+            "display_order": 4, 
+            "text": "I do not support a public vote" }},
+    {   "model" : "consultations.Choice",
+        "pk": 18,
+        "fields": {
+            "question": 5, 
+            "display_order": 5, 
             "text": "Don't know" }},
 
     {   "model" : "consultations.Question",
@@ -150,58 +162,21 @@
         "fields": {
             "consultation": 1,
             "number": 6,
-            "text": "If there is no General Election before Brexit, would you support giving the people the final say on the terms of the Tories’ deal through a public vote?",
+            "text": "With less than 6 months to go before the date upon which the UK is to leave the EU, the rights and status of EU citizens living in the UK, and UK citizens living elsewhere in the EU, remain uncertain. Will you add your name to this statement from Momentum making clear that you believe this situation is unacceptable and should be addressed as a matter of urgency?",
+            "guidance": "\"Protecting the rights of both those British citizens who live in the EU and EU citizens who live in the UK - our family, friends, neighbours, colleagues and workers in public services upon which people across the UK rely - should be a priority for the UK Government. This should be achieved by jointly committing with the EU to implement the citizens’ rights part of the draft Withdrawal Agreement: unilateral assurances by all sides are not sufficient to secure their rights.<br/><br/>\"As members of the Labour Party committed to justice and human rights, we stand in solidarity with those EU citizens in the UK who are now facing uncertainty about their futures. We regret that the UK Government has not been able to resolve this issue before now and call upon it do so immediately as a matter of urgency\".",
             "multipleAnswersAllowed": "False" }},
-    {   "model" : "consultations.Choice",
-        "pk": 17,
-        "fields": {
-            "question": 6, 
-            "display_order": 1, 
-            "text": "Support" }},
-    {   "model" : "consultations.Choice",
-        "pk": 18,
-        "fields": {
-            "question": 6, 
-            "display_order": 2, 
-            "text": "Oppose" }},
     {   "model" : "consultations.Choice",
         "pk": 19,
         "fields": {
             "question": 6, 
-            "display_order": 3, 
-            "text": "Don't know" }},
-
-    {   "model" : "consultations.Question",
-        "pk": 7,
-        "fields": {
-            "consultation": 1,
-            "number": 7,
-            "text": "If Theresa May's Brexit deal fails our tests, Labour defeats it in Parliament, and there is a public vote on the deal - rather than a general election - which of these options would you support?",
-            "guidance": "(you can select more than one)",
-            "multipleAnswersAllowed": "True" }},
+            "display_order": 1, 
+            "text": "Yes – I would like to add my name to this statement",
+            "redirect_url": "https://momentum.nationbuilder.com/donatenow" }},
     {   "model" : "consultations.Choice",
         "pk": 20,
         "fields": {
-            "question": 7, 
-            "display_order": 1, 
-            "text": "Vote for a hard, ‘no deal’ Brexit" }},
-    {   "model" : "consultations.Choice",
-        "pk": 21,
-        "fields": {
-            "question": 7, 
+            "question": 6, 
             "display_order": 2, 
-            "text": "Vote to endorse the Tories' proposed Brexit deal" }},
-    {   "model" : "consultations.Choice",
-        "pk": 22,
-        "fields": {
-            "question": 7, 
-            "display_order": 3, 
-            "text": "Vote to stay in and lead the fight to reform the EU" }},
-    {   "model" : "consultations.Choice",
-        "pk": 23,
-        "fields": {
-            "question": 7, 
-            "display_order": 4, 
-            "text": "Don’t know" }}
+            "text": "No – I do not want to add my name to this statement" }}
 
 ]
