@@ -10,8 +10,8 @@ urlpatterns = [
     
     # activation and authentication
     url(r'^members/', include('members.urls')),
-    url(r'^members/password_reset/$', views.ExtraContextPasswordResetView.as_view(), name='password_reset'),
-    url(r'^members/login/$', auth_views.LoginView.as_view(form_class=forms.ActivationEmailAuthenticationForm), name='login'),
+    url(r'^members/password_reset/$', views.ExtraContextPasswordResetView.as_view(form_class = forms.ActivationEmailPasswordResetForm), name='password_reset'),
+    url(r'^members/login/$', auth_views.LoginView.as_view(form_class = forms.ActivationEmailAuthenticationForm), name='login'),
     url(r'^members/', include('django.contrib.auth.urls')),
     
     # admin
