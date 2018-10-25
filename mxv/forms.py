@@ -58,3 +58,8 @@ class ActivationEmailAuthenticationForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+
+class RequestActivationEmailForm(forms.Form):    
+    email = forms.EmailField()
+
+
