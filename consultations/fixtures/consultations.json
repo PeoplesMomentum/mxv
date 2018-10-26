@@ -170,11 +170,11 @@
         "fields": {
             "question": 6, 
             "display_order": 1, 
-            "text": "Yes – I would like to add my name to this statement" }},
+            "text": "Yes – I support this statement" }},
     {   "model" : "consultations.Choice",
         "pk": 20,
         "fields": {
             "question": 6, 
             "display_order": 2, 
-            "text": "No – I do not want to add my name to this statement" }}
+            "text": "No – I do not support this statement" }}
 ]
