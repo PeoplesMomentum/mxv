@@ -2,12 +2,13 @@ from django.db import models
 from tinymce.models import HTMLField
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
-from datetime import date
+from datetime import date, datetime
 from members.models import Member
 from django.contrib.postgres.fields.citext import CIEmailField
 from solo.models import SingletonModel
 from mxv.settings import LAUNCH_DATE
 from review.models import Proposal
+import re
 
 # an email
 place_holder_text = 'Available place-holders: [name], [link], [months_since_launch], [proposal_count] and [active_member_count]. '
@@ -79,6 +80,7 @@ class Email(models.Model):
         content = content.replace('[months_since_launch]', '%d' % round((date.today() - LAUNCH_DATE).days / 30))   # months (kind of)
         content = content.replace('[active_member_count]', '{:,}'.format(Member.objects.filter(is_active=True).count()))
         content = content.replace('[proposal_count]', '{:,}'.format(Proposal.objects.count()))
+        content = re.sub('(?P<date>\[days_to_[\w\s]+\])', days_to_yyyy_mm_dd, content)
         return content
         
     # sends the email to count inactive members who have not yet been invited
@@ -114,6 +116,14 @@ class Email(models.Model):
         
         return count
         
+# replaces [days_to_yyyy_mm_dd] tags with the number of days until that date
+def days_to_yyyy_mm_dd(match):
+    tag = match.group('date')
+    tag = tag.replace('[days_to_', '').replace(']', '').replace('_', '/')
+    tag_date = datetime.strptime(tag, '%Y/%m/%d')
+    difference = tag_date - datetime.today()
+    return str(difference.days + 1)
+    
 # email settings
 class EmailSettings(SingletonModel):
     test_email_address = CIEmailField(default = '')

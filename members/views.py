@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render
 from mxv.models import EmailSettings
+from mxv import forms
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -142,3 +143,39 @@ def activate(request, activation_key):
         'member' : member,
         'form': form })
 
+# allows entry of an email address to which an activation email will be sent
+def request_activation_email(request):
+    
+    # if valid post...
+    if request.method == 'POST':
+        form = forms.RequestActivationEmailForm(request.POST)
+        if form.is_valid():
+            
+            # and the email entered is for an inactive member...
+            email = form.cleaned_data.get('email')
+            try:
+                inactive_member = Member.objects.get(email = email, is_active = False)
+            except:
+                inactive_member = None
+            if inactive_member:
+                
+                # send an activation email
+                activation_email = EmailSettings.get_solo().activation_email
+                if activation_email:
+                    try:
+                        activation_email.send_to(request, [inactive_member.email])
+                    except:
+                        pass
+         
+            # always notify that an activation email might have been sent
+            messages.info(request, 'If you’re a member but haven’t activated your account yet then you’ve been sent an activation email (so check your email inbox and spam folders)')
+
+            return HttpResponseRedirect('/')
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = forms.RequestActivationEmailForm()
+
+    return render(request, 'members/request_activation_email.html', { 
+        'form': form })

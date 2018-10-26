@@ -6,7 +6,7 @@
             "name": "Brexit",
             "description": "What are your views on Brexit?",
             "voting_start": "2018-10-22",
-            "voting_end": "2018-10-31" }},
+            "voting_end": "2018-11-01" }},
 
     {   "model" : "consultations.Question",
         "pk": 1,
@@ -170,13 +170,11 @@
         "fields": {
             "question": 6, 
             "display_order": 1, 
-            "text": "Yes – I would like to add my name to this statement",
-            "redirect_url": "https://momentum.nationbuilder.com/donatenow" }},
+            "text": "Yes – I support this statement" }},
     {   "model" : "consultations.Choice",
         "pk": 20,
         "fields": {
             "question": 6, 
             "display_order": 2, 
-            "text": "No – I do not want to add my name to this statement" }}
-
+            "text": "No – I do not support this statement" }}
 ]
