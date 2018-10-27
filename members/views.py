@@ -132,7 +132,13 @@ def activate(request, activation_key):
             authenticate(request)
             login(request, member)
             messages.success(request, 'Your password was successfully set!')
-            return HttpResponseRedirect('/')
+            
+            # redirect to next if required
+            next_redirect = request.GET.get('next', None)
+            if next_redirect:
+                return HttpResponseRedirect(next_redirect)
+            else:
+                return HttpResponseRedirect('/')
         else:
             #show errors
             messages.error(request, 'Please correct the errors below.')
