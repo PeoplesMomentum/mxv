@@ -10,6 +10,7 @@ from django.db import models
 # choice admin
 class ChoiceInline(nested.NestedTabularInline):
     model = Choice
+    ordering = ['display_order']
     extra = 0
 
     formfield_overrides = { 
@@ -20,6 +21,7 @@ class ChoiceInline(nested.NestedTabularInline):
 # question admin
 class QuestionInline(nested.NestedTabularInline):
     model = Question
+    ordering = ['number']
     extra = 0
     inlines = [ ChoiceInline ]
 
