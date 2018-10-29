@@ -4,16 +4,19 @@ from datetime import date
 from django.utils import formats
 
 # field sizes
-name_length = 255
-description_length = 1000
+short_text_length = 255
+long_text_length = 1000
 
 # a consultation
 class Consultation(models.Model):
-    template = models.CharField(max_length=name_length)
-    name = models.CharField(max_length=name_length, unique=True)
-    description = models.TextField(max_length=description_length)
+    template = models.CharField(max_length=short_text_length, blank=True, null=True, default=None)
+    name = models.CharField(max_length=short_text_length, unique=True)
+    description = models.TextField(max_length=short_text_length)
+    pre_questions_text = models.TextField(max_length=long_text_length, blank=True, null=True, default=None)
+    post_questions_text = models.TextField(max_length=long_text_length, blank=True, null=True, default=None)
     voting_start = models.DateField()
     voting_end = models.DateField()
+    visible_to_non_staff = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -56,13 +59,17 @@ class Consultation(models.Model):
             return 'Vote now'
         else:
             return 'View results'
+        
+    # questions in number order
+    def questions_in_number_order(self):
+        return self.questions.order_by('number')
     
 # a question on a consultation
 class Question(models.Model):
     consultation = models.ForeignKey(Consultation, related_name='questions')
     number = models.PositiveIntegerField()
-    text = models.TextField(max_length=description_length)
-    guidance = models.TextField(max_length=description_length, default='')
+    text = models.TextField(max_length=long_text_length)
+    guidance = models.TextField(max_length=long_text_length, default='')
     multipleAnswersAllowed = models.BooleanField()
 
     def __str__(self):
@@ -72,7 +79,7 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, related_name='choices')
     display_order = models.PositiveIntegerField(default=1)
-    text = models.CharField(max_length=name_length)
+    text = models.CharField(max_length=short_text_length)
     redirect_url = models.TextField(default='')
 
     def __str__(self):

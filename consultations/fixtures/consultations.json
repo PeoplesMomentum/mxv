@@ -6,7 +6,8 @@
             "name": "Brexit",
             "description": "What are your views on Brexit?",
             "voting_start": "2018-10-22",
-            "voting_end": "2018-11-01" }},
+            "voting_end": "2018-11-01",
+            "visible_to_non_staff": "True" }},
 
     {   "model" : "consultations.Question",
         "pk": 1,

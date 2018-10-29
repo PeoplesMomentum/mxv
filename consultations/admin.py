@@ -5,11 +5,14 @@ from django.http.response import HttpResponse
 import csv
 
 class ConsultationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'voting_start', 'voting_end')
+    list_display = ('name', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff')
     fields = (        
-        'name', 'description',
+        ('name'), 
+        ('description'), 
+        ('pre_questions_text', 'post_questions_text'),
         ('voting_start', 'voting_end'),
-         'results_table'
+        ('visible_to_non_staff'),
+        ('results_table')
     )
     readonly_fields = ('results_table',)
     
