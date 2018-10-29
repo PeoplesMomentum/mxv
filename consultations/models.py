@@ -17,6 +17,7 @@ class Consultation(models.Model):
     voting_start = models.DateField()
     voting_end = models.DateField()
     visible_to_non_staff = models.BooleanField(default=False)
+    display_order = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.name

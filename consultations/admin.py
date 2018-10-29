@@ -5,9 +5,10 @@ from django.http.response import HttpResponse
 import csv
 
 class ConsultationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff')
+    list_display = ('name', 'display_order', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff')
+    ordering = ['display_order']
     fields = (        
-        ('name'), 
+        ('name', 'display_order'), 
         ('description'), 
         ('pre_questions_text', 'post_questions_text'),
         ('voting_start', 'voting_end'),

@@ -18,6 +18,9 @@ def index(request):
         consultations = Consultation.objects.all()
     else:
         consultations = Consultation.objects.filter(visible_to_non_staff=True).all()
+        
+    # set display order
+    consultations = consultations.order_by('display_order')
     
     return render(request, 'consultations/consultations.html', { 
         'consultations': consultations })
