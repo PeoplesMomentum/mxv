@@ -1,10 +1,35 @@
 from django.contrib import admin
-from consultations.models import Consultation
+from nested_admin import nested
+from consultations.models import Consultation, Choice, Question
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
+from django.forms import Textarea, TextInput
+from django.db import models
 
-class ConsultationAdmin(admin.ModelAdmin):
+# choice admin
+class ChoiceInline(nested.NestedTabularInline):
+    model = Choice
+    extra = 0
+
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 4, 'cols': 75 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    
+# question admin
+class QuestionInline(nested.NestedTabularInline):
+    model = Question
+    extra = 0
+    inlines = [ ChoiceInline ]
+
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 4, 'cols': 75 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    
+# consultation admin
+class ConsultationAdmin(nested.NestedModelAdmin):
     list_display = ('name', 'display_order', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff')
     ordering = ['display_order']
     fields = (        
@@ -16,6 +41,12 @@ class ConsultationAdmin(admin.ModelAdmin):
         ('results_table')
     )
     readonly_fields = ('results_table',)
+    inlines = [ QuestionInline ]
+    
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 4, 'cols': 75 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
     
     # returns the results table as HTML (separate header per question as the choices are all different)
     def results_table(self, consultation):

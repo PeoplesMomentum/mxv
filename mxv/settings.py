@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'review.apps.ReviewConfig',
     'voting_intentions.apps.VotingIntentionsConfig',    
     'consultations.apps.ConsultationsConfig',
+    'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     'solo.apps.SoloAppConfig',
     'tinymce',
     'anymail',
-    'widget_tweaks'
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

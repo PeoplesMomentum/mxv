@@ -71,7 +71,7 @@ class Question(models.Model):
     number = models.PositiveIntegerField()
     text = models.TextField(max_length=long_text_length)
     guidance = models.TextField(max_length=long_text_length, default='')
-    multipleAnswersAllowed = models.BooleanField()
+    multipleAnswersAllowed = models.BooleanField(verbose_name = 'Multiple answers allowed')
 
     def __str__(self):
         return '%d - %s' % (self.number, self.text)
@@ -81,7 +81,7 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, related_name='choices')
     display_order = models.PositiveIntegerField(default=1)
     text = models.CharField(max_length=short_text_length)
-    redirect_url = models.TextField(default='')
+    redirect_url = models.CharField(max_length=short_text_length, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.text
