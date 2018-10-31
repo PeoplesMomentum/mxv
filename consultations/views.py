@@ -81,11 +81,11 @@ def consultation(request, pk):
                             pass                    
                 
                 # redirect to a custom URL if specified by a choice (for the last question if more than one are specified)
-                redirect_url = ''
+                redirect_url = None
                 for answer in vote.answers.order_by('question__number'):
-                    if answer.choice.redirect_url != '':
+                    if answer.choice.redirect_url != None and answer.choice.redirect_url != '':
                         redirect_url = answer.choice.redirect_url
-                if redirect_url != '':
+                if redirect_url != None:
                     return redirect(redirect_url)
                     
                 # redirect to thanks page if no choice-specific redirect URL
