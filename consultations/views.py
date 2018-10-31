@@ -9,8 +9,21 @@ from django.contrib import messages
 # renders the consultations index
 @login_required
 def index(request):
+    # redirect if consultations not allowed yet for non-staff
+    if not (CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff):
+        return redirect('index')
+    
+    # filter by whether visible to staff
+    if request.user.is_staff:
+        consultations = Consultation.objects.all()
+    else:
+        consultations = Consultation.objects.filter(visible_to_non_staff=True).all()
+        
+    # set display order
+    consultations = consultations.order_by('display_order')
+    
     return render(request, 'consultations/consultations.html', { 
-        'consultations': Consultation.objects.all() })
+        'consultations': consultations })
 
 # encapsulates request, vote and consultation for when there is no vote (i.e. anonymous user)
 class VotingContext:
@@ -24,7 +37,11 @@ def consultation(request, pk):
     consultation = get_object_or_404(Consultation, pk = pk)
     
     # redirect if consultations not allowed yet for non-staff
-    if not (CONSULTATIONS_VISIBLE_TO_NON_STAFF or  request.user.is_staff):
+    if not (CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff):
+        return redirect('index')
+    
+    # redirect if this consultation is not allowed for non-staff
+    if not (consultation.visible_to_non_staff or request.user.is_staff):
         return redirect('index')
     
     # if there is a logged-in member...
