@@ -18,6 +18,7 @@ class Consultation(models.Model):
     voting_end = models.DateField()
     visible_to_non_staff = models.BooleanField(default=False)
     display_order = models.PositiveIntegerField(default=1)
+    hide_results = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -70,7 +71,7 @@ class Question(models.Model):
     consultation = models.ForeignKey(Consultation, related_name='questions')
     number = models.PositiveIntegerField()
     text = models.TextField(max_length=long_text_length)
-    guidance = models.TextField(max_length=long_text_length, default='')
+    guidance = models.TextField(max_length=long_text_length, default='', blank=True)
     multipleAnswersAllowed = models.BooleanField(verbose_name = 'Multiple answers allowed')
 
     def __str__(self):

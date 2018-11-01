@@ -54,19 +54,33 @@ def question_and_choices(voting_context, question_id):
     
     # voting complete
     else:
-        # results
-        choice_html += '<br/>'
-        for choice in choices:
-            count = question.answers.filter(choice = choice).count()
-            total = question.answers.count()
-            choice_html += '<label class="ml-4">%d voted \'%s\' (%d%%)</label><br/>' % (count, choice.text, count / total * 100 if total > 0 else 0)
-        
-        # answers
-        choice_html += '<br/>'
-        if len(current_answers) > 0:
-            choice_html += '<label class="ml-4">[You voted %s]</label><br/>' % comma_and(['\'%s\'' % answer.choice.text for answer in current_answers])
-        elif not voting_context.request.user.is_anonymous():
-            choice_html += '<label class="ml-4">[You didn\'t vote on this question]</label><br/>'
+        # if embargoed...
+        if voting_context.consultation.hide_results:
+            # disabled controls
+            choice_html += '<br/>'
+            for choice in choices:
+                if question.multipleAnswersAllowed:
+                    choice_html += '<label class="checkbox-inline ml-4"><input type="checkbox" class="mr-4" disabled %s>%s</label><br/>' % ('checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
+                else:
+                    choice_html += '<label class="radio-inline ml-4"><input type="radio" class="mr-4" disabled %s>%s</label><br/>' % ('checked="checked"' if choice in [answer.choice for answer in current_answers] else '', choice.text)
+            
+            # embargo notice
+            choice_html += '<br/><p>Voting completed - results will be released here soon</p>'
+            
+        else:            
+            # results
+            choice_html += '<br/>'
+            for choice in choices:
+                count = question.answers.filter(choice = choice).count()
+                total = question.answers.count()
+                choice_html += '<label class="ml-4">%d voted \'%s\' (%d%%)</label><br/>' % (count, choice.text, count / total * 100 if total > 0 else 0)
+            
+            # answers
+            choice_html += '<br/>'
+            if len(current_answers) > 0:
+                choice_html += '<label class="ml-4">[You voted %s]</label><br/>' % comma_and(['\'%s\'' % answer.choice.text for answer in current_answers])
+            elif not voting_context.request.user.is_anonymous():
+                choice_html += '<label class="ml-4">[You didn\'t vote on this question]</label><br/>'
           
     # layout    
     return mark_safe("""

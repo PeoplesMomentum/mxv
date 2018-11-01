@@ -32,14 +32,14 @@ class QuestionInline(nested.NestedTabularInline):
     
 # consultation admin
 class ConsultationAdmin(nested.NestedModelAdmin):
-    list_display = ('name', 'display_order', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff')
+    list_display = ('name', 'display_order', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff', 'hide_results')
     ordering = ['display_order']
     fields = (        
         ('name', 'display_order'), 
         ('description'), 
         ('pre_questions_text', 'post_questions_text'),
         ('voting_start', 'voting_end'),
-        ('visible_to_non_staff'),
+        ('visible_to_non_staff', 'hide_results'),
         ('results_table')
     )
     readonly_fields = ('results_table',)
