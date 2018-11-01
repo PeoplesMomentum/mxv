@@ -24,16 +24,16 @@ to '~/Desktop/active_members.csv' CSV FORCE QUOTE name, email
 \copy (select distinct m.name, m.email from members_member m where m.is_active = 't') to '~/Desktop/active_members.csv' CSV FORCE QUOTE name, email
 
 
--- emails of members who haven't voted in consultation 1
+-- emails of active members who haven't voted in consultation 1
 
 \copy (
 select distinct m.email 
 from    members_member m 
         left outer join consultations_vote v on m.id = v.member_id 
-where v.id is null) 
+where m.is_active = 't' and v.id is null) 
 to '~/Desktop/consultation_1_non_voters.csv' CSV FORCE QUOTE email
 
-\copy (select distinct m.email from members_member m left outer join consultations_vote v on m.id = v.member_id where v.id is null) to '~/Desktop/consultation_1_non_voters.csv' CSV FORCE QUOTE email
+\copy (select distinct m.email from members_member m left outer join consultations_vote v on m.id = v.member_id where m.is_active = 't' and v.id is null) to '~/Desktop/consultation_1_non_voters.csv' CSV FORCE QUOTE email
 
 -- import CSV of emails to email targets
 create table non_voters (email citext);

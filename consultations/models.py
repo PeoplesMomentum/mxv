@@ -29,7 +29,7 @@ class Consultation(models.Model):
     
     # description of voting dates
     def voting_date_text(self):
-        if self.voting_end > date.today():
+        if self.voting_end >= date.today():
             return '%s - %s' % (formats.date_format(self.voting_start, 'd/m/Y'), formats.date_format(self.voting_end, 'd/m/Y'))
         else:
             return 'Completed'
