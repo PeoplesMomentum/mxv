@@ -20,7 +20,7 @@ class Email(models.Model):
     text_content = models.TextField(default = '', help_text = place_holder_text)
         
     def __str__(self):
-        return self.subject
+        return self.name
     
     # sends the email to the test address
     def send_test(self, request):
