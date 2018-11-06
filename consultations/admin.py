@@ -70,7 +70,7 @@ class ConsultationAdmin(nested.NestedModelAdmin):
             for choice in choices:
                 count = question.answers.filter(choice__text = choice).count()
                 total = question.answers.count()
-                row += '<td>%d (%d)</td>' % (count, count / total * 100 if total > 0 else 0)
+                row += '<td>%d (%.2f)</td>' % (count, count / total * 100 if total > 0 else 0)
             row += '</tr>'
             rows.append(row)
         
