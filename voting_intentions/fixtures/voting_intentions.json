@@ -4,272 +4,292 @@
         "fields": {
             "name": "NEC Elections",
             "redirect_url": "https://momentum.nationbuilder.com/donate2" }},
+
+        {   "model" : "voting_intentions.VoteTag",
+            "pk": 1,
+            "fields": {
+                "vote": 1,
+                "text": "NEC18" }},
+        {   "model" : "voting_intentions.VoteTag",
+            "pk": 2,
+            "fields": {
+                "vote": 1,
+                "text": "NEC18_Email" }},
+
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 1,
+            "fields": {
+                "vote": 1,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 2,
+            "fields": {
+                "vote": 1,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 3,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_country_code" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 4,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_address1" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 5,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_address2" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 6,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_address3" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 7,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_city" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 8,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_zip" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 9,
+            "fields": {
+                "vote": 1,
+                "name": "email",
+                "pass_on_name": "donation_email" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 10,
+            "fields": {
+                "vote": 1,
+                "name": "donation_billing_address_phone_number" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 11,
+            "fields": {
+                "vote": 3,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 12,
+            "fields": {
+                "vote": 3,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 13,
+            "fields": {
+                "vote": 3,
+                "name": "email",
+                "pass_on_name": "donation_email" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 1,
+            "fields": {
+                "vote": 1,
+                "text": "Pledge - all 9" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 1,
+                "fields": {
+                    "choice": 1,
+                    "text": "LPM18NEC" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 2,
+                "fields": {
+                    "choice": 1,
+                    "text": "NEC18_Pledge" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 3,
+                "fields": {
+                    "choice": 1,
+                    "text": "LPM" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 4,
+                "fields": {
+                    "choice": 1,
+                    "text": "LPN",
+                    "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 2,
+            "fields": {
+                "vote": 1,
+                "text": "Voted - all 9" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 5,
+                "fields": {
+                    "choice": 2,
+                    "text": "LPM18NEC" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 6,
+                "fields": {
+                    "choice": 2,
+                    "text": "NEC18_Vote" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 7,
+                "fields": {
+                    "choice": 2,
+                    "text": "LPM" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 8,
+                "fields": {
+                    "choice": 2,
+                    "text": "LPN",
+                    "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 3,
+            "fields": {
+                "vote": 1,
+                "text": "Backing different candidates" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 9,
+                "fields": {
+                    "choice": 3,
+                    "text": "LPM18NEC" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 10,
+                "fields": {
+                    "choice": 3,
+                    "text": "NEC18_Against" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 11,
+                "fields": {
+                    "choice": 3,
+                    "text": "LPM" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 12,
+                "fields": {
+                    "choice": 3,
+                    "text": "LPN",
+                    "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 4,
+            "fields": {
+                "vote": 1,
+                "text": "Not a Labour member" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 13,
+                "fields": {
+                    "choice": 4,
+                    "text": "LPN18NEC" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 14,
+                "fields": {
+                    "choice": 4,
+                    "text": "LPN" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 15,
+                "fields": {
+                    "choice": 4,
+                    "text": "LPM",
+                    "add": "False" }},
+           
+            
+            
     {   "model" : "voting_intentions.Vote",
         "pk": 2,
         "fields": {
             "name": "Labour Party Membership",
             "redirect_url": "https://my.peoplesmomentum.com/voting_intentions/thanks" }},
+            
+        {   "model" : "voting_intentions.Choice",
+            "pk": 5,
+            "fields": {
+                "vote": 2,
+                "text": "Yes, I am a Labour Party member" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 16,
+                "fields": {
+                    "choice": 5,
+                    "text": "LPM" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 17,
+                "fields": {
+                    "choice": 5,
+                    "text": "LPM18MyMomentum" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 18,
+                "fields": {
+                    "choice": 5,
+                    "text": "LPN",
+                    "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 6,
+            "fields": {
+                "vote": 2,
+                "text": "No, I am not a Labour Party member" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 19,
+                "fields": {
+                    "choice": 6,
+                    "text": "LPN" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 20,
+                "fields": {
+                    "choice": 6,
+                    "text": "LPN18MyMomentum" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 21,
+                "fields": {
+                    "choice": 6,
+                    "text": "LPM",
+                    "add": "False" }},
+
+            
     {   "model" : "voting_intentions.Vote",
         "pk": 3,
         "fields": {
             "name": "Lab18 Petitions",
             "redirect_url": "https://momentum.nationbuilder.com/donate10" }},
 
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 1,
-        "fields": {
-            "vote": 1,
-            "name": "donation_first_name" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 2,
-        "fields": {
-            "vote": 1,
-            "name": "donation_last_name" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 3,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_country_code" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 4,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_address1" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 5,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_address2" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 6,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_address3" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 7,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_city" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 8,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_zip" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 9,
-        "fields": {
-            "vote": 1,
-            "name": "email",
-            "pass_on_name": "donation_email" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 10,
-        "fields": {
-            "vote": 1,
-            "name": "donation_billing_address_phone_number" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 11,
-        "fields": {
-            "vote": 3,
-            "name": "donation_first_name" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 12,
-        "fields": {
-            "vote": 3,
-            "name": "donation_last_name" }},
-    {   "model" : "voting_intentions.UrlParameter",
-        "pk": 13,
-        "fields": {
-            "vote": 3,
-            "name": "email",
-            "pass_on_name": "donation_email" }},
+        {   "model" : "voting_intentions.Choice",
+            "pk": 7,
+            "fields": {
+                "vote": 3,
+                "text": "Open Selections" }},
 
-    {   "model" : "voting_intentions.Choice",
-        "pk": 1,
-        "fields": {
-            "vote": 1,
-            "text": "Pledge - all 9" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 2,
-        "fields": {
-            "vote": 1,
-            "text": "Voted - all 9" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 3,
-        "fields": {
-            "vote": 1,
-            "text": "Backing different candidates" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 4,
-        "fields": {
-            "vote": 1,
-            "text": "Not a Labour member" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 5,
-        "fields": {
-            "vote": 2,
-            "text": "Yes, I am a Labour Party member" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 6,
-        "fields": {
-            "vote": 2,
-            "text": "No, I am not a Labour Party member" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 7,
-        "fields": {
-            "vote": 3,
-            "text": "Open Selections" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 8,
-        "fields": {
-            "vote": 3,
-            "text": "Threshold" }},
-    {   "model" : "voting_intentions.Choice",
-        "pk": 9,
-        "fields": {
-            "vote": 3,
-            "text": "Open Selections and Threshold" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 22,
+                "fields": {
+                    "choice": 7,
+                    "text": "MMPetition_1_OpenSelections" }},
 
-    {   "model" : "voting_intentions.VoteTag",
-        "pk": 1,
-        "fields": {
-            "vote": 1,
-            "text": "NEC18" }},
-    {   "model" : "voting_intentions.VoteTag",
-        "pk": 2,
-        "fields": {
-            "vote": 1,
-            "text": "NEC18_Email" }},
+        {   "model" : "voting_intentions.Choice",
+            "pk": 8,
+            "fields": {
+                "vote": 3,
+                "text": "Threshold" }},
 
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 1,
-        "fields": {
-            "choice": 1,
-            "text": "LPM18NEC" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 2,
-        "fields": {
-            "choice": 1,
-            "text": "NEC18_Pledge" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 3,
-        "fields": {
-            "choice": 1,
-            "text": "LPM" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 4,
-        "fields": {
-            "choice": 1,
-            "text": "LPN",
-            "add": "False" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 5,
-        "fields": {
-            "choice": 2,
-            "text": "LPM18NEC" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 6,
-        "fields": {
-            "choice": 2,
-            "text": "NEC18_Vote" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 7,
-        "fields": {
-            "choice": 2,
-            "text": "LPM" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 8,
-        "fields": {
-            "choice": 2,
-            "text": "LPN",
-            "add": "False" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 9,
-        "fields": {
-            "choice": 3,
-            "text": "LPM18NEC" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 10,
-        "fields": {
-            "choice": 3,
-            "text": "NEC18_Against" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 11,
-        "fields": {
-            "choice": 3,
-            "text": "LPM" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 12,
-        "fields": {
-            "choice": 3,
-            "text": "LPN",
-            "add": "False" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 13,
-        "fields": {
-            "choice": 4,
-            "text": "LPN18NEC" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 14,
-        "fields": {
-            "choice": 4,
-            "text": "LPN" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 15,
-        "fields": {
-            "choice": 4,
-            "text": "LPM",
-            "add": "False" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 16,
-        "fields": {
-            "choice": 5,
-            "text": "LPM" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 17,
-        "fields": {
-            "choice": 5,
-            "text": "LPM18MyMomentum" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 18,
-        "fields": {
-            "choice": 5,
-            "text": "LPN",
-            "add": "False" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 19,
-        "fields": {
-            "choice": 6,
-            "text": "LPN" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 20,
-        "fields": {
-            "choice": 6,
-            "text": "LPN18MyMomentum" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 21,
-        "fields": {
-            "choice": 6,
-            "text": "LPM",
-            "add": "False" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 23,
+                "fields": {
+                    "choice": 8,
+                    "text": "MMPetition_2_Threshold" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 9,
+            "fields": {
+                "vote": 3,
+                "text": "Open Selections and Threshold" }},
             
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 22,
-        "fields": {
-            "choice": 7,
-            "text": "MMPetition_1_OpenSelections" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 23,
-        "fields": {
-            "choice": 8,
-            "text": "MMPetition_2_Threshold" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 24,
-        "fields": {
-            "choice": 9,
-            "text": "MMPetition_1_OpenSelections" }},
-    {   "model" : "voting_intentions.ChoiceTag",
-        "pk": 25,
-        "fields": {
-            "choice": 9,
-            "text": "MMPetition_2_Threshold" }}
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 24,
+                "fields": {
+                    "choice": 9,
+                    "text": "MMPetition_1_OpenSelections" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 25,
+                "fields": {
+                    "choice": 9,
+                    "text": "MMPetition_2_Threshold" }}
 ]
