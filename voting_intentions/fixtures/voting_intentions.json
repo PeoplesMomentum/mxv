@@ -67,22 +67,6 @@
             "fields": {
                 "vote": 1,
                 "name": "donation_billing_address_phone_number" }},
-        {   "model" : "voting_intentions.UrlParameter",
-            "pk": 11,
-            "fields": {
-                "vote": 3,
-                "name": "donation_first_name" }},
-        {   "model" : "voting_intentions.UrlParameter",
-            "pk": 12,
-            "fields": {
-                "vote": 3,
-                "name": "donation_last_name" }},
-        {   "model" : "voting_intentions.UrlParameter",
-            "pk": 13,
-            "fields": {
-                "vote": 3,
-                "name": "email",
-                "pass_on_name": "donation_email" }},
 
         {   "model" : "voting_intentions.Choice",
             "pk": 1,
@@ -245,6 +229,7 @@
                     "text": "LPM",
                     "add": "False" }},
 
+  
             
     {   "model" : "voting_intentions.Vote",
         "pk": 3,
@@ -291,5 +276,200 @@
                 "pk": 25,
                 "fields": {
                     "choice": 9,
-                    "text": "MMPetition_2_Threshold" }}
+                    "text": "MMPetition_2_Threshold" }},
+
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 11,
+            "fields": {
+                "vote": 3,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 12,
+            "fields": {
+                "vote": 3,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 13,
+            "fields": {
+                "vote": 3,
+                "name": "email",
+                "pass_on_name": "donation_email" }},
+  
+            
+    {   "model" : "voting_intentions.Vote",
+        "pk": 4,
+        "fields": {
+            "name": "Brexit Petitions",
+            "redirect_url": "" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 10,
+            "fields": {
+                "vote": 4,
+                "text": "Supports our first Brexit petition",
+                "redirect_url": "https://momentum.nationbuilder.com/donate13" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 26,
+                "fields": {
+                    "choice": 10,
+                    "text": "MMPetition_3_Brexit1" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 11,
+            "fields": {
+                "vote": 4,
+                "text": "Supports our second Brexit petition",
+                "redirect_url": "https://momentum.nationbuilder.com/donate14" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 27,
+                "fields": {
+                    "choice": 11,
+                    "text": "MMPetition_4_Brexit2" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 12,
+            "fields": {
+                "vote": 4,
+                "text": "Supports our fifth petition (TBC)",
+                "redirect_url": "https://momentum.nationbuilder.com/donate15" }},
+            
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 28,
+                "fields": {
+                    "choice": 12,
+                    "text": "MMPetition_5" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 13,
+            "fields": {
+                "vote": 4,
+                "text": "Supports our sixth petition (TBC)",
+                "redirect_url": "https://momentum.nationbuilder.com/donate15" }},
+            
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 29,
+                "fields": {
+                    "choice": 13,
+                    "text": "MMPetition_6" }},
+
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 14,
+            "fields": {
+                "vote": 4,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 15,
+            "fields": {
+                "vote": 4,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 16,
+            "fields": {
+                "vote": 4,
+                "name": "email",
+                "pass_on_name": "donation_email" }},
+  
+            
+    {   "model" : "voting_intentions.Vote",
+        "pk": 5,
+        "fields": {
+            "name": "BAME",
+            "redirect_url": "https://momentum.nationbuilder.com/donate12" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 14,
+            "fields": {
+                "vote": 5,
+                "text": "BAME" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 30,
+                "fields": {
+                    "choice": 14,
+                    "text": "BAME" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 31,
+                "fields": {
+                    "choice": 14,
+                    "text": "BAME_18" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 15,
+            "fields": {
+                "vote": 5,
+                "text": "Not BAME" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 32,
+                "fields": {
+                    "choice": 15,
+                    "text": "BAME_No" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 33,
+                "fields": {
+                    "choice": 15,
+                    "text": "BAME_No18" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 16,
+            "fields": {
+                "vote": 5,
+                "text": "BAME and under 35" }},
+            
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 34,
+                "fields": {
+                    "choice": 16,
+                    "text": "BAME" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 35,
+                "fields": {
+                    "choice": 16,
+                    "text": "BAME_18" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 36,
+                "fields": {
+                    "choice": 16,
+                    "text": "Age_Under35_18" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 17,
+            "fields": {
+                "vote": 5,
+                "text": "BAME and not under 35" }},
+            
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 37,
+                "fields": {
+                    "choice": 17,
+                    "text": "BAME" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 38,
+                "fields": {
+                    "choice": 17,
+                    "text": "BAME_18" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 39,
+                "fields": {
+                    "choice": 17,
+                    "text": "Age_Under35_No18" }},
+                    
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 17,
+            "fields": {
+                "vote": 5,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 18,
+            "fields": {
+                "vote": 5,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 19,
+            "fields": {
+                "vote": 5,
+                "name": "email",
+                "pass_on_name": "donation_email" }}
 ]
