@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'tinymce',
     'anymail',
     'widget_tweaks',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
@@ -213,4 +214,12 @@ DEFAULT_REDIRECT_PAGE_URL = 'https://peoplesmomentum.com'
 
 # whether to show consultations to just staff or anyone
 CONSULTATIONS_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_CONSULTATIONS_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+
+# task queues
+RQ_SHOW_ADMIN_LINK = True
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),
+    }
+}
 
