@@ -1,7 +1,7 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
 import django_rq
-from datetime import datetime
+from django.utils import timezone
 
 # an asynchronous task
 class Task(PolymorphicModel):
@@ -31,13 +31,18 @@ class Task(PolymorphicModel):
                 run.result = self.execute()
             except Exception as ex:
                 Error.objects.create(run = run, error = ex.message)
-            run.finish = datetime.utcnow()
+            run.finish = timezone.now()
             run.save()
         
     # (re)enqueues the task and saves the job id
     def save(self, *args, **kwargs):
+        # save immediately so that the task is available to any job that runs immediately
+        super(Task, self).save(*args, **kwargs)
+        
+        # cancel existing job
         if self.job_id:
             django_rq.get_scheduler('default').cancel(self.job_id)
+            
         job = None
         if not self.repeat_seconds:
             if not self.start:
@@ -51,25 +56,27 @@ class Task(PolymorphicModel):
                                               args = self.arguments())
         else:
             # run when and as often as requested
-            job = django_rq.get_scheduler('default').schedule(scheduled_time = self.start if self.start else datetime.utcnow(), 
+            job = django_rq.get_scheduler('default').schedule(scheduled_time = self.start if self.start else timezone.now(), 
                                           func = self.run, 
                                           args = self.arguments(), 
                                           interval = self.repeat_seconds, 
                                           repeat = self.repeat_count)
+        
+        # save job id
         self.job_id = job.id
-        super().save(*args, **kwargs)
+        super(Task, self).save(*args, **kwargs)
 
     # removes the task's job from the queue
     def delete(self, *args, **kwargs):
-        self.scheduler().cancel(self.job_id)
-        super().delete(*args, **kwargs)
+        django_rq.get_scheduler('default').cancel(self.job_id)
+        super(Task, self).delete(*args, **kwargs)
 
 # a run of a task
 class Run(models.Model):
     task = models.ForeignKey(Task, related_name='runs')
     start = models.DateTimeField(auto_now_add = True)
-    finish = models.DateTimeField()
-    result = models.TextField()
+    finish = models.DateTimeField(blank = True, null = True, default = None)
+    result = models.TextField(blank = True, null = True, default = None)
     
     def has_errors(self):
         return self.errors.count() > 0
