@@ -63,3 +63,8 @@ class VotingIntentionTagTask(Task):
 class SendEmailTask(Task):
     def execute(self, *args, **kwargs):
         pass
+
+# raises an exception
+class RaiseExceptionTask(Task):
+    def execute(self, *args, **kwargs):
+        raise Exception('Raised from RaiseExceptionTask')

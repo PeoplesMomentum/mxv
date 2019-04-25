@@ -1,12 +1,12 @@
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 from tasks.models import Task
-from .tasks import VotingIntentionTagTask, SendEmailTask
+from .tasks import VotingIntentionTagTask, SendEmailTask, RaiseExceptionTask
 
 @admin.register(Task)
 class TaskParentAdmin(PolymorphicParentModelAdmin):
     base_model = Task
-    child_models = (VotingIntentionTagTask, SendEmailTask)
+    child_models = (VotingIntentionTagTask, SendEmailTask, RaiseExceptionTask)
 
 class TaskChildAdmin(PolymorphicChildModelAdmin):
     base_model = Task
@@ -16,7 +16,10 @@ class TaskChildAdmin(PolymorphicChildModelAdmin):
 class VotingIntentionTagTaskAdmin(TaskChildAdmin):
     base_model = VotingIntentionTagTask
 
-    
 @admin.register(SendEmailTask)
 class SendEmailTaskAdmin(TaskChildAdmin):
     base_model = SendEmailTask
+
+@admin.register(RaiseExceptionTask)
+class RaiseExceptionTaskAdmin(TaskChildAdmin):
+    base_model = RaiseExceptionTask
