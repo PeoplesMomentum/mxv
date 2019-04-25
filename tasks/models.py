@@ -2,6 +2,7 @@ from django.db import models
 from polymorphic.models import PolymorphicModel
 import django_rq
 from django.utils import timezone
+import traceback
 
 # an asynchronous task
 class Task(PolymorphicModel):
@@ -29,8 +30,8 @@ class Task(PolymorphicModel):
             run = Run.objects.create(task = self)
             try:
                 run.result = self.execute(*args, **kwargs)
-            except Exception as ex:
-                Error.objects.create(run = run, error = ex.message)
+            except:
+                Error.objects.create(run = run, error = traceback.format_exc())
             run.finish = timezone.now()
             run.save()
         
