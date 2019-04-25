@@ -16,19 +16,19 @@ class Task(PolymorphicModel):
         return self.name
         
     # override to provide the task's behaviour and return a result string
-    def execute(self):
-        return ''
+    def execute(self, *args, **kwargs):
+        pass
     
     # override to provide arguments to execute
     def arguments(self):
-        return []
+        pass
     
     # runs the task if enabled and records the results of the run and any errors
-    def run(self):
+    def run(self, *args, **kwargs):
         if self.enabled:
             run = Run.objects.create(task = self)
             try:
-                run.result = self.execute()
+                run.result = self.execute(*args, **kwargs)
             except Exception as ex:
                 Error.objects.create(run = run, error = ex.message)
             run.finish = timezone.now()
@@ -42,6 +42,8 @@ class Task(PolymorphicModel):
         # cancel existing job
         if self.job_id:
             django_rq.get_scheduler('default').cancel(self.job_id)
+            self.job_id = None
+            super(Task, self).save(*args, **kwargs)
             
         job = None
         if not self.repeat_seconds:
@@ -63,12 +65,14 @@ class Task(PolymorphicModel):
                                           repeat = self.repeat_count)
         
         # save job id
-        self.job_id = job.id
-        super(Task, self).save(*args, **kwargs)
+        if job:
+            self.job_id = job.id
+            super(Task, self).save(*args, **kwargs)
 
     # removes the task's job from the queue
     def delete(self, *args, **kwargs):
-        django_rq.get_scheduler('default').cancel(self.job_id)
+        if self.job_id:
+            django_rq.get_scheduler('default').cancel(self.job_id)
         super(Task, self).delete(*args, **kwargs)
 
 # a run of a task
@@ -77,9 +81,6 @@ class Run(models.Model):
     start = models.DateTimeField(auto_now_add = True)
     finish = models.DateTimeField(blank = True, null = True, default = None)
     result = models.TextField(blank = True, null = True, default = None)
-    
-    def has_errors(self):
-        return self.errors.count() > 0
 
 # an error that occurred on a run
 class Error(models.Model):

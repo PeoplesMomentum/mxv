@@ -54,6 +54,7 @@ class Intention(models.Model):
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     recorded_at = models.DateTimeField(auto_now_add=True)
     tags_written_to_nation_builder = models.BooleanField(default=False)
+    email_unknown_in_nation_builder = models.BooleanField(default=False)
     
     def __str__(self):
         return self.email
