@@ -1,10 +1,13 @@
 from .models import Task
 from voting_intentions.models import Intention
 from mxv.nation_builder import NationBuilder
+from django.utils import timezone
 
-# should these classes and their registrations in .admin be moved to their related apps?  difficult because of TaskParentAdmin.child_models
+# should these classes and their registrations in .admin be moved to their related apps?  
+# difficult because of TaskParentAdmin.child_models
 
 # updates the voting intention tags in NationBuilder, respecting the NationBuilder API rate limit
+# this assumes that only this task is using the API token
 class VotingIntentionTagTask(Task):
     
     # updates the tags only if the rate limit has not been reached (or is unknown)
@@ -12,21 +15,20 @@ class VotingIntentionTagTask(Task):
         
         intentions_processed = 0
         
-        # while there are tags to update and remaining executions...
+        # while there are enough remaining executions...
         nb = NationBuilder()
         done = False
         while not done and nb.api_calls_available(1):
             
-            # if there are tags to update...
+            # and tags to update...
             intention = Intention.objects.filter(tags_written_to_nation_builder = False).first()
             if intention:
                 
-                # get the NB id for the email
+                # and the email is known to NationBuilder...
                 nb_id = nb.IdFromEmail(intention.email)
-        
-                # set the vote and choice tags
                 if nb_id:
                     
+                    # and enough remaining executions...
                     if nb.api_calls_available(2):   
                          
                         # add tags
@@ -48,6 +50,7 @@ class VotingIntentionTagTask(Task):
                     # record that the email was unknown and don't process again
                     intention.email_unknown_in_nation_builder = True
                     intention.tags_written_to_nation_builder = True
+                    intention.tags_processed_at = timezone.now()
                     intention.save()
                     intentions_processed += 1
                     
