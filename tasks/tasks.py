@@ -2,62 +2,84 @@ from .models import Task
 from voting_intentions.models import Intention
 from mxv.nation_builder import NationBuilder
 from django.utils import timezone
+from django.db import models
 
-# should these classes and their registrations in .admin be moved to their related apps?  
-# difficult because of TaskParentAdmin.child_models
+# these classes and their registrations in .admin should be moved to their related apps  
+# difficult though because of TaskParentAdmin.child_models
 
 # updates the voting intention tags in NationBuilder, respecting the NationBuilder API rate limit
-# this assumes that only this task is using the API token
 class VotingIntentionTagTask(Task):
     
-    # updates the tags only if the rate limit has not been reached (or is unknown)
+    maximum_attempts = models.IntegerField(default = 50)
+
+    # updates the tags only if the rate limit has not been reached
     def execute(self, *args, **kwargs):
-        
-        intentions_processed = 0
-        
-        # while there are enough remaining executions...
-        nb = NationBuilder()
+
+        # statistics
+        attempted = 0
+        successful = 0
+        failed = 0
+        rate_limit_hit = False
         done = False
-        while not done and nb.api_calls_available(1):
+        
+        # while there are enough remaining executions (or the number of remaining executions is unknown)...
+        nb = NationBuilder()
+        while not done and not rate_limit_hit and attempted <= self.maximum_attempts and nb.api_calls_available(1):
             
-            # and tags to update...
-            intention = Intention.objects.filter(tags_written_to_nation_builder = False).first()
+            # and there are tags to update...
+            intention = Intention.objects.filter(processed_at = None).first()
             if intention:
                 
-                # and the email is known to NationBuilder...
-                nb_id = nb.IdFromEmail(intention.email)
-                if nb_id:
-                    
-                    # and enough remaining executions...
-                    if nb.api_calls_available(2):   
-                         
-                        # add tags
-                        add_tags = intention.vote.vote_tags.filter(add=True).union(intention.choice.choice_tags.filter(add=True))
-                        if len(add_tags) > 0:
-                            nb.SetPersonTags(nb_id, [tag.text for tag in add_tags])
+                # if this is the first access to NationBuilder and the rate limit is immediately hit then no id is returned but the email might still be known so abandon this run
+                intention.nation_builder_id = nb.GetIdFromEmail(intention.email)
+                rate_limit_hit = nb.rate_limit_remaining == 0
+                if not rate_limit_hit:
+                
+                    # if the email is known to NationBuilder...
+                    if intention.nation_builder_id:
                         
-                        # remove tags
-                        remove_tags = intention.vote.vote_tags.filter(add=False).union(intention.choice.choice_tags.filter(add=False))
-                        if len(remove_tags) > 0:
-                            nb.ClearPersonTags(nb_id, [tag.text for tag in remove_tags])                
-        
-                        # record the update
-                        intention.nation_builder_id = nb_id
-                        intention.tags_written_to_nation_builder = True
+                        # and enough remaining executions...
+                        if nb.api_calls_available(2):   
+                             
+                            # add tags
+                            add_tags = intention.vote.vote_tags.filter(add=True).union(intention.choice.choice_tags.filter(add=True))
+                            if len(add_tags) > 0:
+                                nb.SetPersonTags(intention.nation_builder_id, [tag.text for tag in add_tags])
+                            
+                            # remove tags
+                            remove_tags = intention.vote.vote_tags.filter(add=False).union(intention.choice.choice_tags.filter(add=False))
+                            if len(remove_tags) > 0:
+                                nb.ClearPersonTags(intention.nation_builder_id, [tag.text for tag in remove_tags])                
+            
+                            # record that any tags were written and don't process again
+                            intention.tags_written_to_nation_builder = True
+                            intention.email_unknown_in_nation_builder = False
+                            intention.processed_at = timezone.now()
+                            intention.save()
+                            successful += 1
+                        else:
+                            # rate limit reached so process again
+                            rate_limit_hit = True
+                    else:
+                        # record that the email was unknown and don't process again
+                        intention.tags_written_to_nation_builder = False
+                        intention.email_unknown_in_nation_builder = True
+                        intention.processed_at = timezone.now()
                         intention.save()
-                        intentions_processed += 1
-                else:
-                    # record that the email was unknown and don't process again
-                    intention.email_unknown_in_nation_builder = True
-                    intention.tags_written_to_nation_builder = True
-                    intention.tags_processed_at = timezone.now()
-                    intention.save()
-                    intentions_processed += 1
+                        failed += 1
+                    
+                attempted += 1
                     
             else:
                 done = True
                 
-        return "%d intention%s processed" % (intentions_processed, "s" if intentions_processed != 1 else "")
+        return "Attempted: %d, successful: %d, failed: %d%s%s%s" % (
+            attempted, 
+            successful, 
+            failed, 
+            ", rate limit hit" if rate_limit_hit else "", 
+            ", nothing more to do" if done else "",
+            ", maximum attempts reached" if attempted == self.maximum_attempts else "")
             
 # sends an email
 class SendEmailTask(Task):

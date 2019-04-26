@@ -32,6 +32,7 @@ class Task(PolymorphicModel):
                 run.result = self.execute(*args, **kwargs)
             except:
                 Error.objects.create(run = run, error = traceback.format_exc())
+                run.result = 'Error'
             run.finish = timezone.now()
             run.save()
         
@@ -46,6 +47,7 @@ class Task(PolymorphicModel):
             self.job_id = None
             super(Task, self).save(*args, **kwargs)
             
+        # create new job
         job = None
         if not self.repeat_seconds:
             if not self.start:
