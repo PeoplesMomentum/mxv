@@ -24,16 +24,19 @@ class VoteAdmin(admin.ModelAdmin):
     
     # returns the results table as HTML
     def results_table(self, vote):
-        
+                
         # header
-        header = '<tr><th>Choice</th><th>Count</th><th>%</th></tr>'
+        header = '<tr><th>Choice</th><th>Count</th><th>%</th><th>NB: unprocessed</th><th>NB: tags written</th><th>NB: unknown email</th></tr>'
         
         # choice rows        
         rows = []
         total = vote.intentions.all().count()
         for choice in vote.choices.all():
-            count = choice.intentions.all().count()#vote.intentions.filter(choice = choice).count()
-            row = '<tr><td>%d - %s</td><td>%d</td><td>%.2f</td></tr>' % (choice.number, choice.text, count, count / total * 100 if total > 0 else 0)
+            count = choice.intentions.all().count()
+            unprocessed = choice.intentions.filter(processed_at = None).count()
+            tags_written = choice.intentions.filter(tags_written_to_nation_builder = True).count()
+            unknown_email = choice.intentions.filter(email_unknown_in_nation_builder = True).count()
+            row = '<tr><td>%d - %s</td><td>%d</td><td>%.2f</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (choice.number, choice.text, count, count / total * 100 if total > 0 else 0, unprocessed, tags_written, unknown_email)
             rows.append(row)
         
         # table
@@ -56,11 +59,23 @@ class VoteAdmin(admin.ModelAdmin):
             writer = csv.writer(response, quoting = csv.QUOTE_ALL)
             
             # header
-            writer.writerow(['email', 'nation_builder_id', 'time', 'vote_id', 'choice_number' ])
+            writer.writerow(['email', 
+                             'nation_builder_id', 
+                             'time', 
+                             'vote_id', 
+                             'choice_number', 
+                             'tags_written_to_nation_builder', 
+                             'email_unknown_in_nation_builder' ])
             
             # intentions
             for intention in vote.intentions.all():
-                writer.writerow([intention.email, intention.nation_builder_id, intention.recorded_at, intention.vote_id, intention.choice.number])
+                writer.writerow([intention.email, 
+                                 intention.nation_builder_id, 
+                                 intention.recorded_at, 
+                                 intention.vote_id, 
+                                 intention.choice.number, 
+                                 intention.tags_written_to_nation_builder,
+                                 intention.email_unknown_in_nation_builder])
                 
             return response
             
