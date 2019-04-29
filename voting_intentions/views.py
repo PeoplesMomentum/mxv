@@ -8,9 +8,9 @@ def index(request):
     try:
         # if the email, vote and intention are in the URL parameters...
         vote_id = request.GET.get('vote', None)
-        choice_id = request.GET.get('choice', None)
+        choice_number = request.GET.get('choice', None)
         vote = Vote.objects.filter(id = vote_id).first()
-        choice = Choice.objects.filter(id = choice_id).first()
+        choice = vote.choices.filter(number = choice_number).first()
         email = request.GET.get('email', None)
         if vote and choice and email:
             

@@ -47,10 +47,10 @@ class NationBuilder:
         # get the person's NB record
         response = requests.get(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), timeout = self.default_timeout)
         self._process_response(response)
-        record = response.json()
         
         # return the requested fields if the person was found
         if response.status_code == 200:
+            record = response.json()
             return({ field_name: record['person'][field_name] for field_name in field_names })
         else:
             return None
@@ -76,10 +76,10 @@ class NationBuilder:
         # get the matching NB record
         response = requests.get(self.MATCH_URL % (urlencode({ 'email': email }), NATIONBUILDER_API_TOKEN), timeout = self.default_timeout)
         self._process_response(response)
-        record = response.json()
         
         # return the requested fields if the person was found
         if response.status_code == 200:
+            record = response.json()
             return(record['person']['id'])
         else:
             return None

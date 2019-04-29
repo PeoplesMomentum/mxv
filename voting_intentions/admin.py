@@ -32,8 +32,8 @@ class VoteAdmin(admin.ModelAdmin):
         rows = []
         total = vote.intentions.all().count()
         for choice in vote.choices.all():
-            count = vote.intentions.filter(choice = choice).count()
-            row = '<tr><td>%d - %s</td><td>%d</td><td>%.2f</td></tr>' % (choice.id, choice.text, count, count / total * 100 if total > 0 else 0)
+            count = choice.intentions.all().count()#vote.intentions.filter(choice = choice).count()
+            row = '<tr><td>%d - %s</td><td>%d</td><td>%.2f</td></tr>' % (choice.number, choice.text, count, count / total * 100 if total > 0 else 0)
             rows.append(row)
         
         # table
@@ -56,11 +56,11 @@ class VoteAdmin(admin.ModelAdmin):
             writer = csv.writer(response, quoting = csv.QUOTE_ALL)
             
             # header
-            writer.writerow(['email', 'nation_builder_id', 'time', 'vote', 'choice' ])
+            writer.writerow(['email', 'nation_builder_id', 'time', 'vote_id', 'choice_number' ])
             
             # intentions
             for intention in vote.intentions.all():
-                writer.writerow([intention.email, intention.nation_builder_id, intention.recorded_at, intention.vote_id, intention.choice_id])
+                writer.writerow([intention.email, intention.nation_builder_id, intention.recorded_at, intention.vote_id, intention.choice.number])
                 
             return response
             
