@@ -3,6 +3,7 @@ from voting_intentions.models import Intention
 from mxv.nation_builder import NationBuilder
 from django.utils import timezone
 from django.db import models
+from datetime import datetime
 
 # these classes and their registrations in .admin should be moved to their related apps  
 # difficult though because of TaskParentAdmin.child_models
@@ -10,7 +11,7 @@ from django.db import models
 # updates the voting intention tags in NationBuilder, respecting the NationBuilder API rate limit
 class VotingIntentionTagTask(Task):
     
-    maximum_attempts = models.IntegerField(default = 50)
+    maximum_runtime = models.IntegerField(default = 50, help_text = 'Maximum runtime in seconds')
 
     # updates the tags only if the rate limit has not been reached
     def execute(self, *args, **kwargs):
@@ -20,11 +21,13 @@ class VotingIntentionTagTask(Task):
         successful = 0
         failed = 0
         rate_limit_hit = False
-        done = False
+        maximum_runtime_elapsed = False
+        nothing_more_to_do = False
         
-        # while there are enough remaining executions (or the number of remaining executions is unknown)...
+        # while no limits are hit and there are enough remaining executions (or the number of remaining executions is unknown)...
+        start = datetime.utcnow()
         nb = NationBuilder()
-        while not done and not rate_limit_hit and attempted <= self.maximum_attempts and nb.api_calls_available(1):
+        while not nothing_more_to_do and not rate_limit_hit and not maximum_runtime_elapsed and nb.api_calls_available(1):
             
             # and there are tags to update...
             intention = Intention.objects.filter(processed_at = None).first()
@@ -71,15 +74,18 @@ class VotingIntentionTagTask(Task):
                 attempted += 1
                     
             else:
-                done = True
+                nothing_more_to_do = True
+                
+            # stop if maximum runtime elapsed
+            maximum_runtime_elapsed = (datetime.utcnow() - start).total_seconds() >= self.maximum_runtime
                 
         return "Attempted: %d, successful: %d, failed: %d%s%s%s" % (
             attempted, 
             successful, 
             failed, 
             ", rate limit hit" if rate_limit_hit else "", 
-            ", nothing more to do" if done else "",
-            ", maximum attempts reached" if attempted == self.maximum_attempts else "")
+            ", nothing more to do" if nothing_more_to_do else "",
+            ", maximum runtime elapsed" if maximum_runtime_elapsed else "")
             
 # sends an email
 class SendEmailTask(Task):

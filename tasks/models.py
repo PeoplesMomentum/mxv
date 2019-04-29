@@ -7,9 +7,9 @@ import traceback
 # an asynchronous task
 class Task(PolymorphicModel):
     name = models.CharField(max_length = 100)
-    start = models.DateTimeField(blank = True, null = True, default = None)
-    repeat_seconds = models.IntegerField(blank = True, null = True, default = None)
-    repeat_count = models.IntegerField(blank = True, null = True, default = None)
+    start = models.DateTimeField(blank = True, null = True, default = None, help_text = 'Time of first run (leave blank to run immediately)')
+    repeat_seconds = models.IntegerField(blank = True, null = True, default = None, help_text = 'How often to repeat in seconds (leave blank to run only once)')
+    repeat_count = models.IntegerField(blank = True, null = True, default = None, help_text = 'How many times to repeat (leave blank for indefinitely)')
     enabled = models.BooleanField(default = True)
     job_id = models.CharField(max_length = 100, blank = True, null = True, default = None)
     
