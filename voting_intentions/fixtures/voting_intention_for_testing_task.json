@@ -1,0 +1,72 @@
+[
+    {   "model" : "voting_intentions.Vote",
+        "pk": 6,
+        "fields": {
+            "name": "NB update test",
+            "redirect_url": "https://momentum.nationbuilder.com/donate12" }},
+
+        {   "model" : "voting_intentions.VoteTag",
+            "pk": 3,
+            "fields": {
+                "vote": 6,
+                "text": "votetag_add" }},
+        {   "model" : "voting_intentions.VoteTag",
+            "pk": 4,
+            "fields": {
+                "vote": 6,
+                "text": "votetag_delete",
+                "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 18,
+            "fields": {
+                "vote": 6,
+                "text": "Yes" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 40,
+                "fields": {
+                    "choice": 18,
+                    "text": "choicetag_yes_add" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 41,
+                "fields": {
+                    "choice": 18,
+                    "text": "choicetag_yes_delete",
+                    "add": "False" }},
+
+        {   "model" : "voting_intentions.Choice",
+            "pk": 19,
+            "fields": {
+                "vote": 6,
+                "text": "No" }},
+
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 42,
+                "fields": {
+                    "choice": 19,
+                    "text": "choicetag_no_add" }},
+            {   "model" : "voting_intentions.ChoiceTag",
+                "pk": 43,
+                "fields": {
+                    "choice": 19,
+                    "text": "choicetag_no_delete",
+                    "add": "False" }},
+                    
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 20,
+            "fields": {
+                "vote": 6,
+                "name": "donation_first_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 21,
+            "fields": {
+                "vote": 6,
+                "name": "donation_last_name" }},
+        {   "model" : "voting_intentions.UrlParameter",
+            "pk": 22,
+            "fields": {
+                "vote": 6,
+                "name": "email",
+                "pass_on_name": "donation_email" }}
+]

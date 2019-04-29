@@ -31,11 +31,14 @@ DEBUG = True if os.environ.get('MXV_DEBUG', 'True') == 'True' else False
 # Application definition
 
 INSTALLED_APPS = [
+    # apps
     'mxv.apps.MxvConfig',
     'members.apps.MembersConfig',
     'review.apps.ReviewConfig',
     'voting_intentions.apps.VotingIntentionsConfig',    
     'consultations.apps.ConsultationsConfig',
+    'tasks.apps.TasksConfig',
+    # admin, Django and third party
     'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +54,8 @@ INSTALLED_APPS = [
     'tinymce',
     'anymail',
     'widget_tweaks',
+    'django_rq',
+    'polymorphic',
 ]
 
 MIDDLEWARE = [
@@ -213,4 +218,12 @@ DEFAULT_REDIRECT_PAGE_URL = 'https://peoplesmomentum.com'
 
 # whether to show consultations to just staff or anyone
 CONSULTATIONS_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_CONSULTATIONS_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+
+# task queueing
+RQ_SHOW_ADMIN_LINK = True
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),
+    }
+}
 

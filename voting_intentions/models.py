@@ -22,11 +22,12 @@ class UrlParameter(models.Model):
 # the possible voting intentions
 class Choice(models.Model):
     vote = models.ForeignKey(Vote, related_name='choices')
+    number = models.IntegerField(default = 0)
     text = models.TextField()
     redirect_url = models.TextField(default = '')
     
     def __str__(self):
-        return self.text
+        return '%d - %s' % (self.number, self.text)
 
 # NationBuilder tags that are set for a vote
 class VoteTag(models.Model):
@@ -54,6 +55,8 @@ class Intention(models.Model):
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     recorded_at = models.DateTimeField(auto_now_add=True)
     tags_written_to_nation_builder = models.BooleanField(default=False)
+    email_unknown_in_nation_builder = models.NullBooleanField(default=None)
+    processed_at = models.DateTimeField(blank=True, null=True, default=None)
     
     def __str__(self):
         return self.email

@@ -35,4 +35,7 @@ urlpatterns = [
     
     # consultations
     url(r'^consultations/', include('consultations.urls')),
+    
+    # task queueing
+    url(r'^django-rq/', include('django_rq.urls')),
 ]
