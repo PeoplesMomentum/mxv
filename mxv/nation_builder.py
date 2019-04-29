@@ -13,7 +13,7 @@ from django.utils.http import urlencode
 # encapsulates communications with the NationBuilder API
 class NationBuilder:
     
-    # the URL for people
+    # the API URLs
     PERSON_URL = "https://momentum.nationbuilder.com/api/v1/people/%d?access_token=%s"
     MATCH_URL = "https://momentum.nationbuilder.com/api/v1/people/match?%s&access_token=%s"
     TAG_URL = "https://momentum.nationbuilder.com/api/v1/people/%d/taggings?access_token=%s"
@@ -27,7 +27,7 @@ class NationBuilder:
     # how long to wait in seconds for connect/read from NationBuilder
     default_timeout = 5
     
-    # true if the rate limit has not been hit
+    # true if the rate limit has not been hit or is unknown
     def api_calls_available(self, required):
         return not self.rate_limit_remaining or self.rate_limit_remaining >= required
     

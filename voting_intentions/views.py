@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from voting_intentions.models import Vote, Choice, Intention
+from voting_intentions.models import Vote, Intention
 from mxv.settings import DEFAULT_REDIRECT_PAGE_URL
 
 # records a voting intention from the URL parameters and redirects
