@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^admin/', include('members.adminurls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^_nested_admin/', include('nested_admin.urls')),
+    url(r'^nested_admin/', include('nested_admin.urls')),
     
     # democracy review
     url(r'^review/', include('review.urls')),

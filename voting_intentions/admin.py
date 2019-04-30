@@ -1,12 +1,43 @@
 from django.contrib import admin
-from voting_intentions.models import Vote
+from voting_intentions.models import Vote, VoteTag, Choice, ChoiceTag, UrlParameter
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
 from django.forms import TextInput
 from django.db import models
+from nested_admin import nested
 
-class VoteAdmin(admin.ModelAdmin):
+class ChoiceTagInline(nested.NestedTabularInline):
+    model = ChoiceTag
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    
+class ChoiceInline(nested.NestedTabularInline):
+    model = Choice
+    ordering = ['number']
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    inlines = [ChoiceTagInline]
+    
+class VoteTagInline(nested.NestedTabularInline):
+    model = VoteTag
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    
+class UrlParameterInline(nested.NestedTabularInline):
+    model = UrlParameter
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+    
+class VoteAdmin(nested.NestedModelAdmin):
     list_display = ('id', 'name', 'redirect_url')
     ordering = ('id', )
     fields = (
@@ -17,8 +48,9 @@ class VoteAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('id', 'results_table', )
     formfield_overrides = { 
-        models.TextField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
+    inlines = [UrlParameterInline, VoteTagInline, ChoiceInline]
     
     # returns the results table as HTML
     def results_table(self, vote):
