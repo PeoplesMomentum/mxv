@@ -1,26 +1,24 @@
 from django.contrib import admin
 from voting_intentions.models import Vote
 from django.utils.safestring import mark_safe
-from django import forms
 from django.http.response import HttpResponse
 import csv
-
-class VoteAdminForm(forms.ModelForm):
-    class Meta:
-        model = Vote
-        fields = ('name', 'redirect_url')
-    name = forms.CharField(widget = forms.TextInput(attrs = { 'style': 'width:500px' }))
-    redirect_url = forms.CharField(widget = forms.TextInput(attrs = { 'style': 'width:500px' }))
+from django.forms import TextInput
+from django.db import models
 
 class VoteAdmin(admin.ModelAdmin):
-    form = VoteAdminForm
-    list_display = ('name', 'redirect_url')
+    list_display = ('id', 'name', 'redirect_url')
+    ordering = ('id', )
     fields = (
+        'id',
         'name', 
         'redirect_url',
         'results_table'
     )
-    readonly_fields = ('results_table', )
+    readonly_fields = ('id', 'results_table', )
+    formfield_overrides = { 
+        models.TextField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
     
     # returns the results table as HTML
     def results_table(self, vote):
