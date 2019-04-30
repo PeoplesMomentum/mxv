@@ -34,7 +34,7 @@ class UrlParameterInline(nested.NestedTabularInline):
     model = UrlParameter
     extra = 0
     formfield_overrides = { 
-        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 50 })}, 
     }
     
 class VoteAdmin(nested.NestedModelAdmin):
@@ -44,9 +44,10 @@ class VoteAdmin(nested.NestedModelAdmin):
         'id',
         'name', 
         'redirect_url',
+        'nation_builder_urls',
         'results_table'
     )
-    readonly_fields = ('id', 'results_table', )
+    readonly_fields = ('id', 'nation_builder_urls', 'results_table', )
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
@@ -77,6 +78,19 @@ class VoteAdmin(nested.NestedModelAdmin):
         
         return mark_safe(table)
     results_table.short_description = 'results'
+    
+    # URLs for use in NationBuilder
+    def nation_builder_urls(self, vote):
+        urls = ''
+        for choice in vote.choices.all():
+            parameters = []
+            parameters.append(('vote', str(vote.id)))
+            parameters.append(('choice', str(choice.number)))
+            for param in vote.url_parameters.all():
+                parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
+            urls += '<p>https://my.peoplesmomentum.com/voting_intentions?%s</p>' % '&'.join('='.join(param) for param in parameters)
+        return mark_safe(urls)
+    nation_builder_urls.short_description = 'NationBuilder email button URLs'
     
     # returns the intentions as a CSV response
     def response_change(self, request, obj):
