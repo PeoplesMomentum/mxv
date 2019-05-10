@@ -9,6 +9,7 @@ from solo.models import SingletonModel
 from mxv.settings import LAUNCH_DATE
 from review.models import Proposal
 import re
+from django.db.models.deletion import SET_NULL
 
 # an email
 place_holder_text = 'Available place-holders: [name], [link], [months_since_launch], [proposal_count] and [active_member_count]. '
@@ -129,7 +130,7 @@ class EmailSettings(SingletonModel):
     test_email_address = CIEmailField(default = '')
     send_count = models.PositiveIntegerField(default = 1000)
     is_active = models.BooleanField(default = False)
-    activation_email = models.ForeignKey(Email, related_name = '+', blank = True, null = True, default = None)
+    activation_email = models.ForeignKey(Email, related_name = '+', blank = True, null = True, default = None, on_delete=SET_NULL)
 
 # populate this table in SQL with email addresses to receive targeted emails
 class EmailTarget(models.Model):
