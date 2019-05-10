@@ -306,7 +306,7 @@ class Choice(models.Model):
 
 class Vote(models.Model):
     track_voting = models.ForeignKey(TrackVoting, related_name='votes', on_delete=CASCADE)
-    member = models.ForeignKey(AUTH_USER_MODEL, related_name='votes')
+    member = models.ForeignKey(AUTH_USER_MODEL, related_name='votes', on_delete=CASCADE)
 
     def __str__(self):
         return '%s / %s' % (self.track_voting, self.member)
