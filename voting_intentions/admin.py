@@ -68,7 +68,7 @@ class VoteAdmin(nested.NestedModelAdmin):
         # choice rows        
         rows = []
         total = vote.intentions.all().count()
-        for choice in vote.choices.all():
+        for choice in vote.choices.all().order_by('number'):
             count = choice.intentions.all().count()
             unprocessed = choice.intentions.filter(processed_at = None).count()
             tags_written = choice.intentions.filter(tags_written_to_nation_builder = True).count()
@@ -88,7 +88,7 @@ class VoteAdmin(nested.NestedModelAdmin):
     # URLs for use in NationBuilder
     def nation_builder_urls(self, vote):
         urls = ''
-        for choice in vote.choices.all():
+        for choice in vote.choices.all().order_by('number'):
             parameters = []
             parameters.append(('vote', str(vote.id)))
             parameters.append(('choice', str(choice.number)))
