@@ -94,13 +94,18 @@ class VoteAdmin(nested.NestedModelAdmin):
     nation_builder_urls.short_description = 'NationBuilder email button URLs'
     
     def default_url_parameters(self, vote):
+        
+        # returns an empty string for None
+        def blank(text):
+            return text if text else ""
+        
         # header
         header = '<tr><th>Name</th><th>Pass On Name</th><th>NationBuilder Value</th></tr>'
         
         # default rows        
         rows = []
         for param in DefaultUrlParameter.objects.all():
-            row = '<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % (param.name, param.pass_on_name, param.nation_builder_value)
+            row = '<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % (param.name, blank(param.pass_on_name), blank(param.nation_builder_value))
             rows.append(row)
         
         # table
