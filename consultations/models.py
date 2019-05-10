@@ -2,6 +2,7 @@ from django.db import models
 from mxv.settings import AUTH_USER_MODEL
 from datetime import date
 from django.utils import formats
+from django.db.models.deletion import CASCADE
 
 # field sizes
 short_text_length = 255
@@ -68,7 +69,7 @@ class Consultation(models.Model):
     
 # a question on a consultation
 class Question(models.Model):
-    consultation = models.ForeignKey(Consultation, related_name='questions')
+    consultation = models.ForeignKey(Consultation, related_name='questions', on_delete=CASCADE)
     number = models.PositiveIntegerField()
     text = models.TextField(max_length=long_text_length)
     guidance = models.TextField(max_length=long_text_length, default='', blank=True)
@@ -79,7 +80,7 @@ class Question(models.Model):
 
 # a possible answer to a question
 class Choice(models.Model):
-    question = models.ForeignKey(Question, related_name='choices')
+    question = models.ForeignKey(Question, related_name='choices', on_delete=CASCADE)
     display_order = models.PositiveIntegerField(default=1)
     text = models.CharField(max_length=short_text_length)
     redirect_url = models.CharField(max_length=short_text_length, blank=True, null=True, default=None)
@@ -88,17 +89,17 @@ class Choice(models.Model):
         return self.text
 
 class Vote(models.Model):
-    consultation = models.ForeignKey(Consultation, related_name='votes')
-    member = models.ForeignKey(AUTH_USER_MODEL, related_name='consultation_votes')
+    consultation = models.ForeignKey(Consultation, related_name='votes', on_delete=CASCADE)
+    member = models.ForeignKey(AUTH_USER_MODEL, related_name='consultation_votes', on_delete=CASCADE)
 
     def __str__(self):
         return '%s / %s' % (self.consultation, self.member)
     
 # a member's answer to a question
 class Answer(models.Model):
-    vote = models.ForeignKey(Vote, related_name='answers')
-    question = models.ForeignKey(Question, related_name='answers')
-    choice = models.ForeignKey(Choice, related_name='answers')
+    vote = models.ForeignKey(Vote, related_name='answers', on_delete=CASCADE)
+    question = models.ForeignKey(Question, related_name='answers', on_delete=CASCADE)
+    choice = models.ForeignKey(Choice, related_name='answers', on_delete=CASCADE)
     answered_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

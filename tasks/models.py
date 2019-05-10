@@ -3,6 +3,7 @@ from polymorphic.models import PolymorphicModel
 import django_rq
 from django.utils import timezone
 import traceback
+from django.db.models.deletion import CASCADE
 
 # an asynchronous task
 class Task(PolymorphicModel):
@@ -80,14 +81,14 @@ class Task(PolymorphicModel):
 
 # a run of a task
 class Run(models.Model):
-    task = models.ForeignKey(Task, related_name='runs')
+    task = models.ForeignKey(Task, related_name='runs', on_delete=CASCADE)
     start = models.DateTimeField(auto_now_add = True)
     finish = models.DateTimeField(blank = True, null = True, default = None)
     result = models.TextField(blank = True, null = True, default = None)
 
 # an error that occurred on a run
 class Error(models.Model):
-    run = models.ForeignKey(Run, related_name='errors')
+    run = models.ForeignKey(Run, related_name='errors', on_delete=CASCADE)
     occurred_at = models.DateTimeField(auto_now_add=True)
     error = models.TextField()
 
