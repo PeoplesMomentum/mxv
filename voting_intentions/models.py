@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields.citext import CIEmailField
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_save
 
 # a vote for which intentions are being recorded
 class Vote(models.Model):
@@ -8,7 +10,13 @@ class Vote(models.Model):
     
     def __str__(self):
         return self.name
-
+    
+# adds the default URL parameters to new votes
+@receiver(post_save, sender = Vote)
+def add_default_url_parameters(sender, instance, created, *args, **kwargs):
+    if created:
+        for param in DefaultUrlParameter.objects.all():
+            UrlParameter.objects.create(vote = instance, name = param.name, pass_on_name = param.pass_on_name, nation_builder_value = param.nation_builder_value)
 
 # the URL parameters to pass on when redirecting
 class UrlParameter(models.Model):
@@ -20,6 +28,15 @@ class UrlParameter(models.Model):
     def __str__(self):
         return self.name
 
+# default URL parameters that are copied to a vote when it is created
+class DefaultUrlParameter(models.Model):
+    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
+    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
+    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
+    
+    def __str__(self):
+        return self.name
+    
 # the possible voting intentions
 class Choice(models.Model):
     vote = models.ForeignKey(Vote, related_name='choices')

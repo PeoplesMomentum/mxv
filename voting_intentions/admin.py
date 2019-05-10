@@ -1,5 +1,5 @@
 from django.contrib import admin
-from voting_intentions.models import Vote, VoteTag, Choice, ChoiceTag, UrlParameter
+from voting_intentions.models import Vote, VoteTag, Choice, ChoiceTag, UrlParameter, DefaultUrlParameter
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
@@ -38,20 +38,26 @@ class UrlParameterInline(nested.NestedTabularInline):
     }
     
 class VoteAdmin(nested.NestedModelAdmin):
-    list_display = ('id', 'name', 'redirect_url')
+    list_display = ('id', 'name', 'redirect_url', 'votes_cast')
     ordering = ('id', )
     fields = (
         'id',
         'name', 
         'redirect_url',
         'nation_builder_urls',
-        'results_table'
+        'votes_cast',
+        'results_table',
+        'default_url_parameters'
     )
-    readonly_fields = ('id', 'nation_builder_urls', 'results_table', )
+    readonly_fields = ('id', 'nation_builder_urls', 'results_table', 'default_url_parameters', 'votes_cast')
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
     inlines = [UrlParameterInline, VoteTagInline, ChoiceInline]
+    
+    # returns the number of votes
+    def votes_cast(self, vote):
+        return vote.intentions.count()
     
     # returns the results table as HTML
     def results_table(self, vote):
@@ -92,6 +98,30 @@ class VoteAdmin(nested.NestedModelAdmin):
         return mark_safe(urls)
     nation_builder_urls.short_description = 'NationBuilder email button URLs'
     
+    def default_url_parameters(self, vote):
+        
+        # returns an empty string for None
+        def blank(text):
+            return text if text else ""
+        
+        # header
+        header = '<tr><th>Name</th><th>Pass On Name</th><th>NationBuilder Value</th></tr>'
+        
+        # default rows        
+        rows = []
+        for param in DefaultUrlParameter.objects.all():
+            row = '<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % (param.name, blank(param.pass_on_name), blank(param.nation_builder_value))
+            rows.append(row)
+        
+        # table
+        table = '<table>' + header
+        for row in rows:
+            table += row
+        table += '</table>'
+        
+        return mark_safe(table)
+    default_url_parameters.short_description = 'Default URL parameters'
+    
     # returns the intentions as a CSV response
     def response_change(self, request, obj):
         if 'export_intentions_as_csv' in request.POST:
@@ -126,5 +156,10 @@ class VoteAdmin(nested.NestedModelAdmin):
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
 
+class DefaultUrlParameterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'pass_on_name', 'nation_builder_value')
+    fields = ('name', 'pass_on_name', 'nation_builder_value')
+    ordering = ['name']
 
 admin.site.register(Vote, VoteAdmin)
+admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
