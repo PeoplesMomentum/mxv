@@ -38,21 +38,26 @@ class UrlParameterInline(nested.NestedTabularInline):
     }
     
 class VoteAdmin(nested.NestedModelAdmin):
-    list_display = ('id', 'name', 'redirect_url')
+    list_display = ('id', 'name', 'redirect_url', 'votes_cast')
     ordering = ('id', )
     fields = (
         'id',
         'name', 
         'redirect_url',
         'nation_builder_urls',
+        'votes_cast',
         'results_table',
         'default_url_parameters'
     )
-    readonly_fields = ('id', 'nation_builder_urls', 'results_table', 'default_url_parameters')
+    readonly_fields = ('id', 'nation_builder_urls', 'results_table', 'default_url_parameters', 'votes_cast')
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
     inlines = [UrlParameterInline, VoteTagInline, ChoiceInline]
+    
+    # returns the number of votes
+    def votes_cast(self, vote):
+        return vote.intentions.count()
     
     # returns the results table as HTML
     def results_table(self, vote):
