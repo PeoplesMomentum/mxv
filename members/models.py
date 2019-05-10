@@ -46,7 +46,7 @@ def activation_key_default():
 # a group of members
 class MomentumGroup(models.Model):
     name = models.CharField(max_length=255)
-    primary_contact = models.ForeignKey('Member', related_name='+')
+    primary_contact = models.ForeignKey('Member', related_name='+', blank=True, null=True, on_delete=SET_NULL)
     
     def __str__(self):
         return self.name

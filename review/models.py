@@ -4,6 +4,7 @@ from datetime import date
 from django.core.mail.message import EmailMultiAlternatives
 from django.urls.base import reverse
 from django.utils import formats
+from django.db.models.deletion import CASCADE
 
 # field sizes
 name_length = 100
@@ -110,7 +111,7 @@ class Track(models.Model):
         
 # a theme in a track
 class Theme(models.Model):
-    track = models.ForeignKey(Track, related_name='themes')    
+    track = models.ForeignKey(Track, related_name='themes', on_delete=CASCADE)    
     name = models.CharField(max_length=name_length, unique=True)
     description = models.TextField(max_length=description_length)
     display_order = models.IntegerField(default = 1)
@@ -121,8 +122,8 @@ class Theme(models.Model):
 
 # proposal in a theme
 class Proposal(models.Model):
-    theme = models.ForeignKey(Theme, related_name='proposals')
-    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='proposals')
+    theme = models.ForeignKey(Theme, related_name='proposals', on_delete=CASCADE)
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='proposals', on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     summary = models.CharField(max_length=summary_length, default='')
@@ -136,14 +137,14 @@ class Proposal(models.Model):
     
 # proposal URLs
 class ProposalURL(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='urls')
+    proposal = models.ForeignKey(Proposal, related_name='urls', on_delete=CASCADE)
     url = models.TextField(max_length=description_length)
     display_text = models.TextField(max_length=description_length)
 
 # an amendment to a proposal
 class Amendment(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='amendments')
-    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='amendments')
+    proposal = models.ForeignKey(Proposal, related_name='amendments', on_delete=CASCADE)
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='amendments', on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=name_length)
     text = models.TextField(max_length=text_length)
@@ -156,8 +157,8 @@ class Amendment(models.Model):
     
 # a comment on a proposal
 class Comment(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='comments')
-    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments')
+    proposal = models.ForeignKey(Proposal, related_name='comments', on_delete=CASCADE)
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments', on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     text = models.TextField(max_length=text_length)
     
@@ -169,16 +170,16 @@ class Comment(models.Model):
     
 # a member's nomination of a proposal
 class Nomination(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='nominations')
-    nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations')
+    proposal = models.ForeignKey(Proposal, related_name='nominations', on_delete=CASCADE)
+    nominated_by = models.ForeignKey(AUTH_USER_MODEL, related_name='nominations', on_delete=CASCADE)
     nominated_at = models.DateTimeField(auto_now_add=True)
     
 # a moderation request
 class ModerationRequest(models.Model):
-    proposal = models.ForeignKey(Proposal, related_name='moderation_requests', blank=True, null=True, default=None)
-    amendment = models.ForeignKey(Amendment, related_name='moderation_requests', blank=True, null=True, default=None)
-    comment = models.ForeignKey(Comment, related_name='moderation_requests', blank=True, null=True, default=None)
-    requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests')
+    proposal = models.ForeignKey(Proposal, related_name='moderation_requests', blank=True, null=True, default=None, on_delete=CASCADE)
+    amendment = models.ForeignKey(Amendment, related_name='moderation_requests', blank=True, null=True, default=None, on_delete=CASCADE)
+    comment = models.ForeignKey(Comment, related_name='moderation_requests', blank=True, null=True, default=None, on_delete=CASCADE)
+    requested_by = models.ForeignKey(AUTH_USER_MODEL, related_name='moderation_requests', on_delete=CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
     reason = models.TextField(max_length=text_length, default='')
     moderated = models.BooleanField(default=False)
@@ -288,7 +289,7 @@ class TrackVoting(models.Model):
     
 # a question on a track voting page
 class Question(models.Model):
-    track_voting = models.ForeignKey(TrackVoting, related_name='questions')
+    track_voting = models.ForeignKey(TrackVoting, related_name='questions', on_delete=CASCADE)
     number = models.PositiveIntegerField()
     text = models.TextField(max_length=description_length)
 
@@ -297,14 +298,14 @@ class Question(models.Model):
 
 # a possible answer to a question
 class Choice(models.Model):
-    question = models.ForeignKey(Question, related_name='choices')
+    question = models.ForeignKey(Question, related_name='choices', on_delete=CASCADE)
     text = models.TextField(max_length=name_length)
 
     def __str__(self):
         return self.text
 
 class Vote(models.Model):
-    track_voting = models.ForeignKey(TrackVoting, related_name='votes')
+    track_voting = models.ForeignKey(TrackVoting, related_name='votes', on_delete=CASCADE)
     member = models.ForeignKey(AUTH_USER_MODEL, related_name='votes')
 
     def __str__(self):
@@ -312,9 +313,9 @@ class Vote(models.Model):
     
 # a member's answer to a question
 class Answer(models.Model):
-    vote = models.ForeignKey(Vote, related_name='answers')
-    question = models.ForeignKey(Question, related_name='answers')
-    choice = models.ForeignKey(Choice, related_name='answers')
+    vote = models.ForeignKey(Vote, related_name='answers', on_delete=CASCADE)
+    question = models.ForeignKey(Question, related_name='answers', on_delete=CASCADE)
+    choice = models.ForeignKey(Choice, related_name='answers', on_delete=CASCADE)
     answered_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

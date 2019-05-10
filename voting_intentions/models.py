@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields.citext import CIEmailField
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.db.models.deletion import CASCADE
 
 # a vote for which intentions are being recorded
 class Vote(models.Model):
@@ -20,7 +21,7 @@ def add_default_url_parameters(sender, instance, created, *args, **kwargs):
 
 # the URL parameters to pass on when redirecting
 class UrlParameter(models.Model):
-    vote = models.ForeignKey(Vote, related_name='url_parameters')
+    vote = models.ForeignKey(Vote, related_name='url_parameters', on_delete=CASCADE)
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
     pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
     nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
@@ -39,7 +40,7 @@ class DefaultUrlParameter(models.Model):
     
 # the possible voting intentions
 class Choice(models.Model):
-    vote = models.ForeignKey(Vote, related_name='choices')
+    vote = models.ForeignKey(Vote, related_name='choices', on_delete=CASCADE)
     number = models.IntegerField(default = 0)
     text = models.CharField(max_length = 100)
     redirect_url = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to override the redirect for this choice')
@@ -49,7 +50,7 @@ class Choice(models.Model):
 
 # NationBuilder tags that are set for a vote
 class VoteTag(models.Model):
-    vote = models.ForeignKey(Vote, related_name='vote_tags')
+    vote = models.ForeignKey(Vote, related_name='vote_tags', on_delete=CASCADE)
     text = models.CharField(max_length = 100, help_text = 'The tag to add to NationBuilder for this vote')
     add = models.BooleanField(default = True, help_text = 'Clear this to remove the tag instead')
     
@@ -58,7 +59,7 @@ class VoteTag(models.Model):
 
 # NationBuilder tags that are set for a choice
 class ChoiceTag(models.Model):
-    choice = models.ForeignKey(Choice, related_name='choice_tags')
+    choice = models.ForeignKey(Choice, related_name='choice_tags', on_delete=CASCADE)
     text = models.CharField(max_length = 100, help_text = 'The tag to add to NationBuilder for this choice')
     add = models.BooleanField(default = True, help_text = 'Clear this to remove the tag instead')
     
@@ -67,8 +68,8 @@ class ChoiceTag(models.Model):
 
 # a voting intention (associated with an email for now, eventually with a NationBuilder Id)
 class Intention(models.Model):
-    vote = models.ForeignKey(Vote, related_name='intentions')
-    choice = models.ForeignKey(Choice, related_name='intentions')
+    vote = models.ForeignKey(Vote, related_name='intentions', on_delete=CASCADE)
+    choice = models.ForeignKey(Choice, related_name='intentions', on_delete=CASCADE)
     email = CIEmailField(verbose_name='email address', max_length=255)
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     recorded_at = models.DateTimeField(auto_now_add=True)
