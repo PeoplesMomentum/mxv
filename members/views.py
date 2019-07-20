@@ -12,6 +12,7 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render
 from mxv.models import EmailSettings
 from mxv import forms
+from django.contrib.auth.decorators import login_required
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -185,3 +186,8 @@ def request_activation_email(request):
 
     return render(request, 'members/request_activation_email.html', { 
         'form': form })
+
+@login_required
+def profile(request):
+    return render(request, 'members/profile.html', {})
+    

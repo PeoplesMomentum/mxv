@@ -129,6 +129,7 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     def get_model_perms(self, request):
         return {}
     
+# member-editable fields admin
 class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
     field_path = forms.ChoiceField()
     
