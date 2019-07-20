@@ -146,7 +146,8 @@ class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
         form.current_user = request.user
         return form
         
-    list_display = ('field_path', 'field_type', 'required', 'display_text', 'display_order', 'admin_only')
+    list_display = ('display_order', 'display_text', 'field_path', 'field_type', 'required', 'admin_only')
+    ordering = ('display_order', )
 
 # not using builtin permissions
 admin.site.unregister(Group)
