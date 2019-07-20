@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, MomentumGroup
+from members.models import Member
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
@@ -47,7 +47,7 @@ class MemberChangeForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser', 'is_ncg', 'is_members_council')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -64,12 +64,12 @@ class MemberAdmin(BaseUserAdmin):
     # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
+    list_display = ('email', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
         (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_emailed')}),
-        ('Personal info', {'fields': ('name', 'momentum_group', )}),
-        ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
+        ('Personal info', {'fields': ('name',)}),
+        ('Permissions', {'fields': ('is_superuser',)}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -77,7 +77,7 @@ class MemberAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'activation_key', 'password1', 'password2', 'momentum_group')}
+            'fields': ('email', 'name', 'activation_key', 'password1', 'password2')}
         ),
     )
     search_fields = ('email', 'name')
@@ -122,24 +122,6 @@ class MemberInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
     
-class MomentumGroupAdminForm(forms.ModelForm): 
-    
-    class Meta:
-        model = MomentumGroup
-        fields = ['name', 'primary_contact', ]
-    
-    # limit primary contact to group members
-    def __init__(self, *args, **kwargs):
-        super(MomentumGroupAdminForm, self).__init__(*args, **kwargs)
-        self.fields['primary_contact'].queryset = Member.objects.filter(momentum_group__id=self.instance.pk)
-   
-
-class MomentumGroupAdmin(admin.ModelAdmin):
-    form = MomentumGroupAdminForm
-    search_fields = ('name', 'email',)
-    inlines = (MemberInline,)
-    list_display = ('name', 'primary_contact', )
-
 # activation email admin setup
 class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     # hide from the app list as it's linked separately
@@ -148,7 +130,6 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
 
 # register the new admin classes
 admin.site.register(Member, MemberAdmin)
-admin.site.register(MomentumGroup, MomentumGroupAdmin)
 
 # not using builtin permissions
 admin.site.unregister(Group)
