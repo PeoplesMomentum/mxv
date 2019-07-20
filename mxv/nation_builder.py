@@ -1,6 +1,7 @@
 import requests
 from mxv.settings import NATIONBUILDER_API_TOKEN
 from django.utils.http import urlencode
+from json_flatten import flatten
 
 # the NationBuilder API is slow enough that the rate limit shouldn't be hit from a single thread as shown by this experiment:
 # 
@@ -40,6 +41,27 @@ class NationBuilder:
         # status exceptions    
         if self._raise_HTTP_errors:
             response.raise_for_status()
+            
+    # returns a flattened list of (field_path = value) tuples for the person
+    def PersonFieldsAndValues(self, person_id):
+        
+        # get the person's NB record
+        response = requests.get(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), timeout = self.default_timeout)
+        self._process_response(response)
+        
+        # return field_path = value if the person was found
+        if response.status_code == 200:
+            record = response.json()
+            flat = flatten(record)
+            flat_list = []
+            for key, value in flat.items():
+                key_without_type = key if key.find('$') == -1 else key[:key.find('$')]
+                value_without_none = value if value != 'None' else ''
+                flat_list.append((key_without_type, "%s = %s" % (key_without_type, value_without_none)))
+            flat_list.sort(key = lambda tup: tup[0])
+            return(flat_list)
+        else:
+            return None
     
     # returns a dictionary of field values for a person
     def GetPersonFields(self, person_id, field_names):

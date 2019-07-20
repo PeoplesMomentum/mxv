@@ -2,10 +2,11 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member
+from members.models import Member, MemberEditableNationBuilderField
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
+from mxv.nation_builder import NationBuilder
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -47,7 +48,7 @@ class MemberChangeForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
+        fields = ('email', 'password', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser', 'is_ncg', 'is_members_council')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -69,7 +70,7 @@ class MemberAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_emailed')}),
         ('Personal info', {'fields': ('name',)}),
-        ('Permissions', {'fields': ('is_superuser',)}),
+        ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -127,9 +128,29 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     # hide from the app list as it's linked separately
     def get_model_perms(self, request):
         return {}
-
-# register the new admin classes
-admin.site.register(Member, MemberAdmin)
+    
+class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
+    field_path = forms.ChoiceField()
+    
+    def __init__(self, *args, **kwargs):
+        super(MemberEditableNationBuilderFieldAdminForm, self).__init__(*args, **kwargs)
+        nb = NationBuilder()
+        self.fields['field_path'].choices = nb.PersonFieldsAndValues(self.current_user.id)
+        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.id
+    
+class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
+    form = MemberEditableNationBuilderFieldAdminForm
+    
+    def get_form(self, request, *args, **kwargs):
+        form = super(MemberEditableNationBuilderFieldAdmin, self).get_form(request, *args, **kwargs)
+        form.current_user = request.user
+        return form
+        
+    list_display = ('field_path', 'field_type', 'required', 'display_text', 'display_order', 'admin_only')
 
 # not using builtin permissions
 admin.site.unregister(Group)
+
+admin.site.register(Member, MemberAdmin)
+admin.site.register(MemberEditableNationBuilderField, MemberEditableNationBuilderFieldAdmin)
+
