@@ -3,13 +3,13 @@ from members.models import Member
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
-from members.forms import SendMemberActivationEmailsForm
+from members.forms import SendMemberActivationEmailsForm, MemberProfileForm
 from django.contrib import messages
 from django.urls import reverse
 from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from mxv.models import EmailSettings
 from mxv import forms
 from django.contrib.auth.decorators import login_required
@@ -187,7 +187,25 @@ def request_activation_email(request):
     return render(request, 'members/request_activation_email.html', { 
         'form': form })
 
+# displays the member's profile page
 @login_required
 def profile(request):
-    return render(request, 'members/profile.html', {})
+    
+    # get the member
+    member = request.user
+    
+    # if valid post...
+    if request.method == 'POST':
+        form = MemberProfileForm(request.POST)
+        if form.is_valid():
+            do_something_with(form.cleaned_data)
+            return redirect("members:profile")
+            
+    else:
+        form = MemberProfileForm(instance = member)
+    return render(request, 'members/profile.html', { 'form': form})
+    
+    
+    
+    
     
