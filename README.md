@@ -1,7 +1,5 @@
 # MxV - Momentum's new digital democracy platform
 
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/PeoplesMomentum/mxv.svg?columns=all)](https://waffle.io/PeoplesMomentum/mxv)
-
 ## What's this?
 This new digital platform will be used initially to help in the generation of ideas for Momentum's submissions to the Labour Party Democracy Review.  It will probably broaden into a "Member's hub" after that.
 
