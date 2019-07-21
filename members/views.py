@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member
+from members.models import Member, MemberEditableNationBuilderField
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from mxv.models import EmailSettings
 from mxv import forms
 from django.contrib.auth.decorators import login_required
+from mxv.nation_builder import NationBuilder
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -191,18 +192,29 @@ def request_activation_email(request):
 @login_required
 def profile(request):
     
-    # get the member
+    # get the member and accessible profile fields
     member = request.user
+    profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = member.is_superuser)
+    
+    # get values for the fields
+    nb = NationBuilder()
+    member_fields = nb.PersonFieldsAndValues(member.id)
+    for profile_field in profile_fields:
+        profile_field.value_string = [field[1] for field in member_fields if field[0] == profile_field.field_path][0]
     
     # if valid post...
     if request.method == 'POST':
-        form = MemberProfileForm(request.POST)
+        form = MemberProfileForm(request.POST, extra_fields = profile_fields)
         if form.is_valid():
-            do_something_with(form.cleaned_data)
+             
+#             post each custom field value back to NB
+            
+#             save model fields as well?
+
             return redirect("members:profile")
             
     else:
-        form = MemberProfileForm(instance = member)
+        form = MemberProfileForm(instance = member, extra_fields = profile_fields)
     return render(request, 'members/profile.html', { 'form': form})
     
     

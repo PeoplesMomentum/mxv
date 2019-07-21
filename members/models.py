@@ -75,14 +75,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
 # UI choices for member-editable fields
 class MemberEditableFieldType(Enum):
     Char = "Single line text"
-    Text = "Multiple line text"
     Integer = "Integer"
     Decimal = "Decimal"
     Boolean = "Checkbox (true/false)"
     Email = "Email"
-    Date = "Date"
-    Time = "Time"
-    DateTime = "Date and time"
 
 # fields in the members' NationBuilder records that should be editable by the member on their profile page
 class MemberEditableNationBuilderField(models.Model):

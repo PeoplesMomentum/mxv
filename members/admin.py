@@ -136,7 +136,7 @@ class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MemberEditableNationBuilderFieldAdminForm, self).__init__(*args, **kwargs)
         nb = NationBuilder()
-        self.fields['field_path'].choices = nb.PersonFieldsAndValues(self.current_user.id)
+        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.id)]
         self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.id
     
 class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):

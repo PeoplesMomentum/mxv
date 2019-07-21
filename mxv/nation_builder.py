@@ -57,7 +57,7 @@ class NationBuilder:
             for key, value in flat.items():
                 key_without_type = key if key.find('$') == -1 else key[:key.find('$')]
                 value_without_none = value if value != 'None' else ''
-                flat_list.append((key_without_type, "%s = %s" % (key_without_type, value_without_none)))
+                flat_list.append((key_without_type, value_without_none, "%s = %s" % (key_without_type, value_without_none)))
             flat_list.sort(key = lambda tup: tup[0])
             return(flat_list)
         else:
