@@ -2,10 +2,11 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, MomentumGroup
+from members.models import Member, MemberEditableNationBuilderField
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
+from mxv.nation_builder import NationBuilder
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -64,11 +65,11 @@ class MemberAdmin(BaseUserAdmin):
     # The fields to be used in displaying the member model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'name', 'momentum_group', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
+    list_display = ('email', 'name', 'activation_key', 'is_active', 'last_emailed', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
         (None, {'fields': ('email', 'password', 'activation_key', 'is_active', 'last_emailed')}),
-        ('Personal info', {'fields': ('name', 'momentum_group', )}),
+        ('Personal info', {'fields': ('name',)}),
         ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
@@ -77,7 +78,7 @@ class MemberAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'activation_key', 'password1', 'password2', 'momentum_group')}
+            'fields': ('email', 'name', 'activation_key', 'password1', 'password2')}
         ),
     )
     search_fields = ('email', 'name')
@@ -122,33 +123,39 @@ class MemberInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
     
-class MomentumGroupAdminForm(forms.ModelForm): 
-    
-    class Meta:
-        model = MomentumGroup
-        fields = ['name', 'primary_contact', ]
-    
-    # limit primary contact to group members
-    def __init__(self, *args, **kwargs):
-        super(MomentumGroupAdminForm, self).__init__(*args, **kwargs)
-        self.fields['primary_contact'].queryset = Member.objects.filter(momentum_group__id=self.instance.pk)
-   
-
-class MomentumGroupAdmin(admin.ModelAdmin):
-    form = MomentumGroupAdminForm
-    search_fields = ('name', 'email',)
-    inlines = (MemberInline,)
-    list_display = ('name', 'primary_contact', )
-
 # activation email admin setup
 class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     # hide from the app list as it's linked separately
     def get_model_perms(self, request):
         return {}
-
-# register the new admin classes
-admin.site.register(Member, MemberAdmin)
-admin.site.register(MomentumGroup, MomentumGroupAdmin)
+    
+# member-editable fields admin
+class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
+    field_path = forms.ChoiceField()
+    
+    def __init__(self, *args, **kwargs):
+        super(MemberEditableNationBuilderFieldAdminForm, self).__init__(*args, **kwargs)
+        nb = NationBuilder()
+        if not self.current_user.nation_builder_id:
+            self.current_user.nation_builder_id = nb.GetIdFromEmail(self.current_user.email)
+            self.current_user.save()
+        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_id)]
+        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_id
+    
+class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
+    form = MemberEditableNationBuilderFieldAdminForm
+    
+    def get_form(self, request, *args, **kwargs):
+        form = super(MemberEditableNationBuilderFieldAdmin, self).get_form(request, *args, **kwargs)
+        form.current_user = request.user
+        return form
+        
+    list_display = ('display_order', 'display_text', 'field_path', 'field_type', 'required', 'admin_only')
+    ordering = ('display_order', )
 
 # not using builtin permissions
 admin.site.unregister(Group)
+
+admin.site.register(Member, MemberAdmin)
+admin.site.register(MemberEditableNationBuilderField, MemberEditableNationBuilderFieldAdmin)
+

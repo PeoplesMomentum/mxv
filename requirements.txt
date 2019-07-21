@@ -3,7 +3,7 @@ chardet==3.0.4
 Click==7.0
 croniter==0.3.29
 dj-database-url==0.4.2
-Django==1.11.20
+Django==1.11.22
 django-anymail==4.1
 django-nested-admin==3.1.2
 django-polymorphic==2.0.3
@@ -13,6 +13,7 @@ django-tinymce==2.6.0
 django-widget-tweaks==1.4.1
 gunicorn==19.7.1
 idna==2.6
+json-flatten==0.1
 psycopg2==2.7.3.2
 python-dateutil==2.8.0
 python-monkey-business==1.0.0
@@ -23,5 +24,6 @@ rq==1.0
 rq-scheduler==0.9
 sentry-sdk==0.7.14
 six==1.11.0
+sqlparse==0.3.0
 urllib3==1.24.2
 whitenoise==3.3.1

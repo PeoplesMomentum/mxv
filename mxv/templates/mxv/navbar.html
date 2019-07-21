@@ -21,13 +21,20 @@
         </ul>
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link active" >{{user.name }}</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'password_change' %}">Change Password</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-item active nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if profiles_visible_to_non_staff or user.is_superuser %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'members:profile' %}">Profile</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'password_change' %}">Change Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
             {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ join_url }}">Sign up</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ join_url }}">Sign up</a></li>
             {% endif %}
         </ul>
     </div>
