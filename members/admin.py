@@ -136,8 +136,11 @@ class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MemberEditableNationBuilderFieldAdminForm, self).__init__(*args, **kwargs)
         nb = NationBuilder()
-        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.id)]
-        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.id
+        if not self.current_user.nation_builder_id:
+            self.current_user.nation_builder_id = nb.GetIdFromEmail(self.current_user.email)
+            self.current_user.save()
+        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_id)]
+        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_id
     
 class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
     form = MemberEditableNationBuilderFieldAdminForm

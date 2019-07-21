@@ -192,30 +192,45 @@ def request_activation_email(request):
 @login_required
 def profile(request):
     
-    # get the member and accessible profile fields
+    # get the member's nation builder id
     member = request.user
-    profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = member.is_superuser)
-    
-    # get values for the fields
     nb = NationBuilder()
-    member_fields = nb.PersonFieldsAndValues(member.id)
-    for profile_field in profile_fields:
-        profile_field.value_string = [field[1] for field in member_fields if field[0] == profile_field.field_path][0]
+    if not member.nation_builder_id:
+        member.nation_builder_id = nb.GetIdFromEmail(member.email)
+        member.save()
+    
+    # if the member is known in nation builder...
+    profile_fields = []
+    member_in_nation_builder = member.nation_builder_id != None
+    if member_in_nation_builder:
+    
+        # get the profile fields
+        profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = member.is_superuser).order_by('display_order')
+        
+        # get values for the profile fields
+        member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
+        for profile_field in profile_fields:
+            profile_field.value_string = [field[1] for field in member_fields if field[0] == profile_field.field_path][0]
     
     # if valid post...
     if request.method == 'POST':
-        form = MemberProfileForm(request.POST, extra_fields = profile_fields)
+        form = MemberProfileForm(request.POST, instance = member, extra_fields = profile_fields)
         if form.is_valid():
-             
-#             post each custom field value back to NB
             
-#             save model fields as well?
+            # write the member-editable fields
+            
+            
+            # save the member
+            form.save()
 
-            return redirect("members:profile")
-            
+            return redirect("members:profile")      
     else:
         form = MemberProfileForm(instance = member, extra_fields = profile_fields)
-    return render(request, 'members/profile.html', { 'form': form})
+    return render(request, 'members/profile.html', { 
+        'form': form,
+        'email': member.email,
+        'member_in_nation_builder': member_in_nation_builder
+        })
     
     
     

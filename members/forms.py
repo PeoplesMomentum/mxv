@@ -12,12 +12,10 @@ class SendMemberActivationEmailsForm(forms.ModelForm):
 
 # member profile form
 class MemberProfileForm(forms.ModelForm):
-    email = forms.EmailField(
-        widget = forms.EmailInput(attrs = { 'readonly': True }))
 
     class Meta:
         model = Member
-        fields = ['email', 'name']
+        fields = ['name']
         
     def FieldFromType(self, field_type):
         field_class = getattr(forms, '%sField' % field_type)

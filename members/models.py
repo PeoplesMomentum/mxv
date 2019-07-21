@@ -52,6 +52,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     last_emailed = models.DateField(blank=True, null=True, default=None)
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
+    nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
