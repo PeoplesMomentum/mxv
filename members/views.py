@@ -6,7 +6,7 @@ from django.contrib.admin import site
 from members.forms import SendMemberActivationEmailsForm, MemberProfileForm
 from django.contrib import messages
 from django.urls import reverse
-from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET
+from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, redirect
@@ -192,6 +192,10 @@ def request_activation_email(request):
 @login_required
 def profile(request):
     
+    # redirect if profiles are not visible to this user
+    if not request.user.is_superuser and not PROFILES_VISIBLE_TO_NON_STAFF:
+        return redirect('index')
+
     # get the member's nation builder id
     member = request.user
     nb = NationBuilder()
@@ -200,21 +204,27 @@ def profile(request):
         member.save()
     
     # if the member is known in nation builder...
-    profile_fields = []
+    extra_fields = []
     member_in_nation_builder = member.nation_builder_id != None
     if member_in_nation_builder:
     
         # get the profile fields
-        profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = member.is_superuser).order_by('display_order')
+        if member.is_superuser:
+            profile_fields = MemberEditableNationBuilderField.objects.order_by('display_order')
+        else:
+            profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = False).order_by('display_order')
         
         # get values for the profile fields
         member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
         for profile_field in profile_fields:
-            profile_field.value_string = [field[1] for field in member_fields if field[0] == profile_field.field_path][0]
+            values = [field[1] for field in member_fields if field[0] == profile_field.field_path]
+            if len(values) > 0:
+                profile_field.value_string = values[0]
+                extra_fields.append(profile_field)
     
     # if valid post...
     if request.method == 'POST':
-        form = MemberProfileForm(request.POST, instance = member, extra_fields = profile_fields)
+        form = MemberProfileForm(request.POST, instance = member, extra_fields = extra_fields)
         if form.is_valid():
             
             # write the member-editable fields
@@ -227,7 +237,7 @@ def profile(request):
             messages.success(request, 'Profile saved')
             return redirect("members:profile")      
     else:
-        form = MemberProfileForm(instance = member, extra_fields = profile_fields)
+        form = MemberProfileForm(instance = member, extra_fields = extra_fields)
     return render(request, 'members/profile.html', { 
         'form': form,
         'email': member.email,

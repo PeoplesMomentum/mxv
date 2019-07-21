@@ -235,3 +235,6 @@ sentry_sdk.init(
     dsn=os.getenv('SENTRY_DSN', ''),
     integrations=[DjangoIntegration()]
 )
+
+# whether to show profile pages to just staff or anyone
+PROFILES_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_PROFILES_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
