@@ -218,11 +218,13 @@ def profile(request):
         if form.is_valid():
             
             # write the member-editable fields
-            
+            extra_field_values = form.extra_field_values()
+            nb.SetFieldPathValues(member.nation_builder_id, extra_field_values)
             
             # save the member
             form.save()
 
+            messages.success(request, 'Profile saved')
             return redirect("members:profile")      
     else:
         form = MemberProfileForm(instance = member, extra_fields = profile_fields)

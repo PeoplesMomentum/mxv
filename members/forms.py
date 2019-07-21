@@ -31,3 +31,8 @@ class MemberProfileForm(forms.ModelForm):
             field.initial = field.to_python(extra_field.value_string)
             field.required = extra_field.required
             self.fields['custom_%s' % extra_field.field_path] = field
+            
+    def extra_field_values(self):
+        for name, value in self.cleaned_data.items():
+            if name.startswith('custom_'):
+                yield (name[7:], value)

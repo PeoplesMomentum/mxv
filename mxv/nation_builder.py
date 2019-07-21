@@ -1,7 +1,7 @@
 import requests
 from mxv.settings import NATIONBUILDER_API_TOKEN
 from django.utils.http import urlencode
-from json_flatten import flatten
+from json_flatten import flatten, unflatten
 
 # the NationBuilder API is slow enough that the rate limit shouldn't be hit from a single thread as shown by this experiment:
 # 
@@ -62,7 +62,18 @@ class NationBuilder:
             return(flat_list)
         else:
             return None
-    
+        
+    # writes the values back to nation builder
+    def SetFieldPathValues(self, person_id, field_path_values):
+        
+        # build record
+        flat = { field[0]: field[1] for field in field_path_values }
+        record = unflatten(flat) 
+        
+        # write to nation builder
+        response = requests.put(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), json = record, timeout = self.default_timeout)
+        self._process_response(response)    
+        
     # returns a dictionary of field values for a person
     def GetPersonFields(self, person_id, field_names):
         
