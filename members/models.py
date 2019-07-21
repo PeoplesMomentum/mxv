@@ -89,3 +89,8 @@ class MemberEditableNationBuilderField(models.Model):
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)
     admin_only = models.BooleanField(default = True)
+    
+    # debug
+    def __str__(self):
+        return self.field_path
+

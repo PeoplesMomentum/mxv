@@ -12,13 +12,14 @@
         <div class="col-sm">
             <h4>{{ email }}</h4><br/>
             {% if not member_in_nation_builder %}
-            Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+                Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+            {% else %}
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% include 'mxv/includes/form.html' %}
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
             {% endif %}
-            <form method="post" novalidate>
-                {% csrf_token %}
-                {% include 'mxv/includes/form.html' %}
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </form>
         </div>
     </div>
 {% endblock %}
