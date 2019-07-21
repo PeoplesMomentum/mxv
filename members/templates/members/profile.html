@@ -12,7 +12,7 @@
         <div class="col-sm">
             <h4>{{ email }}</h4><br/>
             {% if not member_in_nation_builder %}
-            Can't look up profile, please contact Momentum and let them know: membership@peoplesmomentum.com
+            Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
             {% endif %}
             <form method="post" novalidate>
                 {% csrf_token %}

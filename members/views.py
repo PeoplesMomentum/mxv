@@ -218,6 +218,8 @@ def profile(request):
         member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
         for profile_field in profile_fields:
             values = [field[1] for field in member_fields if field[0] == profile_field.field_path]
+            
+            # add the field/value if it is in the member's nation builder record
             if len(values) > 0:
                 profile_field.value_string = values[0]
                 extra_fields.append(profile_field)
@@ -241,7 +243,8 @@ def profile(request):
     return render(request, 'members/profile.html', { 
         'form': form,
         'email': member.email,
-        'member_in_nation_builder': member_in_nation_builder
+        'member_in_nation_builder': member_in_nation_builder,
+        'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
         })
     
     
