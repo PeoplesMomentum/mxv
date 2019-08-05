@@ -222,7 +222,7 @@ def profile(request):
             # add the field/value if it is in the member's nation builder record
             if len(values) > 0:
                 profile_field.value_string = values[0]
-                extra_fields.append(profile_field)
+            extra_fields.append(profile_field)
     
     # if valid post...
     if request.method == 'POST':
