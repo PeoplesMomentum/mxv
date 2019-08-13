@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, MemberEditableNationBuilderField
+from members.models import Member, MemberEditableNationBuilderField, always_display_fields
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -208,11 +208,14 @@ def profile(request):
     member_in_nation_builder = member.nation_builder_id != None
     if member_in_nation_builder:
     
+        # start with the fields that are always displayed
+        profile_fields = always_display_fields
+    
         # get the profile fields
         if member.is_superuser:
-            profile_fields = MemberEditableNationBuilderField.objects.order_by('display_order')
+            profile_fields.extend(MemberEditableNationBuilderField.objects.order_by('display_order'))
         else:
-            profile_fields = MemberEditableNationBuilderField.objects.filter(admin_only = False).order_by('display_order')
+            profile_fields.extend(MemberEditableNationBuilderField.objects.filter(admin_only = False).order_by('display_order'))
         
         # get values for the profile fields
         member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
@@ -225,6 +228,12 @@ def profile(request):
             else:
                 profile_field.value_string = ''
             extra_fields.append(profile_field)
+            
+        # update mxv name here in case first or last name have been edited here or in nation builder
+        nb_full_name = [field[1] for field in member_fields if field[0] == 'person.full_name']
+        if len(nb_full_name) > 0 and nb_full_name[0] != member.name:
+            member.name = nb_full_name[0]
+            member.save()
     
     # if valid post...
     if request.method == 'POST':

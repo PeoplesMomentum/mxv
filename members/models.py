@@ -94,3 +94,8 @@ class MemberEditableNationBuilderField(models.Model):
     def __str__(self):
         return self.field_path
 
+# these fields are always displayed
+always_display_fields = [
+    MemberEditableNationBuilderField(field_path = 'person.first_name', field_type = 'Char', required = True, display_text = 'First name', display_order = -2, admin_only = False),
+    MemberEditableNationBuilderField(field_path = 'person.last_name', field_type = 'Char', required = True, display_text = 'Last name', display_order = -1, admin_only = False)]
+
