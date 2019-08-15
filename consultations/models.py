@@ -6,7 +6,7 @@ from django.db.models.deletion import CASCADE
 
 # field sizes
 short_text_length = 255
-long_text_length = 1000
+long_text_length = 2000
 
 # a consultation
 class Consultation(models.Model):
