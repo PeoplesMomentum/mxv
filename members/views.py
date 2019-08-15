@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, MemberEditableNationBuilderField, always_display_fields
+from members.models import Member, MemberEditableNationBuilderField
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -188,56 +188,49 @@ def request_activation_email(request):
     return render(request, 'members/request_activation_email.html', { 
         'form': form })
 
+# well-known fields are always displayed on the profile
+class WellKnownFields:
+    first_name = MemberEditableNationBuilderField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
+    last_name = MemberEditableNationBuilderField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
+    
+    # returns all the well-known fields
+    def all(self):
+        return [self.first_name, self.last_name]
+    
+    # returns all the well-known fields' names (in valid field name format)
+    def all_names(self):
+        names = []
+        for field in self.all():
+            names.append(field.field_path.replace('.', '__'))
+        return names
+    
 # displays the member's profile page
 @login_required
 def profile(request):
     
-    # redirect if profiles are not visible to this user
-    if not request.user.is_superuser and not PROFILES_VISIBLE_TO_NON_STAFF:
-        return redirect('index')
-
-    # get the member's nation builder id
+    # redirect if profiles are not visible to this member
     member = request.user
+    if not member.is_superuser and not PROFILES_VISIBLE_TO_NON_STAFF:
+        return redirect('index')
+    
+    # build the profile fields from the well-known fields and extra fields
+    well_known_fields = WellKnownFields()
+    profile_fields = well_known_fields.all()        
+    if member.is_superuser:
+        profile_fields.extend(MemberEditableNationBuilderField.objects.all())
+    else:
+        profile_fields.extend(MemberEditableNationBuilderField.objects.filter(admin_only = False))
+    
+    # get the member's nation builder id if required
     nb = NationBuilder()
     if not member.nation_builder_id:
         member.nation_builder_id = nb.GetIdFromEmail(member.email)
         member.save()
-    
-    # if the member is known in nation builder...
-    extra_fields = []
     member_in_nation_builder = member.nation_builder_id != None
-    if member_in_nation_builder:
-    
-        # start with the fields that are always displayed
-        profile_fields = always_display_fields
-    
-        # get the profile fields
-        if member.is_superuser:
-            profile_fields.extend(MemberEditableNationBuilderField.objects.order_by('display_order'))
-        else:
-            profile_fields.extend(MemberEditableNationBuilderField.objects.filter(admin_only = False).order_by('display_order'))
-        
-        # get values for the profile fields
-        member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
-        for profile_field in profile_fields:
-            values = [field[1] for field in member_fields if field[0] == profile_field.field_path]
-            
-            # add the field/value if it is in the member's nation builder record
-            if len(values) > 0:
-                profile_field.value_string = values[0]
-            else:
-                profile_field.value_string = ''
-            extra_fields.append(profile_field)
-            
-        # update mxv name here in case first or last name have been edited here or in nation builder
-        nb_full_name = [field[1] for field in member_fields if field[0] == 'person.full_name']
-        if len(nb_full_name) > 0 and nb_full_name[0] != member.name:
-            member.name = nb_full_name[0]
-            member.save()
     
     # if valid post...
     if request.method == 'POST':
-        form = MemberProfileForm(request.POST, instance = member, extra_fields = extra_fields)
+        form = MemberProfileForm(request.POST, instance = member, profile_fields = profile_fields)
         if form.is_valid():
             
             # write the member-editable fields
@@ -250,10 +243,32 @@ def profile(request):
             messages.success(request, 'Profile saved')
             return redirect("members:profile")      
     else:
-        form = MemberProfileForm(instance = member, extra_fields = extra_fields)
+        # if the member is known in nation builder...
+        if member_in_nation_builder:
+        
+            # get the member's NationBuilder record
+            member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
+            
+            # returns the field's value or an empty string
+            def field_path_value(fields, field_path):
+                values = [field[1] for field in fields if field[0] == field_path]
+                return values[0] if len(values) > 0 else ''
+            
+            # set values for the profile fields
+            for profile_field in profile_fields:
+                profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
+                
+            # update member name here in case first or last name have been edited here or in nation builder
+            nb_full_name = field_path_value(member_fields, 'person.full_name')
+            if nb_full_name != member.name:
+                member.name = nb_full_name
+                member.save()
+    
+        form = MemberProfileForm(instance = member, profile_fields = profile_fields)
+        
     return render(request, 'members/profile.html', { 
         'form': form,
-        'email': member.email,
+        'exclude_from_form': well_known_fields.all_names(),
         'member_in_nation_builder': member_in_nation_builder,
         'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
         })

@@ -89,13 +89,10 @@ class MemberEditableNationBuilderField(models.Model):
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)
     admin_only = models.BooleanField(default = True)
+    value_string = ''
     
     # debug
     def __str__(self):
-        return self.field_path
+        return '%s = %s' % (self.field_path, self.value_string)
 
-# these fields are always displayed
-always_display_fields = [
-    MemberEditableNationBuilderField(field_path = 'person.first_name', field_type = 'Char', required = True, display_text = 'First name', display_order = -2, admin_only = False),
-    MemberEditableNationBuilderField(field_path = 'person.last_name', field_type = 'Char', required = True, display_text = 'Last name', display_order = -1, admin_only = False)]
 
