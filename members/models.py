@@ -95,4 +95,7 @@ class MemberEditableNationBuilderField(models.Model):
     def __str__(self):
         return '%s = %s' % (self.field_path, self.value_string)
 
+# a field that will get its value from the model
+class MxvField(MemberEditableNationBuilderField):
+    pass
 

@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, MemberEditableNationBuilderField
+from members.models import Member, MemberEditableNationBuilderField, MxvField
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -192,10 +192,12 @@ def request_activation_email(request):
 class WellKnownFields:
     first_name = MemberEditableNationBuilderField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
     last_name = MemberEditableNationBuilderField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
+    login_email = MxvField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
+    #other_email = MemberEditableNationBuilderField(field_path = 'person.email', display_text = 'Other email', field_type = 'Char', required = True, admin_only = False)
     
     # returns all the well-known fields
     def all(self):
-        return [self.first_name, self.last_name]
+        return [self.first_name, self.last_name, self.login_email]
     
     # returns all the well-known fields' names (in valid field name format)
     def all_names(self):
@@ -256,11 +258,14 @@ def profile(request):
             
             # set values for the profile fields
             for profile_field in profile_fields:
-                profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
+                if isinstance(profile_field, MxvField):
+                    profile_field.value_string = getattr(member, profile_field.field_path)
+                else:
+                    profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
                 
             # update member name here in case first or last name have been edited here or in nation builder
             nb_full_name = field_path_value(member_fields, 'person.full_name')
-            if nb_full_name != member.name:
+            if nb_full_name != member.name and nb_full_name != '':
                 member.name = nb_full_name
                 member.save()
     
