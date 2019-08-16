@@ -83,12 +83,14 @@ class MemberEditableFieldType(Enum):
 
 # fields in the members' NationBuilder records that should be editable by the member on their profile page
 class MemberEditableNationBuilderField(models.Model):
+    # database fields
     field_path = models.CharField(max_length = 255)
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in MemberEditableFieldType], default = MemberEditableFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)
     admin_only = models.BooleanField(default = True)
+    # runtime attributes
     value_string = ''
     
     # debug

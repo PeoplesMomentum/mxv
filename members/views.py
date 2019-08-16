@@ -193,11 +193,11 @@ class WellKnownFields:
     first_name = MemberEditableNationBuilderField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
     last_name = MemberEditableNationBuilderField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
     login_email = MxvField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
-    #other_email = MemberEditableNationBuilderField(field_path = 'person.email', display_text = 'Other email', field_type = 'Char', required = True, admin_only = False)
+    other_email = MemberEditableNationBuilderField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
     
     # returns all the well-known fields
     def all(self):
-        return [self.first_name, self.last_name, self.login_email]
+        return [self.first_name, self.last_name, self.login_email, self.other_email]
     
     # returns all the well-known fields' names (in valid field name format)
     def all_names(self):
@@ -268,12 +268,18 @@ def profile(request):
             if nb_full_name != member.name and nb_full_name != '':
                 member.name = nb_full_name
                 member.save()
+                
+            # hide the other email if it's the same as the login email
+            login_email = next((profile_field for profile_field in profile_fields if profile_field.field_path == 'email'))
+            other_email = next((profile_field for profile_field in profile_fields if profile_field.field_path == 'person.email'))
+            hide_other_email = other_email.value_string == login_email.value_string 
     
         form = MemberProfileForm(instance = member, profile_fields = profile_fields)
         
     return render(request, 'members/profile.html', { 
         'form': form,
         'exclude_from_form': well_known_fields.all_names(),
+        'hide_other_email': hide_other_email,
         'member_in_nation_builder': member_in_nation_builder,
         'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
         })

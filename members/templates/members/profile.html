@@ -22,6 +22,9 @@
                     {% include 'mxv/includes/form_field.html' with field=form.person__last_name %}
                     <h5 class="mb-4">Email</h5>
                     {% include 'mxv/includes/form_field.html' with field=form.email|attr:"readonly:True" %}
+                    {% if not hide_other_email %}
+                        {% include 'mxv/includes/form_field.html' with field=form.person__email|attr:"readonly:True" %}
+                    {% endif %}
                                  
                     <!-- extra fields -->
                     <h5 class="mb-4">Other</h5>
