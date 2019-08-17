@@ -51,7 +51,9 @@ class MemberProfileForm(forms.ModelForm):
     
     # returns the name/value tuples of the profile fields        
     def extra_field_values(self):
+        values = {}
         for name, value in self.cleaned_data.items():
-            yield (self.name_to_field_path(name), value)
+            values[self.name_to_field_path(name)] = value
+        return values
                 
                 

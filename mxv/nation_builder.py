@@ -67,8 +67,7 @@ class NationBuilder:
     def SetFieldPathValues(self, person_id, field_path_values):
         
         # build record
-        flat = { field[0]: field[1] for field in field_path_values }
-        record = unflatten(flat) 
+        record = unflatten(field_path_values) 
         
         # write to nation builder
         response = requests.put(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), json = record, timeout = self.default_timeout)

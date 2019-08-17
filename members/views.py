@@ -230,19 +230,40 @@ def profile(request):
         member.save()
     member_in_nation_builder = member.nation_builder_id != None
     
-    # if valid post...
+    # if post...
     if request.method == 'POST':
+        
+        # remove the other email field from the profile fields if the get form was built without it
+        if 'hide_other_email' in request.POST:
+            profile_fields.remove(well_known_fields.other_email)
+        
+        # if the form is valid...
         form = MemberProfileForm(request.POST, instance = member, profile_fields = profile_fields)
         if form.is_valid():
             
-            # write the member-editable fields
+            # get the extra field values
             extra_field_values = form.extra_field_values()
+
+            # replace or use other email
+            other_email_choice = ''
+            if 'other_email' in request.POST:
+                other_email_choice = request.POST.get('other_email')
+                if other_email_choice == 'replace_other_with_login':
+                    extra_field_values['person.email'] = member.email
+                else:
+                    member.email = extra_field_values['person.email']
+
+            # write the member-editable fields and save the member
             nb.SetFieldPathValues(member.nation_builder_id, extra_field_values)
-            
-            # save the member
             form.save()
 
+            # messages            
             messages.success(request, 'Profile saved')
+            if other_email_choice == 'replace_other_with_login':
+                messages.success(request, 'Other email replaced with login email')
+            elif other_email_choice == 'use_other_as_login':
+                messages.success(request, 'Other email is now your login email as well')
+            
             return redirect("members:profile")      
     else:
         # if the member is known in nation builder...
@@ -268,18 +289,13 @@ def profile(request):
             if nb_full_name != member.name and nb_full_name != '':
                 member.name = nb_full_name
                 member.save()
-                
-            # hide the other email if it's the same as the login email
-            login_email = next((profile_field for profile_field in profile_fields if profile_field.field_path == 'email'))
-            other_email = next((profile_field for profile_field in profile_fields if profile_field.field_path == 'person.email'))
-            hide_other_email = other_email.value_string == login_email.value_string 
-    
+                    
         form = MemberProfileForm(instance = member, profile_fields = profile_fields)
         
     return render(request, 'members/profile.html', { 
         'form': form,
         'exclude_from_form': well_known_fields.all_names(),
-        'hide_other_email': hide_other_email,
+        'hide_other_email': well_known_fields.other_email.value_string == well_known_fields.login_email.value_string,
         'member_in_nation_builder': member_in_nation_builder,
         'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
         })
