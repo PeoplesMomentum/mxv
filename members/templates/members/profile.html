@@ -16,10 +16,12 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
                     
-                    <!-- well-known fields -->
+                    <!-- name -->
                     <h5 class="mb-4">Name</h5>
                     {% include 'mxv/includes/form_field.html' with field=form.person__first_name %}
                     {% include 'mxv/includes/form_field.html' with field=form.person__last_name %}
+                    
+                    <!-- emails -->
                     <h5 class="mb-4">Email</h5>
                     {% include 'mxv/includes/form_field.html' with field=form.email|attr:"readonly:True" %}
                     {% if not hide_other_email %}
@@ -29,6 +31,9 @@
                     {% else %}
                         <input type="hidden" name="hide_other_email">
                     {% endif %}
+                    
+                    <!-- change login email -->
+                    <a href="{% url 'members:change_login_email' %}" class="btn btn-primary mb-4">Change login email</a>
                                  
                     <!-- extra fields -->
                     <h5 class="mb-4">Other</h5>

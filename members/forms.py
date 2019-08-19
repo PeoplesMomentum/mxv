@@ -1,6 +1,7 @@
 from django import forms
 from mxv.models import EmailSettings
 from members.models import Member
+from django.contrib.auth.hashers import check_password
 
 # form for sending member activation email
 class SendMemberActivationEmailsForm(forms.ModelForm):
@@ -55,5 +56,25 @@ class MemberProfileForm(forms.ModelForm):
         for name, value in self.cleaned_data.items():
             values[self.name_to_field_path(name)] = value
         return values
-                
+    
+# verify login email form
+class VerifyEmailForm(forms.Form):
+    email = forms.EmailField(label = 'New login email', widget = forms.EmailInput(attrs = { 'readonly': True }))
+    password = forms.CharField(label='Password', strip=False, widget=forms.PasswordInput())
+    
+    # stores the request
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(VerifyEmailForm, self).__init__(*args, **kwargs)
+        
+    # checks the entered password against the member's password
+    def clean(self):
+        form_data = self.cleaned_data
+        if not check_password(form_data['password'], self.request.user.password):
+            self._errors["password"] = ["Password is incorrect"]
+            del form_data['password']
+        return form_data
+    
+
+    
                 

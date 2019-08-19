@@ -1,9 +1,9 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, MemberEditableNationBuilderField, MxvField
+from members.models import Member, MemberEditableNationBuilderField, activation_key_default
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
-from members.forms import SendMemberActivationEmailsForm, MemberProfileForm
+from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm
 from django.contrib import messages
 from django.urls import reverse
 from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
@@ -14,6 +14,8 @@ from mxv.models import EmailSettings
 from mxv import forms
 from django.contrib.auth.decorators import login_required
 from mxv.nation_builder import NationBuilder
+from mxv.simple_email import send_simple_email
+
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -156,7 +158,7 @@ def request_activation_email(request):
     
     # if valid post...
     if request.method == 'POST':
-        form = forms.RequestActivationEmailForm(request.POST)
+        form = forms.EmailForm(request.POST)
         if form.is_valid():
             
             # and the email entered is for an inactive member...
@@ -183,7 +185,7 @@ def request_activation_email(request):
             #show errors
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = forms.RequestActivationEmailForm()
+        form = forms.EmailForm()
 
     return render(request, 'members/request_activation_email.html', { 
         'form': form })
@@ -192,8 +194,12 @@ def request_activation_email(request):
 class WellKnownFields:
     first_name = MemberEditableNationBuilderField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
     last_name = MemberEditableNationBuilderField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
-    login_email = MxvField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
+    login_email = MemberEditableNationBuilderField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
     other_email = MemberEditableNationBuilderField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
+    
+    # sets login email to be a member field instead of a nation builder field
+    def __init__(self):
+        self.login_email.is_member_field = True
     
     # returns all the well-known fields
     def all(self):
@@ -264,7 +270,11 @@ def profile(request):
             elif other_email_choice == 'use_other_as_login':
                 messages.success(request, 'Other email is now your login email as well')
             
-            return redirect("members:profile")      
+            return redirect("members:profile")
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
+      
     else:
         # if the member is known in nation builder...
         if member_in_nation_builder:
@@ -279,7 +289,7 @@ def profile(request):
             
             # set values for the profile fields
             for profile_field in profile_fields:
-                if isinstance(profile_field, MxvField):
+                if profile_field.is_member_field:
                     profile_field.value_string = getattr(member, profile_field.field_path)
                 else:
                     profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
@@ -300,7 +310,82 @@ def profile(request):
         'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
         })
     
+# allows the member to enter a new login email and sends a verification email to it
+@login_required
+def change_login_email(request):
+    member = request.user
     
+    # if valid post...
+    if request.method == 'POST':
+        form = forms.EmailForm(request.POST)
+        if form.is_valid():
+                        
+            # record a single-use verification key and new login email on the member's record
+            member.login_email_verification_key = activation_key_default()
+            member.new_login_email = form.cleaned_data.get('email')
+            member.save()
+            
+            # send the verification email
+            send_simple_email(
+                member.new_login_email, 
+                'My Momentum - verify your new login email', 
+                'Click here to verify your new login email: %s' % request.build_absolute_uri(reverse('members:verify_login_email', kwargs = {'login_email_verification_key': member.login_email_verification_key})))
+         
+            # redirect to verification email sent page
+            return redirect("members:login_email_verification_sent")
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = forms.EmailForm()
+
+    return render(request, 'members/change_login_email.html', { 
+        'form': form })    
+
+# tells the member that a verification email has been sent
+@login_required
+def login_email_verification_sent(request):
+    member = request.user
+    return render(request, 'members/login_email_verification_sent.html', { 'new_login_email': member.new_login_email})    
+
+# lets the member log in with their new login email
+@login_required
+def verify_login_email(request, login_email_verification_key):
+    verification_key_found = True
     
-    
-    
+    # if valid post...
+    if request.method == 'POST':
+        form = VerifyEmailForm(request = request, data = request.POST)
+        if form.is_valid():
+            
+            # change the login email and clear the key and new email from the member's record
+            member = request.user
+            member.email = member.new_login_email
+            member.new_login_email = None
+            member.login_email_verification_key = None
+            member.save()
+            
+            # change the nation builder email
+            nb = NationBuilder()
+            nb.SetFieldPathValues(member.nation_builder_id, { 'person.email': member.email })
+            
+            # redirect to profile with a success message
+            messages.success(request, 'Login email successfully changed')
+            return redirect('members:profile')
+                
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        # get the member for the verification key
+        member = Member.objects.filter(login_email_verification_key = login_email_verification_key).first()
+        if member:
+            form = VerifyEmailForm(request = request, initial = {'email': member.new_login_email})
+        else:            
+            verification_key_found = False
+            form = VerifyEmailForm()
+
+    return render(request, 'members/verify_login_email.html', { 
+        'form': form,
+        'verification_key_found': verification_key_found })    
+

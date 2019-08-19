@@ -1,0 +1,16 @@
+{% extends "mxv/base.html" %}
+
+{% block title %}Login email verification sent{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Login email verification sent</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm">
+             <p>A verification email has been sent to {{ new_login_email }} and you will have to click the link in it before you can use this new login email.</p>
+             <p>Don't forget to check your spam folder if you can't find the email.</p>
+        </div>
+    </div>
+{% endblock %}

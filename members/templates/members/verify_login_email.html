@@ -1,0 +1,25 @@
+{% extends "mxv/base.html" %}
+
+{% block title %}Verify login email{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Verify login email</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm">
+            {% if verification_key_found %}
+                <p>Enter your password to verify your login email.</p>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% include 'mxv/includes/form.html' %}
+                    <button type="submit" class="btn btn-primary">Verify new login email</button>
+                </form>
+            {% else %}
+                <p>Verification link not recognised - did you already verify your new login email?</p>
+                <p>If you did then try logging in with that email, if not then your old login email address will still work.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
