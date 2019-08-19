@@ -1,0 +1,25 @@
+{% load form_tags widget_tweaks %}
+
+<!-- renders the field using widget tweaks -->
+<div class="form-group">
+
+    <!-- label -->
+    {{ field.label_tag }}
+    
+    <!-- field -->
+    {% render_field field class=field|input_class %}
+    
+    <!-- field-level errors -->
+    {% for error in field.errors %}
+        <div class="invalid-feedback">
+            {{ error }}
+        </div>
+    {% endfor %}
+    
+    <!-- help text -->
+    {% if field.help_text %}
+        <small class="form-text text-muted">
+            {{ field.help_text|safe }}
+        </small>
+    {% endif %}
+</div>

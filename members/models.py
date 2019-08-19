@@ -53,6 +53,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
+    new_login_email = CIEmailField(max_length=255, blank=True, null=True, default=None)
+    login_email_verification_key = models.CharField(max_length=activation_key_length, blank=True, null=True, default=None)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
@@ -83,14 +85,19 @@ class MemberEditableFieldType(Enum):
 
 # fields in the members' NationBuilder records that should be editable by the member on their profile page
 class MemberEditableNationBuilderField(models.Model):
+    # database fields
     field_path = models.CharField(max_length = 255)
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in MemberEditableFieldType], default = MemberEditableFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)
     admin_only = models.BooleanField(default = True)
+    # runtime attributes
+    value_string = ''
+    is_member_field = False
     
     # debug
     def __str__(self):
-        return self.field_path
+        return '%s = %s' % (self.field_path, self.value_string)
+
 

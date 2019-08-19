@@ -1,0 +1,21 @@
+{% extends "mxv/base.html" %}
+
+{% block title %}Change login email{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Change login email</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm">
+            <p>Enter the email address which you would like to use to login to this site in future.</p>
+            <p>A verification email will be sent to this address and you will have to click the link in it before you can use this new login email.</p>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include 'mxv/includes/form.html' %}
+                <button type="submit" class="btn btn-primary">Change login email</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

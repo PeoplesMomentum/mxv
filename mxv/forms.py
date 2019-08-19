@@ -65,7 +65,7 @@ class ActivationEmailAuthenticationForm(AuthenticationForm):
 
         return self.cleaned_data
 
-class RequestActivationEmailForm(forms.Form):    
+class EmailForm(forms.Form):    
     email = forms.EmailField()
 
 class ActivationEmailPasswordResetForm(PasswordResetForm):
