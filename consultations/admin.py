@@ -138,7 +138,7 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         parameters = []
         for param in consultation.url_parameters.all().order_by('id'):
             parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
-        url = '<p>https://my.peoplesmomentum.com/consultations/consultation/%d?%s</p>' % (consultation.id, '&'.join('='.join(param) for param in parameters))
+        url = '<p>https://my.peoplesmomentum.com/consultations/consultation/%d?%s</p>' % (consultation.id if consultation.id else 0, '&'.join('='.join(param) for param in parameters))
         return mark_safe(url)
     nation_builder_url.short_description = 'NationBuilder consultation URL'
 
