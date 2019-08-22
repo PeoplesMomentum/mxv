@@ -165,8 +165,7 @@ class CampaignTagInline(nested.NestedTabularInline):
     extra = 0
 
     formfield_overrides = { 
-        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
-        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
 
 # campaign field admin
@@ -174,17 +173,26 @@ class CampaignFieldInline(nested.NestedTabularInline):
     model = CampaignField
     ordering = ['display_order']
     extra = 0
-
     formfield_overrides = { 
-        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
-        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
+    
+    # stores the current user
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == 'field_path':
+            nb = NationBuilder()
+            if not request.user.nation_builder_id:
+                request.user.nation_builder_id = nb.GetIdFromEmail(request.user.email)
+                request.user.save()
+            db_field.choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(request.user.nation_builder_id)]
+            db_field.help_text = 'Example field values are from your NationBuilder record (id = %d)' % request.user.nation_builder_id
+        return super(CampaignFieldInline, self).formfield_for_dbfield(db_field, request, **kwargs)
 
 # update details campaign
 class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
     formfield_overrides = { 
-        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
-        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 200 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 200 })}, 
     }
     inlines = [CampaignTagInline, CampaignFieldInline ]
 
