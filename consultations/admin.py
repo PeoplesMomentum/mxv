@@ -1,11 +1,12 @@
 from django.contrib import admin
 from nested_admin import nested
-from consultations.models import Consultation, Choice, Question, UrlParameter, DefaultUrlParameter
+from consultations.models import Consultation, Choice, Question, UrlParameter
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
 from django.forms import Textarea, TextInput
 from django.db import models
+from mxv.models import DefaultUrlParameter
 
 # choice admin
 class ChoiceInline(nested.NestedTabularInline):
@@ -138,7 +139,7 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         parameters = []
         for param in consultation.url_parameters.all().order_by('id'):
             parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
-        url = '<p>https://my.peoplesmomentum.com/consultations/consultation/%d?%s</p>' % (consultation.id, '&'.join('='.join(param) for param in parameters))
+        url = '<p>https://my.peoplesmomentum.com/consultations/consultation/%d?%s</p>' % (consultation.id if consultation.id else 0, '&'.join('='.join(param) for param in parameters))
         return mark_safe(url)
     nation_builder_url.short_description = 'NationBuilder consultation URL'
 
@@ -167,11 +168,4 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         return mark_safe(table)
     default_url_parameters.short_description = 'Default URL parameters'
 
-# default URL parameter admin
-class DefaultUrlParameterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'pass_on_name', 'nation_builder_value')
-    fields = ('name', 'pass_on_name', 'nation_builder_value')
-    ordering = ['name']
-
-admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
 admin.site.register(Consultation, ConsultationAdmin)

@@ -1,0 +1,9 @@
+1,donation_first_name,,{{ recipient.first_name }}
+2,donation_last_name,,{{ recipient.last_name }}
+3,donation_email,,{{ recipient.email }}
+4,donation_billing_address_address1,,{{ recipient.home_address.address1 }}
+5,donation_billing_address_address2,,{{ recipient.home_address.address2 }}
+6,donation_billing_address_address3,,{{ recipient.home_address.address3 }}
+7,donation_billing_address_city,,{{ recipient.home_address.city }}
+8,donation_billing_address_zip,,{{ recipient.home_address.zip }}
+9,donation_billing_address_country_code,,{{ recipient.home_address.country_code }}
