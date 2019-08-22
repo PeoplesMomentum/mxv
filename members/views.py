@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, MemberEditableNationBuilderField, activation_key_default
+from members.models import Member, ProfileField, activation_key_default
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
@@ -192,10 +192,10 @@ def request_activation_email(request):
 
 # well-known fields are always displayed on the profile
 class WellKnownFields:
-    first_name = MemberEditableNationBuilderField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
-    last_name = MemberEditableNationBuilderField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
-    login_email = MemberEditableNationBuilderField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
-    other_email = MemberEditableNationBuilderField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
+    first_name = ProfileField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
+    last_name = ProfileField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
+    login_email = ProfileField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
+    other_email = ProfileField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
     
     # sets login email to be a member field instead of a nation builder field
     def __init__(self):
@@ -221,13 +221,13 @@ def profile(request):
     if not member.is_superuser and not PROFILES_VISIBLE_TO_NON_STAFF:
         return redirect('index')
     
-    # build the profile fields from the well-known fields and extra fields
+    # build the profile fields from the well-known fields and profile fields
     well_known_fields = WellKnownFields()
     profile_fields = well_known_fields.all()        
     if member.is_superuser:
-        profile_fields.extend(MemberEditableNationBuilderField.objects.all())
+        profile_fields.extend(ProfileField.objects.all())
     else:
-        profile_fields.extend(MemberEditableNationBuilderField.objects.filter(admin_only = False))
+        profile_fields.extend(ProfileField.objects.filter(admin_only = False))
     
     # get the member's nation builder id if required
     nb = NationBuilder()

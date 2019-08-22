@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, MemberEditableNationBuilderField
+from members.models import Member, ProfileField
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
@@ -129,12 +129,13 @@ class MemberActivationEmailModelAdmin(SingletonModelAdmin):
     def get_model_perms(self, request):
         return {}
     
-# member-editable fields admin
-class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
+# profile field admin
+class ProfileFieldAdminForm(forms.ModelForm):
     field_path = forms.ChoiceField()
     
+    # gets the nation builder id for the current user if required
     def __init__(self, *args, **kwargs):
-        super(MemberEditableNationBuilderFieldAdminForm, self).__init__(*args, **kwargs)
+        super(ProfileFieldAdminForm, self).__init__(*args, **kwargs)
         nb = NationBuilder()
         if not self.current_user.nation_builder_id:
             self.current_user.nation_builder_id = nb.GetIdFromEmail(self.current_user.email)
@@ -142,11 +143,12 @@ class MemberEditableNationBuilderFieldAdminForm(forms.ModelForm):
         self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_id)]
         self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_id
     
-class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
-    form = MemberEditableNationBuilderFieldAdminForm
+class ProfileFieldAdmin(admin.ModelAdmin):
+    form = ProfileFieldAdminForm
     
+    # stores the current user
     def get_form(self, request, *args, **kwargs):
-        form = super(MemberEditableNationBuilderFieldAdmin, self).get_form(request, *args, **kwargs)
+        form = super(ProfileFieldAdmin, self).get_form(request, *args, **kwargs)
         form.current_user = request.user
         return form
         
@@ -157,5 +159,5 @@ class MemberEditableNationBuilderFieldAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 
 admin.site.register(Member, MemberAdmin)
-admin.site.register(MemberEditableNationBuilderField, MemberEditableNationBuilderFieldAdmin)
+admin.site.register(ProfileField, ProfileFieldAdmin)
 
