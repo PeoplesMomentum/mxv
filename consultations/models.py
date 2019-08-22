@@ -3,6 +3,8 @@ from mxv.settings import AUTH_USER_MODEL
 from datetime import date
 from django.utils import formats
 from django.db.models.deletion import CASCADE
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_save
 
 # field sizes
 short_text_length = 255
@@ -67,6 +69,18 @@ class Consultation(models.Model):
     def questions_in_number_order(self):
         return self.questions.order_by('number')
     
+    # returns the URL parameters as the parameter string of a URL
+    def url_parameter_string(self, request):
+        url_parameters_present = []
+        for url_parameter in self.url_parameters.all().order_by('id'):
+            if url_parameter.name in request.GET:
+                name = url_parameter.name if not url_parameter.pass_on_name or url_parameter.pass_on_name == '' else url_parameter.pass_on_name
+                value = request.GET[url_parameter.name]
+                url_parameters_present.append((name, value))
+        url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
+        return url_parameter_string
+
+    
 # a question on a consultation
 class Question(models.Model):
     consultation = models.ForeignKey(Consultation, related_name='questions', on_delete=CASCADE)
@@ -104,4 +118,30 @@ class Answer(models.Model):
     
     def __str__(self):
         return '%s / %s' % (self.question, self.choice)
+
+# the URL parameters to pass on when redirecting
+class UrlParameter(models.Model):
+    consultation = models.ForeignKey(Consultation, related_name='url_parameters', on_delete=CASCADE)
+    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
+    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
+    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
+    
+    def __str__(self):
+        return self.name
+
+# default URL parameters that are copied to a consultation when it is created
+class DefaultUrlParameter(models.Model):
+    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
+    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
+    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
+    
+    def __str__(self):
+        return self.name
+    
+# adds the default URL parameters to new consultations
+@receiver(post_save, sender = Consultation)
+def add_default_url_parameters(sender, instance, created, *args, **kwargs):
+    if created:
+        for param in DefaultUrlParameter.objects.all():
+            UrlParameter.objects.create(consultation = instance, name = param.name, pass_on_name = param.pass_on_name, nation_builder_value = param.nation_builder_value)
 

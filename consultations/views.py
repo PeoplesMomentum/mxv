@@ -4,6 +4,8 @@ from mxv.settings import CONSULTATIONS_VISIBLE_TO_NON_STAFF
 from consultations.forms import VoteForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http.response import HttpResponseRedirect
+from django.urls.base import reverse
 
 
 # renders the consultations index
@@ -86,10 +88,12 @@ def consultation(request, pk):
                     if answer.choice.redirect_url != None and answer.choice.redirect_url != '':
                         redirect_url = answer.choice.redirect_url
                 if redirect_url != None:
-                    return redirect(redirect_url)
+                    # redirect with URL parameters
+                    url_parameter_string = consultation.url_parameter_string(request)
+                    return redirect('?'.join([redirect_url, url_parameter_string]) if url_parameter_string != '' else redirect_url)
                     
-                # redirect to thanks page if no choice-specific redirect URL
-                return redirect('consultations:thanks', pk = consultation.pk)
+                # redirect to thanks page if no choice-specific redirect URL (with all GET parameters as-is to be processed by thanks page)
+                return HttpResponseRedirect('%s?%s' % (reverse('consultations:thanks', kwargs = {'pk': consultation.pk}), request.GET.urlencode()))
             else:
                 # show errors
                 messages.error(request, 'Please correct the errors below.')
@@ -109,11 +113,15 @@ def consultation(request, pk):
         'voting_context': voting_context, 
         'form': form })
 
-# shown after voting
+# passes on the URL parameters to the donation page
 @login_required
 def thanks(request, pk):
     consultation = get_object_or_404(Consultation, pk = pk)
+    url_parameter_string = consultation.url_parameter_string(request)
+    if url_parameter_string != '':
+        url_parameter_string = '?%s' % url_parameter_string
     return render(request, 'consultations/thanks.html', { 
-        'consultation': consultation })
+        'consultation': consultation,
+        'url_parameter_string': url_parameter_string })
     
     

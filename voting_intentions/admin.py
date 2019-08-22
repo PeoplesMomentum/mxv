@@ -98,6 +98,7 @@ class VoteAdmin(nested.NestedModelAdmin):
         return mark_safe(urls)
     nation_builder_urls.short_description = 'NationBuilder email button URLs'
     
+    # displays the default URL parameters
     def default_url_parameters(self, vote):
         
         # returns an empty string for None
