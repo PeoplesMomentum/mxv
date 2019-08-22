@@ -75,8 +75,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_superuser
 
-# UI choices for member-editable fields
-class MemberEditableFieldType(Enum):
+# UI choices for profile fields
+class ProfileFieldType(Enum):
     Char = "Single line text"
     Integer = "Integer"
     Decimal = "Decimal"
@@ -84,10 +84,10 @@ class MemberEditableFieldType(Enum):
     Email = "Email"
 
 # fields in the members' NationBuilder records that should be editable by the member on their profile page
-class MemberEditableNationBuilderField(models.Model):
+class ProfileField(models.Model):
     # database fields
     field_path = models.CharField(max_length = 255)
-    field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in MemberEditableFieldType], default = MemberEditableFieldType.Char)
+    field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('field_path', models.CharField(max_length=255)),
-                ('field_type', models.CharField(choices=[('Char', 'Single line text'), ('Integer', 'Integer'), ('Decimal', 'Decimal'), ('Boolean', 'Checkbox (true/false)'), ('Email', 'Email')], default=members.models.MemberEditableFieldType('Single line text'), max_length=8)),
+                ('field_type', models.CharField(choices=[('Char', 'Single line text'), ('Integer', 'Integer'), ('Decimal', 'Decimal'), ('Boolean', 'Checkbox (true/false)'), ('Email', 'Email')], default=members.models.ProfileFieldType('Single line text'), max_length=8)),
                 ('required', models.BooleanField(default=False)),
                 ('display_text', models.CharField(default='', max_length=255)),
                 ('display_order', models.IntegerField(default=1)),
