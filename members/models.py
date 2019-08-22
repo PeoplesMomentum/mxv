@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.postgres.fields.citext import CIEmailField
 from enum import Enum
+from solo.models import SingletonModel
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -83,7 +84,7 @@ class ProfileFieldType(Enum):
     Boolean = "Checkbox (true/false)"
     Email = "Email"
 
-# fields in the members' NationBuilder records that should be editable by the member on their profile page
+# fields in the members' NationBuilder records that are editable by the member on their profile page
 class ProfileField(models.Model):
     # database fields
     field_path = models.CharField(max_length = 255)
@@ -100,4 +101,26 @@ class ProfileField(models.Model):
     def __str__(self):
         return '%s = %s' % (self.field_path, self.value_string)
 
+# update details campaign
+class UpdateDetailsCampaign(SingletonModel):
+    first_page_pre_text = models.TextField()
+    first_page_post_text = models.TextField()
+    second_page_pre_text = models.TextField()
+    second_page_post_text = models.TextField()
+    redirect_URL = models.CharField(max_length = 255)
+    
+# sets a tag in nation builder if checked by the member
+class CampaignTag(models.Model):
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tags')
+    label = models.CharField(max_length = 255)
+    tag = models.CharField(max_length = 255)
+    display_order = models.IntegerField(default = 1)
+    
+    def __str__(self):
+        return '%s / %s' % (self.label, self.tag)
+
+# fields in the members' NationBuilder records that are editable by the member on the update details campaign page
+class CampaignField(ProfileField):
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
+    
 

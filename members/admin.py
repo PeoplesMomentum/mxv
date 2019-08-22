@@ -2,11 +2,14 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, ProfileField
+from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignTag, CampaignField
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
 from mxv.nation_builder import NationBuilder
+from django.db import models
+from django.forms.widgets import Textarea, TextInput
+from nested_admin import nested
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -155,9 +158,42 @@ class ProfileFieldAdmin(admin.ModelAdmin):
     list_display = ('display_order', 'display_text', 'field_path', 'field_type', 'required', 'admin_only')
     ordering = ('display_order', )
 
+# campaign tag admin
+class CampaignTagInline(nested.NestedTabularInline):
+    model = CampaignTag
+    ordering = ['display_order']
+    extra = 0
+
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+    }
+
+# campaign field admin
+class CampaignFieldInline(nested.NestedTabularInline):
+    model = CampaignField
+    ordering = ['display_order']
+    extra = 0
+
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+    }
+
+# update details campaign
+class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
+    formfield_overrides = { 
+        models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 150 })}, 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 150 })}, 
+    }
+    inlines = [CampaignTagInline, CampaignFieldInline ]
+
+
 # not using builtin permissions
 admin.site.unregister(Group)
 
+# register admins
 admin.site.register(Member, MemberAdmin)
 admin.site.register(ProfileField, ProfileFieldAdmin)
+admin.site.register(UpdateDetailsCampaign, UpdateDetailsCampaignAdmin)
 
