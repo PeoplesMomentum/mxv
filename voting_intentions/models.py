@@ -3,6 +3,7 @@ from django.contrib.postgres.fields.citext import CIEmailField
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 from django.db.models.deletion import CASCADE
+from mxv.models import DefaultUrlParameter
 
 # a vote for which intentions are being recorded
 class Vote(models.Model):
@@ -22,15 +23,6 @@ def add_default_url_parameters(sender, instance, created, *args, **kwargs):
 # the URL parameters to pass on when redirecting
 class UrlParameter(models.Model):
     vote = models.ForeignKey(Vote, related_name='url_parameters', on_delete=CASCADE)
-    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
-    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
-    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
-    
-    def __str__(self):
-        return self.name
-
-# default URL parameters that are copied to a vote when it is created
-class DefaultUrlParameter(models.Model):
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
     pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
     nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')

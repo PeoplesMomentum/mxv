@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mxv.models import Email, EmailSettings
+from mxv.models import Email, EmailSettings, DefaultUrlParameter
 from members.models import Member
 from django.contrib import messages
 
@@ -47,6 +47,11 @@ class EmailAdmin(admin.ModelAdmin):
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
 
+# default URL parameter admin
+class DefaultUrlParameterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'pass_on_name', 'nation_builder_value')
+    fields = ('name', 'pass_on_name', 'nation_builder_value')
+    ordering = ['name']
 
-# register the admin classes
+admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
 admin.site.register(Email, EmailAdmin)

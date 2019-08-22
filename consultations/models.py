@@ -5,6 +5,7 @@ from django.utils import formats
 from django.db.models.deletion import CASCADE
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from mxv.models import DefaultUrlParameter
 
 # field sizes
 short_text_length = 255
@@ -72,7 +73,7 @@ class Consultation(models.Model):
     # returns the URL parameters as the parameter string of a URL
     def url_parameter_string(self, request):
         url_parameters_present = []
-        for url_parameter in self.url_parameters.all().order_by('id'):
+        for url_parameter in self.url_parameters.all().order_by('name'):
             if url_parameter.name in request.GET:
                 name = url_parameter.name if not url_parameter.pass_on_name or url_parameter.pass_on_name == '' else url_parameter.pass_on_name
                 value = request.GET[url_parameter.name]
@@ -129,15 +130,6 @@ class UrlParameter(models.Model):
     def __str__(self):
         return self.name
 
-# default URL parameters that are copied to a consultation when it is created
-class DefaultUrlParameter(models.Model):
-    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
-    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
-    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
-    
-    def __str__(self):
-        return self.name
-    
 # adds the default URL parameters to new consultations
 @receiver(post_save, sender = Consultation)
 def add_default_url_parameters(sender, instance, created, *args, **kwargs):

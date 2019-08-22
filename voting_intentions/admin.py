@@ -1,11 +1,12 @@
 from django.contrib import admin
-from voting_intentions.models import Vote, VoteTag, Choice, ChoiceTag, UrlParameter, DefaultUrlParameter
+from voting_intentions.models import Vote, VoteTag, Choice, ChoiceTag, UrlParameter
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
 from django.forms import TextInput
 from django.db import models
 from nested_admin import nested
+from mxv.models import DefaultUrlParameter
 
 class ChoiceTagInline(nested.NestedTabularInline):
     model = ChoiceTag
@@ -157,10 +158,5 @@ class VoteAdmin(nested.NestedModelAdmin):
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
 
-class DefaultUrlParameterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'pass_on_name', 'nation_builder_value')
-    fields = ('name', 'pass_on_name', 'nation_builder_value')
-    ordering = ['name']
-
 admin.site.register(Vote, VoteAdmin)
-admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
+
