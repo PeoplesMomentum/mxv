@@ -1,6 +1,6 @@
 from django.contrib import admin
 from nested_admin import nested
-from consultations.models import Consultation, Choice, Question
+from consultations.models import Consultation, Choice, Question, UrlParameter, DefaultUrlParameter
 from django.utils.safestring import mark_safe
 from django.http.response import HttpResponse
 import csv
@@ -30,6 +30,14 @@ class QuestionInline(nested.NestedTabularInline):
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
     
+# URL parameter admin
+class UrlParameterInline(nested.NestedTabularInline):
+    model = UrlParameter
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 50 })}, 
+    }
+    
 # consultation admin
 class ConsultationAdmin(nested.NestedModelAdmin):
     list_display = ('name', 'display_order', 'description', 'pre_questions_text', 'post_questions_text', 'voting_start', 'voting_end', 'visible_to_non_staff', 'hide_results')
@@ -40,15 +48,22 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         ('pre_questions_text', 'post_questions_text'),
         ('voting_start', 'voting_end'),
         ('visible_to_non_staff', 'hide_results'),
+        ('nation_builder_url'),
+        ('default_url_parameters'),
+        ('votes_cast'),
         ('results_table')
     )
-    readonly_fields = ('results_table',)
-    inlines = [ QuestionInline ]
+    readonly_fields = ('nation_builder_url', 'default_url_parameters', 'votes_cast', 'results_table')
+    inlines = [ UrlParameterInline, QuestionInline ]
     
     formfield_overrides = { 
         models.TextField: { 'widget': Textarea(attrs = { 'rows': 4, 'cols': 75 })}, 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
+    
+    # returns the number of votes
+    def votes_cast(self, consultation):
+        return consultation.votes.count()
     
     # returns the results table as HTML (separate header per question as the choices are all different)
     def results_table(self, consultation):
@@ -118,4 +133,45 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)
 
+    # URL for use in NationBuilder
+    def nation_builder_url(self, consultation):
+        parameters = []
+        for param in consultation.url_parameters.all().order_by('id'):
+            parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
+        url = '<p>https://my.peoplesmomentum.com/voting_intentions/%d?%s</p>' % (consultation.id, '&'.join('='.join(param) for param in parameters))
+        return mark_safe(url)
+    nation_builder_url.short_description = 'NationBuilder consultation URL'
+
+    # displays the default URL parameters
+    def default_url_parameters(self, vote):
+        
+        # returns an empty string for None
+        def blank(text):
+            return text if text else ""
+        
+        # header
+        header = '<tr><th>Name</th><th>Pass On Name</th><th>NationBuilder Value</th></tr>'
+        
+        # default rows        
+        rows = []
+        for param in DefaultUrlParameter.objects.all():
+            row = '<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % (param.name, blank(param.pass_on_name), blank(param.nation_builder_value))
+            rows.append(row)
+        
+        # table
+        table = '<table>' + header
+        for row in rows:
+            table += row
+        table += '</table>'
+        
+        return mark_safe(table)
+    default_url_parameters.short_description = 'Default URL parameters'
+
+# default URL parameter admin
+class DefaultUrlParameterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'pass_on_name', 'nation_builder_value')
+    fields = ('name', 'pass_on_name', 'nation_builder_value')
+    ordering = ['name']
+
+admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
 admin.site.register(Consultation, ConsultationAdmin)
