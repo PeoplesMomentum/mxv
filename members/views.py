@@ -3,7 +3,7 @@ from members.models import Member, ProfileField, activation_key_default, UpdateD
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
-from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm, UpdateDetailsForm
+from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm
 from django.contrib import messages
 from django.urls import reverse
 from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
@@ -255,20 +255,20 @@ def profile(request):
         form = MemberProfileForm(request.POST, instance = member, profile_fields = profile_fields)
         if form.is_valid():
             
-            # get the extra field values
-            extra_field_values = form.extra_field_values()
+            # get the profile field values
+            profile_field_values = form.profile_field_values()
 
             # replace or use other email
             other_email_choice = ''
             if 'other_email' in request.POST:
                 other_email_choice = request.POST.get('other_email')
                 if other_email_choice == 'replace_other_with_login':
-                    extra_field_values['person.email'] = member.email
+                    profile_field_values['person.email'] = member.email
                 else:
-                    member.email = extra_field_values['person.email']
+                    member.email = profile_field_values['person.email']
 
-            # write the member-editable fields and save the member
-            nb.SetFieldPathValues(member.nation_builder_id, extra_field_values)
+            # write the profile fields and save the member
+            nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
             form.save()
 
             # messages            
@@ -401,7 +401,8 @@ def update_details(request, page):
         tags = list(campaign.tags.all())
     elif page == 2:
         # build the profile fields from the well-known full name field and the campaign fields
-        profile_fields = [well_known_fields.full_name].extend(campaign.fields.all())
+        profile_fields = list(campaign.fields.all())
+        profile_fields.append(well_known_fields.full_name)
 
     # get the member's nation builder id if required
     nb = NationBuilder()
@@ -430,32 +431,54 @@ def update_details(request, page):
                     member.name = nb_full_name
                     member.save()
  
-        form = UpdateDetailsForm(instance = member, profile_fields = profile_fields, tags = tags)
+        form = MemberProfileForm(instance = member, profile_fields = profile_fields, tags = tags)
     else:
-        # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
-        profile_fields.remove(well_known_fields.full_name)
+        if profile_fields:
+            # update member name here in case first or last name have been edited here or in nation builder
+            # (not redirecting back to here after successful post so can't deal with this in the GET as we do for the profile page)
+            nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
+            if nb_full_name != member.name and nb_full_name != '':
+                member.name = nb_full_name
+                member.save()
+
+            # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
+            profile_fields.remove(well_known_fields.full_name)
 
         # if the form is valid...
-        form = UpdateDetailsForm(request.POST, instance = member, profile_fields = profile_fields, tags = tags)
+        form = MemberProfileForm(request.POST, instance = member, profile_fields = profile_fields, tags = tags)
         if form.is_valid():
             
             if page == 1:    
                 # get the tag values
+                tag_values = form.tag_values()
                 
                 # clear and set the tags
+                tags_to_set = []
+                tags_to_clear = []
+                for tag in tags:
+                    if tag_values[tag.tag]:
+                        tags_to_set.append(tag.tag)
+                    else:
+                        tags_to_clear.append(tag.tag)
+                if len(tags_to_set) > 0:
+                    nb.SetPersonTags(member.nation_builder_id, tags_to_set)
+                if len(tags_to_clear) > 0:
+                    nb.ClearPersonTags(member.nation_builder_id, tags_to_clear)
                 
-                # redirect to page 2
+                # redirect to page 2 (with all GET parameters as-is)
+                return redirect('members:update_details', page = 2)
                 
                 pass
             elif page == 2:
                 # get the extra field values
-                extra_field_values = form.extra_field_values()
+                profile_field_values = form.profile_field_values()
         
-                # write the member-editable fields and save the member
-                nb.SetFieldPathValues(member.nation_builder_id, extra_field_values)
+                # write the profile fields and save the member
+                nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
                 form.save()
             
-                # redirect to campaign URL
+                # redirect to campaign URL (with all GET parameters as-is)
+                return redirect(campaign.redirect_url)
                 
         else:
             #show errors
@@ -465,8 +488,10 @@ def update_details(request, page):
         'pre_text': campaign.pre(page),
         'post_text': campaign.post(page),
         'form': form,
+        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],
         'member_in_nation_builder': member_in_nation_builder,
-        'error_mailto': error_mailto(member.name) })
+        'error_mailto': error_mailto(member.name),
+        'page': page })
     
 
 
