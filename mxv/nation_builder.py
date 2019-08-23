@@ -63,6 +63,26 @@ class NationBuilder:
         else:
             return None
         
+    # gets the values for the member's profile fields
+    def GetProfileFieldValues(self, member, profile_fields):
+
+        # get the member's NationBuilder record
+        member_fields = self.PersonFieldsAndValues(member.nation_builder_id)
+        
+        # returns the field's value or an empty string
+        def field_path_value(fields, field_path):
+            values = [field[1] for field in fields if field[0] == field_path]
+            return values[0] if len(values) > 0 else ''
+        
+        # set values for the profile fields
+        for profile_field in profile_fields:
+            if profile_field.is_member_field:
+                profile_field.value_string = getattr(member, profile_field.field_path)
+            else:
+                profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
+
+        return profile_fields
+    
     # writes the values back to nation builder
     def SetFieldPathValues(self, person_id, field_path_values):
         
@@ -91,6 +111,18 @@ class NationBuilder:
     def SetPersonFields(self, person_id, fields):
         response = requests.put(self.PERSON_URL % (person_id, NATIONBUILDER_API_TOKEN), json = { 'person':  fields }, timeout = self.default_timeout)
         self._process_response(response)
+
+    # get the tags for a person
+    def GetPersonTags(self, person_id):
+        response = requests.get(self.TAG_URL % (person_id, NATIONBUILDER_API_TOKEN), timeout = self.default_timeout)
+        self._process_response(response)
+        
+        # return the person's tags if the person was found
+        if response.status_code == 200:
+            record = response.json()
+            return [tag['tag'] for tag in record['taggings']]
+        else:
+            return None
 
     # sets the tags for a person
     def SetPersonTags(self, person_id, tags):

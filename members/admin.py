@@ -217,7 +217,7 @@ class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
         parameters = []
         for param in campaign.url_parameters.all().order_by('name'):
             parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
-        url = '<p>https://my.peoplesmomentum.com/members/updatedetailscampaign/%d?%s</p>' % (campaign.id if campaign.id else 0, '&'.join('='.join(param) for param in parameters))
+        url = '<p>https://my.peoplesmomentum.com/members/update_details/1?%s</p>' % '&'.join('='.join(param) for param in parameters)
         return mark_safe(url)
 
 # not using builtin permissions

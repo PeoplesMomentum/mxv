@@ -109,22 +109,40 @@ class UpdateDetailsCampaign(SingletonModel):
     second_page_post_text = models.TextField()
     redirect_url = models.CharField(max_length = 255)
     
+    # returns the pre-text for the page
+    def pre(self, page):
+        if page == 1:
+            return self.first_page_pre_text
+        else:
+            return self.second_page_pre_text
+    
+    # returns the post-text for the page
+    def post(self, page):
+        if page == 1:
+            return self.first_page_post_text
+        else:
+            return self.second_page_post_text
+    
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
+    # database fields
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tags')
-    label = models.CharField(max_length = 255)
+    display_text = models.CharField(max_length = 255)
     tag = models.CharField(max_length = 255)
     display_order = models.IntegerField(default = 1)
+    # runtime attributes
+    value_string = ''
     
     def __str__(self):
-        return '%s / %s' % (self.label, self.tag)
+        return '%s / %s = %s' % (self.display_text, self.tag, self.value_string)
 
 # fields in the members' NationBuilder records that are editable by the member on the update details campaign page
 class CampaignField(ProfileField):
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
     
 # the URL parameters to pass on when redirecting 
-# populated manually since the campaign is a singleton: insert into members_urlparameter (consultation_id, name, nation_builder_value) select 1, name, nation_builder_value from mxv_defaulturlparameter;
+# populated manually since the campaign is a singleton: 
+#   insert into members_urlparameter (consultation_id, name, nation_builder_value) select 1, name, nation_builder_value from mxv_defaulturlparameter;
 class UrlParameter(models.Model):
     consultation = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')

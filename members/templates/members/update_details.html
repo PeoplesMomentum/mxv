@@ -1,0 +1,28 @@
+{% extends "mxv/base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}Update details{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Update details</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm">
+            {% if not member_in_nation_builder %}
+                Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+            {% else %}
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <p>{{ pre_text|safe }}</p>
+                    <hr>
+                    {% include 'mxv/includes/form.html' %}
+                    <hr>
+                    <p>{{ post_text|safe }}</p>
+                    <button type="submit" class="btn btn-primary">Next</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,9 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, ProfileField, activation_key_default
+from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
-from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm
+from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm, UpdateDetailsForm
 from django.contrib import messages
 from django.urls import reverse
 from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
@@ -192,6 +192,7 @@ def request_activation_email(request):
 
 # well-known fields are always displayed on the profile
 class WellKnownFields:
+    full_name = ProfileField(field_path = 'person.full_name', display_text = 'Full name', field_type = 'Char', required = True, admin_only = False)
     first_name = ProfileField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
     last_name = ProfileField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
     login_email = ProfileField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
@@ -203,7 +204,7 @@ class WellKnownFields:
     
     # returns all the well-known fields
     def all(self):
-        return [self.first_name, self.last_name, self.login_email, self.other_email]
+        return [self.full_name, self.first_name, self.last_name, self.login_email, self.other_email]
     
     # returns all the well-known fields' names (in valid field name format)
     def all_names(self):
@@ -211,7 +212,11 @@ class WellKnownFields:
         for field in self.all():
             names.append(field.field_path.replace('.', '__'))
         return names
-    
+
+# returns a mailto link that creates an error email for the member to send    
+def error_mailto(name):
+    return 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + name + '.'    
+
 # displays the member's profile page
 @login_required
 def profile(request):
@@ -242,6 +247,9 @@ def profile(request):
         # remove the other email field from the profile fields if the get form was built without it
         if 'hide_other_email' in request.POST:
             profile_fields.remove(well_known_fields.other_email)
+            
+        # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
+        profile_fields.remove(well_known_fields.full_name)
         
         # if the form is valid...
         form = MemberProfileForm(request.POST, instance = member, profile_fields = profile_fields)
@@ -279,23 +287,11 @@ def profile(request):
         # if the member is known in nation builder...
         if member_in_nation_builder:
         
-            # get the member's NationBuilder record
-            member_fields = nb.PersonFieldsAndValues(member.nation_builder_id)
-            
-            # returns the field's value or an empty string
-            def field_path_value(fields, field_path):
-                values = [field[1] for field in fields if field[0] == field_path]
-                return values[0] if len(values) > 0 else ''
-            
-            # set values for the profile fields
-            for profile_field in profile_fields:
-                if profile_field.is_member_field:
-                    profile_field.value_string = getattr(member, profile_field.field_path)
-                else:
-                    profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
+            # get the profile field values             
+            profile_fields = nb.GetProfileFieldValues(member, profile_fields)
                 
             # update member name here in case first or last name have been edited here or in nation builder
-            nb_full_name = field_path_value(member_fields, 'person.full_name')
+            nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
             if nb_full_name != member.name and nb_full_name != '':
                 member.name = nb_full_name
                 member.save()
@@ -307,7 +303,7 @@ def profile(request):
         'exclude_from_form': well_known_fields.all_names(),
         'hide_other_email': well_known_fields.other_email.value_string == well_known_fields.login_email.value_string,
         'member_in_nation_builder': member_in_nation_builder,
-        'error_mailto': 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + member.name + '.'
+        'error_mailto': error_mailto(member.name)
         })
     
 # allows the member to enter a new login email and sends a verification email to it
@@ -388,4 +384,91 @@ def verify_login_email(request, login_email_verification_key):
     return render(request, 'members/verify_login_email.html', { 
         'form': form,
         'verification_key_found': verification_key_found })    
+
+# displays the update details campaign pages
+@login_required
+def update_details(request, page):
+    campaign = UpdateDetailsCampaign.get_solo()
+    member = request.user
+    page = int(page)
+    
+    # get the fields for the page
+    tags = None
+    profile_fields = None
+    well_known_fields = WellKnownFields()
+    if page == 1:
+        # get all the tags
+        tags = list(campaign.tags.all())
+    elif page == 2:
+        # build the profile fields from the well-known full name field and the campaign fields
+        profile_fields = [well_known_fields.full_name].extend(campaign.fields.all())
+
+    # get the member's nation builder id if required
+    nb = NationBuilder()
+    if not member.nation_builder_id:
+        member.nation_builder_id = nb.GetIdFromEmail(member.email)
+        member.save()
+    member_in_nation_builder = member.nation_builder_id != None
+    
+    if request.method == 'GET':
+        # if the member is known in nation builder...
+        if member_in_nation_builder:
+        
+            if page == 1:
+                # get the tags
+                member_tags= nb.GetPersonTags(member.nation_builder_id)
+                for tag in tags:
+                    tag.value_string = 'True' if tag.tag in member_tags else 'False'
+                
+            elif page == 2:          
+                # get the campaign field values
+                profile_fields = nb.GetProfileFieldValues(member, profile_fields)
+                    
+                # update member name here in case first or last name have been edited here or in nation builder
+                nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
+                if nb_full_name != member.name and nb_full_name != '':
+                    member.name = nb_full_name
+                    member.save()
+ 
+        form = UpdateDetailsForm(instance = member, profile_fields = profile_fields, tags = tags)
+    else:
+        # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
+        profile_fields.remove(well_known_fields.full_name)
+
+        # if the form is valid...
+        form = UpdateDetailsForm(request.POST, instance = member, profile_fields = profile_fields, tags = tags)
+        if form.is_valid():
+            
+            if page == 1:    
+                # get the tag values
+                
+                # clear and set the tags
+                
+                # redirect to page 2
+                
+                pass
+            elif page == 2:
+                # get the extra field values
+                extra_field_values = form.extra_field_values()
+        
+                # write the member-editable fields and save the member
+                nb.SetFieldPathValues(member.nation_builder_id, extra_field_values)
+                form.save()
+            
+                # redirect to campaign URL
+                
+        else:
+            #show errors
+            messages.error(request, 'Please correct the errors below.')
+    
+    return render(request, 'members/update_details.html', { 
+        'pre_text': campaign.pre(page),
+        'post_text': campaign.post(page),
+        'form': form,
+        'member_in_nation_builder': member_in_nation_builder,
+        'error_mailto': error_mailto(member.name) })
+    
+
+
+
 
