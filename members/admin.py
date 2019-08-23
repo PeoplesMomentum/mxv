@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignTag, CampaignField
+from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignTag, CampaignField, UrlParameter
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
@@ -10,6 +10,7 @@ from mxv.nation_builder import NationBuilder
 from django.db import models
 from django.forms.widgets import Textarea, TextInput
 from nested_admin import nested
+from django.utils.safestring import mark_safe
 
 # form for creating a new member
 class MemberCreationForm(forms.ModelForm):
@@ -177,7 +178,7 @@ class CampaignFieldInline(nested.NestedTabularInline):
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
     
-    # stores the current user
+    # populates the field path choices from the current user's nation builder record
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == 'field_path':
             nb = NationBuilder()
@@ -188,14 +189,36 @@ class CampaignFieldInline(nested.NestedTabularInline):
             db_field.help_text = 'Example field values are from your NationBuilder record (id = %d)' % request.user.nation_builder_id
         return super(CampaignFieldInline, self).formfield_for_dbfield(db_field, request, **kwargs)
 
+# URL parameter admin
+class UrlParameterInline(nested.NestedTabularInline):
+    model = UrlParameter
+    ordering = ['name']
+    extra = 0
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 50 })}, 
+    }
+    
 # update details campaign
 class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
     formfield_overrides = { 
         models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 200 })}, 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 200 })}, 
     }
-    inlines = [CampaignTagInline, CampaignFieldInline ]
+    inlines = [CampaignTagInline, CampaignFieldInline, UrlParameterInline ]
+    model = UpdateDetailsCampaign
+    fields = (
+        ('first_page_pre_text', 'first_page_post_text', 'second_page_pre_text', 'second_page_post_text', ),
+        ('redirect_url'),
+        ('nation_builder_url'))
+    readonly_fields = ('nation_builder_url',)
 
+    # URL for use in NationBuilder
+    def nation_builder_url(self, campaign):
+        parameters = []
+        for param in campaign.url_parameters.all().order_by('name'):
+            parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
+        url = '<p>https://my.peoplesmomentum.com/members/updatedetailscampaign/%d?%s</p>' % (campaign.id if campaign.id else 0, '&'.join('='.join(param) for param in parameters))
+        return mark_safe(url)
 
 # not using builtin permissions
 admin.site.unregister(Group)

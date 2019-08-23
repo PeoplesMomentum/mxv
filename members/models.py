@@ -107,7 +107,7 @@ class UpdateDetailsCampaign(SingletonModel):
     first_page_post_text = models.TextField()
     second_page_pre_text = models.TextField()
     second_page_post_text = models.TextField()
-    redirect_URL = models.CharField(max_length = 255)
+    redirect_url = models.CharField(max_length = 255)
     
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
@@ -123,4 +123,14 @@ class CampaignTag(models.Model):
 class CampaignField(ProfileField):
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
     
+# the URL parameters to pass on when redirecting 
+# populated manually since the campaign is a singleton: insert into members_urlparameter (consultation_id, name, nation_builder_value) select 1, name, nation_builder_value from mxv_defaulturlparameter;
+class UrlParameter(models.Model):
+    consultation = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
+    name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
+    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
+    nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
+    
+    def __str__(self):
+        return self.name
 

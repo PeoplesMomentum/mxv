@@ -34,6 +34,7 @@ class QuestionInline(nested.NestedTabularInline):
 # URL parameter admin
 class UrlParameterInline(nested.NestedTabularInline):
     model = UrlParameter
+    ordering = ['name']
     extra = 0
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 50 })}, 
@@ -55,7 +56,7 @@ class ConsultationAdmin(nested.NestedModelAdmin):
         ('results_table')
     )
     readonly_fields = ('nation_builder_url', 'default_url_parameters', 'votes_cast', 'results_table')
-    inlines = [ UrlParameterInline, QuestionInline ]
+    inlines = [ QuestionInline, UrlParameterInline ]
     
     formfield_overrides = { 
         models.TextField: { 'widget': Textarea(attrs = { 'rows': 4, 'cols': 75 })}, 
@@ -137,7 +138,7 @@ class ConsultationAdmin(nested.NestedModelAdmin):
     # URL for use in NationBuilder
     def nation_builder_url(self, consultation):
         parameters = []
-        for param in consultation.url_parameters.all().order_by('id'):
+        for param in consultation.url_parameters.all().order_by('name'):
             parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
         url = '<p>https://my.peoplesmomentum.com/consultations/consultation/%d?%s</p>' % (consultation.id if consultation.id else 0, '&'.join('='.join(param) for param in parameters))
         return mark_safe(url)

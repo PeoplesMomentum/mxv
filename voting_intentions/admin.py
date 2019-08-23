@@ -33,6 +33,7 @@ class VoteTagInline(nested.NestedTabularInline):
     
 class UrlParameterInline(nested.NestedTabularInline):
     model = UrlParameter
+    ordering = ['name']
     extra = 0
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 50 })}, 
@@ -54,7 +55,7 @@ class VoteAdmin(nested.NestedModelAdmin):
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
-    inlines = [UrlParameterInline, VoteTagInline, ChoiceInline]
+    inlines = [VoteTagInline, ChoiceInline, UrlParameterInline]
     
     # returns the number of votes
     def votes_cast(self, vote):
@@ -93,7 +94,7 @@ class VoteAdmin(nested.NestedModelAdmin):
             parameters = []
             parameters.append(('vote', str(vote.id)))
             parameters.append(('choice', str(choice.number)))
-            for param in vote.url_parameters.all():
+            for param in vote.url_parameters.all().order_by('name'):
                 parameters.append((param.name, param.nation_builder_value if param.nation_builder_value else ''))
             urls += '<p>https://my.peoplesmomentum.com/voting_intentions?%s</p>' % '&'.join('='.join(param) for param in parameters)
         return mark_safe(urls)
