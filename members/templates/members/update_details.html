@@ -1,0 +1,29 @@
+{% extends "mxv/base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}Update details{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Update details</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm">
+            {% if not member_in_nation_builder %}
+                Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+            {% else %}
+                <h5>Page {{ page }} of 2</h5><br/>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <p>{{ pre_text|safe }}</p>
+                    <hr>
+                    {% include 'mxv/includes/form.html' with exclude_from_form=exclude_from_form %}
+                    <hr>
+                    <p>{{ post_text|safe }}</p>
+                    <button type="submit" class="btn btn-primary">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -21,6 +21,24 @@ class MemberProfileForm(forms.ModelForm):
         fields = ['name', ]
     name = forms.CharField(label = '', widget = forms.TextInput(attrs = { 'readonly': True, 'hidden': True, 'height': 1 }))
 
+    # adds the tags and profile fields to the form in display order
+    def __init__(self, *args, **kwargs):
+        profile_fields = None
+        if 'profile_fields' in kwargs:
+            profile_fields = kwargs.pop('profile_fields')
+        tags = None
+        if 'tags' in kwargs:
+            tags = kwargs.pop('tags')
+        super(MemberProfileForm, self).__init__(*args, **kwargs)
+        if profile_fields:
+            profile_fields.sort(key = lambda field: field.display_order)
+            for profile_field in profile_fields:
+                self.fields[self.field_path_to_name(profile_field.field_path)] = self.CreateFieldFromProfileField(profile_field)
+        if tags:
+            tags.sort(key = lambda tag: tag.display_order)
+            for tag in tags:
+                self.fields[tag.tag] = self.CreateFieldFromTag(tag)
+    
     # returns a field created from the profile field
     def CreateFieldFromProfileField(self, profile_field):
         # create the field
@@ -42,19 +60,30 @@ class MemberProfileForm(forms.ModelForm):
     def name_to_field_path(self, name):
         return name.replace('__', '.')
 
-    # adds the profile fields to the form in display order
-    def __init__(self, *args, **kwargs):
-        profile_fields = kwargs.pop('profile_fields')
-        super(MemberProfileForm, self).__init__(*args, **kwargs)
-        profile_fields.sort(key = lambda field: field.display_order)
-        for profile_field in profile_fields:
-            self.fields[self.field_path_to_name(profile_field.field_path)] = self.CreateFieldFromProfileField(profile_field)
-    
-    # returns the name/value tuples of the profile fields        
-    def extra_field_values(self):
+    # returns a dictionary of the profile fields' names and values
+    def profile_field_values(self):
         values = {}
         for name, value in self.cleaned_data.items():
             values[self.name_to_field_path(name)] = value
+        return values
+    
+    # returns a field created from the tag
+    def CreateFieldFromTag(self, tag):
+        # create the field
+        field = forms.BooleanField()
+        
+        # set the field parameters
+        field.label = tag.display_text
+        field.initial = field.to_python(tag.value_string)
+        field.required = False
+        
+        return field
+
+    # returns a dictionary of the tag' names and values
+    def tag_values(self):
+        values = {}
+        for name, value in self.cleaned_data.items():
+            values[name] = value
         return values
     
 # verify login email form

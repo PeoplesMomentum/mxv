@@ -15,5 +15,8 @@ urlpatterns = [
     url(r'^change_login_email/$', views.change_login_email, name='change_login_email'), 
     url(r'^login_email_verification_sent/$', views.login_email_verification_sent, name='login_email_verification_sent'), 
     url(r'^verify_login_email/(?P<login_email_verification_key>[a-zA-Z0-9]+)/$', views.verify_login_email, name='verify_login_email'),
+    
+    # update details campaign
+    url(r'^update_details/(?P<page>\d+)/$', views.update_details, name='update_details'), 
 ]
 
