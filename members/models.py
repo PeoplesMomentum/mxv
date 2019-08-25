@@ -123,6 +123,17 @@ class UpdateDetailsCampaign(SingletonModel):
         else:
             return self.second_page_post_text
     
+    # returns the URL parameters as the parameter string of a URL
+    def url_parameter_string(self, request):
+        url_parameters_present = []
+        for url_parameter in self.url_parameters.all().order_by('name'):
+            if url_parameter.name in request.GET:
+                name = url_parameter.name if not url_parameter.pass_on_name or url_parameter.pass_on_name == '' else url_parameter.pass_on_name
+                value = request.GET[url_parameter.name]
+                url_parameters_present.append((name, value))
+        url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
+        return url_parameter_string
+
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
     # database fields

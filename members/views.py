@@ -465,8 +465,9 @@ def update_details(request, page):
                 if len(tags_to_clear) > 0:
                     nb.ClearPersonTags(member.nation_builder_id, tags_to_clear)
                 
-                # redirect to page 2 (with all GET parameters as-is)
-                return redirect('members:update_details', page = 2)
+                # redirect to page 2 (with all GET parameters re-encoded)
+                url_parameter_string = campaign.url_parameter_string(request)
+                return HttpResponseRedirect('%s?%s' % (reverse('members:update_details', kwargs = {'page': 2}), url_parameter_string))
                 
                 pass
             elif page == 2:
@@ -477,8 +478,9 @@ def update_details(request, page):
                 nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
                 form.save()
             
-                # redirect to campaign URL (with all GET parameters as-is)
-                return redirect(campaign.redirect_url)
+                # redirect to campaign URL (with all GET parameters re-encoded)
+                url_parameter_string = campaign.url_parameter_string(request)
+                return redirect('?'.join([campaign.redirect_url, url_parameter_string]))
                 
         else:
             #show errors
