@@ -236,10 +236,10 @@ def profile(request):
     
     # get the member's nation builder id if required
     nb = NationBuilder()
-    if not member.nation_builder_id:
-        member.nation_builder_id = nb.GetIdFromEmail(member.email)
-        member.save()
-    member_in_nation_builder = member.nation_builder_id != None
+    if not member.nation_builder_person.nation_builder_id:
+        member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
+        member.nation_builder_person.save()
+    member_in_nation_builder = member.nation_builder_person.nation_builder_id != None
     
     # if post...
     if request.method == 'POST':
@@ -266,10 +266,12 @@ def profile(request):
                     profile_field_values['person.email'] = member.email
                 else:
                     member.email = profile_field_values['person.email']
+                    member.nation_builder_person.email = profile_field_values['person.email']
 
             # write the profile fields and save the member
-            nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
+            nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, profile_field_values)
             form.save()
+            member.nation_builder_person.save()
 
             # messages            
             messages.success(request, 'Profile saved')
@@ -357,13 +359,15 @@ def verify_login_email(request, login_email_verification_key):
             # change the login email and clear the key and new email from the member's record
             member = request.user
             member.email = member.new_login_email
+            member.nation_builder_person.email = member.new_login_email
             member.new_login_email = None
             member.login_email_verification_key = None
             member.save()
+            member.nation_builder_person.save()
             
             # change the nation builder email
             nb = NationBuilder()
-            nb.SetFieldPathValues(member.nation_builder_id, { 'person.email': member.email })
+            nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, { 'person.email': member.email })
             
             # redirect to profile with a success message
             messages.success(request, 'Login email successfully changed')
@@ -406,10 +410,10 @@ def update_details(request, page):
 
     # get the member's nation builder id if required
     nb = NationBuilder()
-    if not member.nation_builder_id:
-        member.nation_builder_id = nb.GetIdFromEmail(member.email)
+    if not member.nation_builder_person.nation_builder_id:
+        member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
         member.save()
-    member_in_nation_builder = member.nation_builder_id != None
+    member_in_nation_builder = member.nation_builder_person.nation_builder_id != None
     
     if request.method == 'GET':
         # if the member is known in nation builder...
@@ -417,7 +421,7 @@ def update_details(request, page):
         
             if page == 1:
                 # get the tags
-                member_tags= nb.GetPersonTags(member.nation_builder_id)
+                member_tags= nb.GetPersonTags(member.nation_builder_person.nation_builder_id)
                 for tag in tags:
                     tag.value_string = 'True' if tag.tag in member_tags else 'False'
                 
@@ -461,9 +465,9 @@ def update_details(request, page):
                     else:
                         tags_to_clear.append(tag.tag)
                 if len(tags_to_set) > 0:
-                    nb.SetPersonTags(member.nation_builder_id, tags_to_set)
+                    nb.SetPersonTags(member.nation_builder_person.nation_builder_id, tags_to_set)
                 if len(tags_to_clear) > 0:
-                    nb.ClearPersonTags(member.nation_builder_id, tags_to_clear)
+                    nb.ClearPersonTags(member.nation_builder_person.nation_builder_id, tags_to_clear)
                 
                 # redirect to page 2 (with all GET parameters re-encoded)
                 url_parameter_string = campaign.url_parameter_string(request)
@@ -475,7 +479,7 @@ def update_details(request, page):
                 profile_field_values = form.profile_field_values()
         
                 # write the profile fields and save the member
-                nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
+                nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, profile_field_values)
                 form.save()
             
                 # redirect to campaign URL (with all GET parameters re-encoded)

@@ -22,6 +22,14 @@ class MemberManager(BaseUserManager):
         )
         member.set_password(password)
         
+        # create the NationBuilder link (the new member might already be a supporter)
+        supporter = NationBuilderPerson.objects.filter(email = email)
+        if supporter:
+            supporter.member = member
+            supporter.save(using=self._db)
+        else:
+            NationBuilderPerson.objects.create(member = member, email = member.email)
+        
         member.save(using=self._db)
         return member
 
@@ -53,7 +61,6 @@ class Member(AbstractBaseUser, PermissionsMixin):
     last_emailed = models.DateField(blank=True, null=True, default=None)
     is_ncg = models.BooleanField(default=False, verbose_name = 'NCG')
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
-    nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
     new_login_email = CIEmailField(max_length=255, blank=True, null=True, default=None)
     login_email_verification_key = models.CharField(max_length=activation_key_length, blank=True, null=True, default=None)
 
@@ -75,6 +82,13 @@ class Member(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_superuser
+
+# a member's link to their NationBuilder record
+class NationBuilderPerson(models.Model):
+    member = models.OneToOneField(Member, related_name = 'nation_builder_person', blank = True, null = True, default = None)
+    email = CIEmailField(max_length=255, unique=True) # duplicate of member.email so that supporters can be promoted to members when joining
+    unique_token = models.CharField(max_length = activation_key_length, default = activation_key_default)
+    nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
 
 # UI choices for profile fields
 class ProfileFieldType(Enum):
