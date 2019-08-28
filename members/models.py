@@ -22,15 +22,16 @@ class MemberManager(BaseUserManager):
         )
         member.set_password(password)
         
+        member.save(using=self._db)
+
         # create the NationBuilder link (the new member might already be a supporter)
-        supporter = NationBuilderPerson.objects.filter(email = email)
+        supporter = NationBuilderPerson.objects.filter(email = email).first()
         if supporter:
             supporter.member = member
             supporter.save(using=self._db)
         else:
             NationBuilderPerson.objects.create(member = member, email = member.email)
         
-        member.save(using=self._db)
         return member
 
     # creates a superuser
