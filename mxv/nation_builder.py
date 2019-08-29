@@ -67,7 +67,7 @@ class NationBuilder:
     def GetProfileFieldValues(self, member, profile_fields):
 
         # get the member's NationBuilder record
-        member_fields = self.PersonFieldsAndValues(member.nation_builder_id)
+        member_fields = self.PersonFieldsAndValues(member.nation_builder_person.nation_builder_id)
         
         # returns the field's value or an empty string
         def field_path_value(fields, field_path):

@@ -18,5 +18,11 @@ urlpatterns = [
     
     # update details campaign
     url(r'^update_details/(?P<page>\d+)/$', views.update_details, name='update_details'), 
+    
+    # NationBuilder web hooks
+    url(r'^nation_builder_person_created/$', views.nation_builder_person_created, name='nation_builder_person_created'), 
+    url(r'^nation_builder_person_updated/$', views.nation_builder_person_updated, name='nation_builder_person_updated'), 
+    url(r'^nation_builder_person_deleted/$', views.nation_builder_person_deleted, name='nation_builder_person_deleted'), 
+    url(r'^nation_builder_person_merged/$', views.nation_builder_person_merged, name='nation_builder_person_merged'), 
 ]
 

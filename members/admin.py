@@ -141,11 +141,11 @@ class ProfileFieldAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileFieldAdminForm, self).__init__(*args, **kwargs)
         nb = NationBuilder()
-        if not self.current_user.nation_builder_id:
-            self.current_user.nation_builder_id = nb.GetIdFromEmail(self.current_user.email)
+        if not self.current_user.nation_builder_person.nation_builder_id:
+            self.current_user.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(self.current_user.email)
             self.current_user.save()
-        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_id)]
-        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_id
+        self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_person.nation_builder_id)]
+        self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_person.nation_builder_id
     
 class ProfileFieldAdmin(admin.ModelAdmin):
     form = ProfileFieldAdminForm
@@ -182,11 +182,11 @@ class CampaignFieldInline(nested.NestedTabularInline):
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == 'field_path':
             nb = NationBuilder()
-            if not request.user.nation_builder_id:
-                request.user.nation_builder_id = nb.GetIdFromEmail(request.user.email)
+            if not request.user.nation_builder_person.nation_builder_id:
+                request.user.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(request.user.email)
                 request.user.save()
-            db_field.choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(request.user.nation_builder_id)]
-            db_field.help_text = 'Example field values are from your NationBuilder record (id = %d)' % request.user.nation_builder_id
+            db_field.choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(request.user.nation_builder_person.nation_builder_id)]
+            db_field.help_text = 'Example field values are from your NationBuilder record (id = %d)' % request.user.nation_builder_person.nation_builder_id
         return super(CampaignFieldInline, self).formfield_for_dbfield(db_field, request, **kwargs)
 
 # URL parameter admin

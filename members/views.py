@@ -1,12 +1,12 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign
+from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign, NationBuilderPerson
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
 from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm
 from django.contrib import messages
 from django.urls import reverse
-from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
+from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF, WEB_HOOK_SECRET
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, redirect
@@ -15,7 +15,8 @@ from mxv import forms
 from django.contrib.auth.decorators import login_required
 from mxv.nation_builder import NationBuilder
 from mxv.simple_email import send_simple_email
-
+import json
+from django.db.models import Q
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -236,10 +237,10 @@ def profile(request):
     
     # get the member's nation builder id if required
     nb = NationBuilder()
-    if not member.nation_builder_id:
-        member.nation_builder_id = nb.GetIdFromEmail(member.email)
-        member.save()
-    member_in_nation_builder = member.nation_builder_id != None
+    if not member.nation_builder_person.nation_builder_id:
+        member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
+        member.nation_builder_person.save()
+    member_in_nation_builder = member.nation_builder_person.nation_builder_id != None
     
     # if post...
     if request.method == 'POST':
@@ -266,10 +267,12 @@ def profile(request):
                     profile_field_values['person.email'] = member.email
                 else:
                     member.email = profile_field_values['person.email']
+                    member.nation_builder_person.email = profile_field_values['person.email']
 
             # write the profile fields and save the member
-            nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
+            nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, profile_field_values)
             form.save()
+            member.nation_builder_person.save()
 
             # messages            
             messages.success(request, 'Profile saved')
@@ -357,13 +360,15 @@ def verify_login_email(request, login_email_verification_key):
             # change the login email and clear the key and new email from the member's record
             member = request.user
             member.email = member.new_login_email
+            member.nation_builder_person.email = member.new_login_email
             member.new_login_email = None
             member.login_email_verification_key = None
             member.save()
+            member.nation_builder_person.save()
             
             # change the nation builder email
             nb = NationBuilder()
-            nb.SetFieldPathValues(member.nation_builder_id, { 'person.email': member.email })
+            nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, { 'person.email': member.email })
             
             # redirect to profile with a success message
             messages.success(request, 'Login email successfully changed')
@@ -406,10 +411,10 @@ def update_details(request, page):
 
     # get the member's nation builder id if required
     nb = NationBuilder()
-    if not member.nation_builder_id:
-        member.nation_builder_id = nb.GetIdFromEmail(member.email)
+    if not member.nation_builder_person.nation_builder_id:
+        member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
         member.save()
-    member_in_nation_builder = member.nation_builder_id != None
+    member_in_nation_builder = member.nation_builder_person.nation_builder_id != None
     
     if request.method == 'GET':
         # if the member is known in nation builder...
@@ -417,7 +422,7 @@ def update_details(request, page):
         
             if page == 1:
                 # get the tags
-                member_tags= nb.GetPersonTags(member.nation_builder_id)
+                member_tags= nb.GetPersonTags(member.nation_builder_person.nation_builder_id)
                 for tag in tags:
                     tag.value_string = 'True' if tag.tag in member_tags else 'False'
                 
@@ -461,9 +466,9 @@ def update_details(request, page):
                     else:
                         tags_to_clear.append(tag.tag)
                 if len(tags_to_set) > 0:
-                    nb.SetPersonTags(member.nation_builder_id, tags_to_set)
+                    nb.SetPersonTags(member.nation_builder_person.nation_builder_id, tags_to_set)
                 if len(tags_to_clear) > 0:
-                    nb.ClearPersonTags(member.nation_builder_id, tags_to_clear)
+                    nb.ClearPersonTags(member.nation_builder_person.nation_builder_id, tags_to_clear)
                 
                 # redirect to page 2 (with all GET parameters re-encoded)
                 url_parameter_string = campaign.url_parameter_string(request)
@@ -475,7 +480,7 @@ def update_details(request, page):
                 profile_field_values = form.profile_field_values()
         
                 # write the profile fields and save the member
-                nb.SetFieldPathValues(member.nation_builder_id, profile_field_values)
+                nb.SetFieldPathValues(member.nation_builder_person.nation_builder_id, profile_field_values)
                 form.save()
             
                 # redirect to campaign URL (with all GET parameters re-encoded)
@@ -494,8 +499,112 @@ def update_details(request, page):
         'member_in_nation_builder': member_in_nation_builder,
         'error_mailto': error_mailto(member.name),
         'page': page })
-    
 
+# returns the person dictionary if the web hook request is valid
+def person_if_valid_web_hook(request):
+    if request.method == 'POST':
+        try:
+            record = json.loads(request.body)
+            if record['token'] == WEB_HOOK_SECRET:
+                return record['payload']['person']
+        except:
+            pass
+    return None
+
+# returns the NationBuilderPerson for the person record if it exists
+def find_nation_builder_person(person):
+
+    # search by id, token and email in that order
+    return NationBuilderPerson.objects.filter(
+        Q(nation_builder_id = person['id']) |
+        Q(unique_token = person['my_momentum_unique_token']) |
+        Q(email = person['email'])
+        ).first()
+
+# ensures that a person in NationBuilder has a linked My Momentum record
+def ensure_my_momentum_record_for_person(person):
+    
+    # try to find a record of the person
+    nation_builder_person = find_nation_builder_person(person)
+    if not nation_builder_person:
+        
+        # create a supporter record for a new person
+        # (it will be upgraded to a member if necessary when the join page creates the inactive member)
+        nation_builder_person = NationBuilderPerson.objects.create(email = person['email'], nation_builder_id = person['id'])
+    else:        
+        # ensure we have the id and email of an already known person (the join page might already have created the person)
+        nation_builder_person.nation_builder_id = person['id']
+        nation_builder_person.email = person['email']
+        nation_builder_person.save()
+        
+    # tell NationBuilder the token if it didn't know it
+    if not person['my_momentum_unique_token'] or person['my_momentum_unique_token'] == '':
+        nb = NationBuilder()
+        nb.SetPersonFields(nation_builder_person.nation_builder_id, { 'my_momentum_unique_token': nation_builder_person.unique_token })
+
+# fires when a person is created in NationBuilder
+@csrf_exempt
+def nation_builder_person_created(request):
+    try:
+        # if it's a valid web hook request...
+        person = person_if_valid_web_hook(request)
+        if person:
+                  
+            # ensure there is am updated linked My Momentum record for the person
+            ensure_my_momentum_record_for_person(person)
+        else:
+            return HttpResponseForbidden()
+    except:
+        # fail silently
+        pass   
+    return HttpResponse()
+
+# fires when a person is updated in NationBuilder
+@csrf_exempt
+def nation_builder_person_updated(request):
+    try:
+        # if it's a valid web hook request...
+        person = person_if_valid_web_hook(request)
+        if person:
+                  
+            # ensure there is am updated linked My Momentum record for the person
+            ensure_my_momentum_record_for_person(person)
+        else:
+            return HttpResponseForbidden()
+    except:
+        # fail silently
+        pass   
+    return HttpResponse()
+
+# fires when a person is deleted in NationBuilder
+@csrf_exempt
+def nation_builder_person_deleted(request):
+    
+    # if it's a valid web hook request...
+    person = person_if_valid_web_hook(request)
+    if person:
+        
+        # mark the member as deleted here?
+
+        return HttpResponse()
+    else:
+        return HttpResponseForbidden()
+
+# fires when two people are merged in NationBuilder
+@csrf_exempt
+def nation_builder_person_merged(request):
+    
+    # if it's a valid web hook request...
+    person = person_if_valid_web_hook(request)
+    if person:
+        
+        # get the two people
+        
+        # merge them
+        
+        return HttpResponse()
+    else:
+        return HttpResponseForbidden()
 
 
 

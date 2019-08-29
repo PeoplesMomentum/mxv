@@ -238,3 +238,7 @@ sentry_sdk.init(
 
 # whether to show profile pages to just staff or anyone
 PROFILES_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_PROFILES_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+
+# get the secret used by the NationBuilder web hooks
+WEB_HOOK_SECRET = os.environ.get('MXV_WEB_HOOK_SECRET', 'mxv')
+
