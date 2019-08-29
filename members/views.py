@@ -413,7 +413,7 @@ def update_details(request, page):
     nb = NationBuilder()
     if not member.nation_builder_person.nation_builder_id:
         member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
-        member.save()
+        member.nation_builder_person.save()
     member_in_nation_builder = member.nation_builder_person.nation_builder_id != None
     
     if request.method == 'GET':
