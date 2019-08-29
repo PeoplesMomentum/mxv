@@ -1,12 +1,12 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign
+from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign, NationBuilderPerson
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.admin import site
 from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm
 from django.contrib import messages
 from django.urls import reverse
-from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF
+from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF, WEB_HOOK_SECRET
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, redirect
@@ -15,7 +15,8 @@ from mxv import forms
 from django.contrib.auth.decorators import login_required
 from mxv.nation_builder import NationBuilder
 from mxv.simple_email import send_simple_email
-
+import json
+from django.db.models import Q
 
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
@@ -498,8 +499,112 @@ def update_details(request, page):
         'member_in_nation_builder': member_in_nation_builder,
         'error_mailto': error_mailto(member.name),
         'page': page })
-    
 
+# returns the person dictionary if the web hook request is valid
+def person_if_valid_web_hook(request):
+    if request.method == 'POST':
+        try:
+            record = json.loads(request.body)
+            if record['token'] == WEB_HOOK_SECRET:
+                return record['payload']['person']
+        except:
+            pass
+    return None
+
+# returns the NationBuilderPerson for the person record if it exists
+def find_nation_builder_person(person):
+
+    # search by id, token and email in that order
+    return NationBuilderPerson.objects.filter(
+        Q(nation_builder_id = person['id']) |
+        Q(unique_token = person['my_momentum_unique_token']) |
+        Q(email = person['email'])
+        ).first()
+
+# ensures that a person in NationBuilder has a linked My Momentum record
+def ensure_my_momentum_record_for_person(person):
+    
+    # try to find a record of the person
+    nation_builder_person = find_nation_builder_person(person)
+    if not nation_builder_person:
+        
+        # create a supporter record for a new person
+        # (it will be upgraded to a member if necessary when the join page creates the inactive member)
+        nation_builder_person = NationBuilderPerson.objects.create(email = person['email'], nation_builder_id = person['id'])
+    else:        
+        # ensure we have the id and email of an already known person (the join page might already have created the person)
+        nation_builder_person.nation_builder_id = person['id']
+        nation_builder_person.email = person['email']
+        nation_builder_person.save()
+        
+    # tell NationBuilder the token if it didn't know it
+    if not person['my_momentum_unique_token'] or person['my_momentum_unique_token'] == '':
+        nb = NationBuilder()
+        nb.SetPersonFields(nation_builder_person.nation_builder_id, { 'my_momentum_unique_token': nation_builder_person.unique_token })
+
+# fires when a person is created in NationBuilder
+@csrf_exempt
+def nation_builder_person_created(request):
+    try:
+        # if it's a valid web hook request...
+        person = person_if_valid_web_hook(request)
+        if person:
+                  
+            # ensure there is am updated linked My Momentum record for the person
+            ensure_my_momentum_record_for_person(person)
+        else:
+            return HttpResponseForbidden()
+    except:
+        # fail silently
+        pass   
+    return HttpResponse()
+
+# fires when a person is updated in NationBuilder
+@csrf_exempt
+def nation_builder_person_updated(request):
+    try:
+        # if it's a valid web hook request...
+        person = person_if_valid_web_hook(request)
+        if person:
+                  
+            # ensure there is am updated linked My Momentum record for the person
+            ensure_my_momentum_record_for_person(person)
+        else:
+            return HttpResponseForbidden()
+    except:
+        # fail silently
+        pass   
+    return HttpResponse()
+
+# fires when a person is deleted in NationBuilder
+@csrf_exempt
+def nation_builder_person_deleted(request):
+    
+    # if it's a valid web hook request...
+    person = person_if_valid_web_hook(request)
+    if person:
+        
+        # mark the member as deleted here?
+
+        return HttpResponse()
+    else:
+        return HttpResponseForbidden()
+
+# fires when two people are merged in NationBuilder
+@csrf_exempt
+def nation_builder_person_merged(request):
+    
+    # if it's a valid web hook request...
+    person = person_if_valid_web_hook(request)
+    if person:
+        
+        # get the two people
+        
+        # merge them
+        
+        return HttpResponse()
+    else:
+        return HttpResponseForbidden()
 
 
 

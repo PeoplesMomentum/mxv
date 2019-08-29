@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.contrib.postgres.fields.citext import CIEmailField
 from enum import Enum
 from solo.models import SingletonModel
+from django.utils.crypto import get_random_string
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -84,12 +85,25 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_superuser
 
+# returns a random token that has not yet been used as a unique token
+# still vulnerable to race conditions from other web requests but better than assuming no collisions
+unique_token_length = 20
+def unused_unique_token():
+    token = get_random_string(unique_token_length)
+    while NationBuilderPerson.objects.filter(unique_token = token).first():
+        token = get_random_string(unique_token_length)
+    return token
+
 # a member's link to their NationBuilder record
 class NationBuilderPerson(models.Model):
     member = models.OneToOneField(Member, related_name = 'nation_builder_person', blank = True, null = True, default = None)
     email = CIEmailField(max_length=255, unique=True) # duplicate of member.email so that supporters can be promoted to members when joining
-    unique_token = models.CharField(max_length = activation_key_length, default = activation_key_default)
+    unique_token = models.CharField(max_length = unique_token_length, default = unused_unique_token)
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
+
+    # debug
+    def __str__(self):
+        return '%s (%d, %s)' % (self.email, self.nation_builder_id, self.unique_token)
 
 # UI choices for profile fields
 class ProfileFieldType(Enum):
