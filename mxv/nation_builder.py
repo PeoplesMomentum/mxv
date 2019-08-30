@@ -26,7 +26,7 @@ class NationBuilder:
     rate_limit_remaining = None
     
     # how long to wait in seconds for connect/read from NationBuilder
-    default_timeout = 5
+    default_timeout = 30
     
     # true if the rate limit has not been hit or is unknown
     def api_calls_available(self, required):
@@ -63,26 +63,6 @@ class NationBuilder:
         else:
             return None
         
-    # gets the values for the member's profile fields
-    def GetProfileFieldValues(self, member, profile_fields):
-
-        # get the member's NationBuilder record
-        member_fields = self.PersonFieldsAndValues(member.nation_builder_person.nation_builder_id)
-        
-        # returns the field's value or an empty string
-        def field_path_value(fields, field_path):
-            values = [field[1] for field in fields if field[0] == field_path]
-            return values[0] if len(values) > 0 else ''
-        
-        # set values for the profile fields
-        for profile_field in profile_fields:
-            if profile_field.is_member_field:
-                profile_field.value_string = getattr(member, profile_field.field_path)
-            else:
-                profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
-
-        return profile_fields
-    
     # writes the values back to nation builder
     def SetFieldPathValues(self, person_id, field_path_values):
         
