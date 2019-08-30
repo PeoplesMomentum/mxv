@@ -185,10 +185,8 @@ class CampaignField(models.Model):
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = 1)
-    #admin_only = models.BooleanField(default = False)
     # runtime attributes
     value_string = ''
-    is_member_field = False
     
     # debug
     def __str__(self):

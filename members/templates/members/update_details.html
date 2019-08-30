@@ -10,8 +10,8 @@
 {% block content %}
     <div class="row">
         <div class="col-sm">
-            {% if not member_in_nation_builder %}
-                Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+            {% if not user_in_nation_builder %}
+                Can't look up details, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
             {% else %}
                 <h5>Page {{ page }} of 2</h5><br/>
                 <form method="post" novalidate>
@@ -21,7 +21,7 @@
                     {% include 'mxv/includes/form.html' with exclude_from_form=exclude_from_form %}
                     <hr>
                     <p>{{ post_text|safe }}</p>
-                    <button type="submit" class="btn btn-primary">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
+                    <button type="submit" class="btn btn-success">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
                 </form>
             {% endif %}
         </div>
