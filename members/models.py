@@ -103,7 +103,7 @@ class NationBuilderPerson(models.Model):
 
     # debug
     def __str__(self):
-        return '%s (%d, %s)' % (self.email, self.nation_builder_id, self.unique_token)
+        return '%s - %s (%s, %s)' % ('Member' if self.member else 'Supporter', self.email, self.unique_token, str(self.nation_builder_id) if self.nation_builder_id else '')
 
 # UI choices for profile fields
 class ProfileFieldType(Enum):

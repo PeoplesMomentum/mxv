@@ -106,6 +106,14 @@ DATABASES = {
         'NAME': os.environ.get('MXV_DATABASE_NAME', 'mxv'),
         'USER': os.environ.get('MXV_DATABASE_USER', 'mxv'),
         'PASSWORD': os.environ.get('MXV_DATABASE_PASSWORD', 'mxv')
+    },
+    'live': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('MXV_LIVE_DATABASE_HOST', ''),
+        'PORT': os.environ.get('MXV_LIVE_DATABASE_PORT', ''),
+        'NAME': os.environ.get('MXV_LIVE_DATABASE_NAME', 'mxv'),
+        'USER': os.environ.get('MXV_LIVE_DATABASE_USER', 'mxv'),
+        'PASSWORD': os.environ.get('MXV_LIVE_DATABASE_PASSWORD', 'mxv')
     }
 }
 
