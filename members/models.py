@@ -4,6 +4,7 @@ from django.contrib.postgres.fields.citext import CIEmailField
 from enum import Enum
 from solo.models import SingletonModel
 from django.utils.crypto import get_random_string
+from django.db.models.aggregates import Max
 
 # creates members and super users
 class MemberManager(BaseUserManager):
@@ -113,6 +114,10 @@ class ProfileFieldType(Enum):
     Boolean = "Checkbox (true/false)"
     Email = "Email"
 
+# returns the next unused display order
+def profile_field_next_display_order():
+    return ProfileField.objects.aggregate(Max('display_order'))['display_order__max'] + 1
+
 # fields in the members' NationBuilder records that are editable by the member on their profile page
 class ProfileField(models.Model):
     # database fields
@@ -120,7 +125,7 @@ class ProfileField(models.Model):
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
-    display_order = models.IntegerField(default = 1)
+    display_order = models.IntegerField(default = profile_field_next_display_order)
     admin_only = models.BooleanField(default = True)
     # runtime attributes
     value_string = ''
@@ -163,19 +168,28 @@ class UpdateDetailsCampaign(SingletonModel):
         url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
         return url_parameter_string
 
+# returns the next unused display order
+def campaign_tag_next_display_order():
+    return CampaignTag.objects.aggregate(Max('display_order'))['display_order__max'] + 1
+
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
     # database fields
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tags')
     display_text = models.CharField(max_length = 255)
     tag = models.CharField(max_length = 255)
-    display_order = models.IntegerField(default = 1)
+    display_order = models.IntegerField(default = campaign_tag_next_display_order)
     # runtime attributes
     value_string = ''
     
     def __str__(self):
         return '%s / %s = %s' % (self.display_text, self.tag, self.value_string)
 
+# returns the next unused display order
+def campaign_field_next_display_order():
+    return CampaignField.objects.aggregate(Max('display_order'))['display_order__max'] + 1
+
+# sets a tag in nation builder if checked by the member
 # fields in the members' NationBuilder records that are editable by the member on the update details campaign page
 class CampaignField(models.Model):
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
@@ -184,7 +198,7 @@ class CampaignField(models.Model):
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
-    display_order = models.IntegerField(default = 1)
+    display_order = models.IntegerField(default = campaign_field_next_display_order)
     # runtime attributes
     value_string = ''
     
