@@ -177,8 +177,22 @@ class CampaignTag(models.Model):
         return '%s / %s = %s' % (self.display_text, self.tag, self.value_string)
 
 # fields in the members' NationBuilder records that are editable by the member on the update details campaign page
-class CampaignField(ProfileField):
+class CampaignField(models.Model):
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
+    # database fields
+    field_path = models.CharField(max_length = 255)
+    field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
+    required = models.BooleanField(default = False)
+    display_text = models.CharField(max_length = 255, default = '')
+    display_order = models.IntegerField(default = 1)
+    #admin_only = models.BooleanField(default = False)
+    # runtime attributes
+    value_string = ''
+    is_member_field = False
+    
+    # debug
+    def __str__(self):
+        return '%s = %s' % (self.field_path, self.value_string)
     
 # the URL parameters to pass on when redirecting 
 # populated manually since the campaign is a singleton: 
