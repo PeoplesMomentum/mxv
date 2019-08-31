@@ -16,11 +16,24 @@
                 <h5>Page {{ page }} of 2</h5><br/>
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    <p>{{ pre_text|safe }}</p>
-                    <hr>
-                    {% include 'mxv/includes/form.html' with exclude_from_form=exclude_from_form %}
-                    <hr>
-                    <p>{{ post_text|safe }}</p>
+                    
+                    <!-- tag group forms -->
+                    {% for tag_group in tag_groups %}
+                        <hr>
+                        <p>{{ tag_group.header|safe }}</p>
+                        {% include 'mxv/includes/three_column_form.html' with form=tag_group.form exclude_from_form=exclude_from_form %}
+                        <p>{{ tag_group.footer|safe }}</p>
+                    {% endfor %}
+                    
+                    <!-- fields form -->
+                    {% if fields_form %}
+                        <p>{{ fields_page_header|safe }}</p>
+                        <hr>
+                        {% include 'mxv/includes/form.html' with form=fields_form exclude_from_form=exclude_from_form %}
+                        <hr>
+                        <p>{{ fields_page_footer|safe }}</p>
+                    {% endif %}
+                    
                     <button type="submit" class="btn btn-success">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
                 </form>
             {% endif %}

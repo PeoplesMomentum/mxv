@@ -1,0 +1,13 @@
+<!-- form-level errors -->
+{% include 'mxv/includes/form_errors.html' %}
+
+<!-- form fields -->
+<div class="row">
+    {% for field in form %}
+        {% if not field.name in exclude_from_form %} 
+            <div class="col-sm-4">
+                {% include 'mxv/includes/form_field.html' %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
