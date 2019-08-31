@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignTag, CampaignField, UrlParameter
+from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignField, UrlParameter, CampaignTagGroup, CampaignTag
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
@@ -164,7 +164,17 @@ class CampaignTagInline(nested.NestedTabularInline):
     model = CampaignTag
     ordering = ['display_order']
     extra = 0
-
+ 
+    formfield_overrides = { 
+        models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
+    }
+ 
+# campaign tag group admin
+class CampaignTagGroupInline(nested.NestedTabularInline):
+    model = CampaignTagGroup
+    ordering = ['display_order']
+    extra = 0
+    inlines = [ CampaignTagInline ]
     formfield_overrides = { 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 75 })}, 
     }
@@ -204,10 +214,10 @@ class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
         models.TextField: { 'widget': Textarea(attrs = { 'rows': 5, 'cols': 200 })}, 
         models.CharField: { 'widget': TextInput(attrs = { 'size': 200 })}, 
     }
-    inlines = [CampaignTagInline, CampaignFieldInline, UrlParameterInline ]
+    inlines = [CampaignTagGroupInline, CampaignFieldInline, UrlParameterInline ]
     model = UpdateDetailsCampaign
     fields = (
-        ('first_page_pre_text', 'first_page_post_text', 'second_page_pre_text', 'second_page_post_text', ),
+        ('second_page_pre_text', 'second_page_post_text', ),
         ('redirect_url'),
         ('nation_builder_url'))
     readonly_fields = ('nation_builder_url',)

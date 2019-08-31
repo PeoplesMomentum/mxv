@@ -2,3 +2,4 @@ venv
 *.pyc
 staticfiles
 .env
+.settings/org.eclipse.core.resources.prefs

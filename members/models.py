@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.db import models
 from django.contrib.postgres.fields.citext import CIEmailField
 from enum import Enum
 from solo.models import SingletonModel
@@ -113,49 +113,32 @@ class ProfileFieldType(Enum):
     Decimal = "Decimal"
     Boolean = "Checkbox (true/false)"
     Email = "Email"
-
+    
 # returns the next unused display order
-def profile_field_next_display_order():
-    return ProfileField.objects.aggregate(Max('display_order'))['display_order__max'] + 1
+def next_profile_field_display_order():
+    highest = ProfileField.objects.aggregate(Max('display_order'))['display_order__max']
+    return 1 if not highest else highest + 1
 
 # fields in the members' NationBuilder records that are editable by the member on their profile page
 class ProfileField(models.Model):
-    # database fields
     field_path = models.CharField(max_length = 255)
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
-    display_order = models.IntegerField(default = profile_field_next_display_order)
+    display_order = models.IntegerField(default = next_profile_field_display_order)
     admin_only = models.BooleanField(default = True)
-    # runtime attributes
     value_string = ''
     is_member_field = False
     
     # debug
     def __str__(self):
-        return '%s = %s' % (self.field_path, self.value_string)
+        return '%d - %s = %s' % (self.display_order, self.field_path, self.value_string)
 
 # update details campaign
 class UpdateDetailsCampaign(SingletonModel):
-    first_page_pre_text = models.TextField()
-    first_page_post_text = models.TextField()
     second_page_pre_text = models.TextField()
     second_page_post_text = models.TextField()
     redirect_url = models.CharField(max_length = 255)
-    
-    # returns the pre-text for the page
-    def pre(self, page):
-        if page == 1:
-            return self.first_page_pre_text
-        else:
-            return self.second_page_pre_text
-    
-    # returns the post-text for the page
-    def post(self, page):
-        if page == 1:
-            return self.first_page_post_text
-        else:
-            return self.second_page_post_text
     
     # returns the URL parameters as the parameter string of a URL
     def url_parameter_string(self, request):
@@ -169,42 +152,54 @@ class UpdateDetailsCampaign(SingletonModel):
         return url_parameter_string
 
 # returns the next unused display order
-def campaign_tag_next_display_order():
-    return CampaignTag.objects.aggregate(Max('display_order'))['display_order__max'] + 1
-
+def next_campaign_tag_group_display_order():
+    highest = CampaignTagGroup.objects.aggregate(Max('display_order'))['display_order__max']
+    return 1 if not highest else highest + 1
+  
+# a group of campaign tags
+class CampaignTagGroup(models.Model):
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tag_groups')
+    header = models.TextField()
+    footer = models.TextField()
+    display_order = models.IntegerField(default = next_campaign_tag_group_display_order)
+      
+    def __str__(self):
+        return '%d' % self.display_order
+  
+# returns the next unused display order
+def next_campaign_tag_display_order():
+    highest = CampaignTag.objects.aggregate(Max('display_order'))['display_order__max']
+    return 1 if not highest else highest + 1
+  
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
-    # database fields
-    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tags')
+    group = models.ForeignKey(CampaignTagGroup, related_name = 'tags')
     display_text = models.CharField(max_length = 255)
     tag = models.CharField(max_length = 255)
-    display_order = models.IntegerField(default = campaign_tag_next_display_order)
-    # runtime attributes
+    display_order = models.IntegerField(default = next_campaign_tag_display_order)
     value_string = ''
-    
+      
     def __str__(self):
-        return '%s / %s = %s' % (self.display_text, self.tag, self.value_string)
+        return '%d - %s / %s = %s' % (self.display_order, self.display_text, self.tag, self.value_string)
 
 # returns the next unused display order
-def campaign_field_next_display_order():
-    return CampaignField.objects.aggregate(Max('display_order'))['display_order__max'] + 1
+def next_campaign_field_display_order():
+    highest = CampaignField.objects.aggregate(Max('display_order'))['display_order__max']
+    return 1 if not highest else highest + 1
 
-# sets a tag in nation builder if checked by the member
 # fields in the members' NationBuilder records that are editable by the member on the update details campaign page
 class CampaignField(models.Model):
     campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
-    # database fields
     field_path = models.CharField(max_length = 255)
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
-    display_order = models.IntegerField(default = campaign_field_next_display_order)
-    # runtime attributes
+    display_order = models.IntegerField(default = next_campaign_field_display_order)
     value_string = ''
     
     # debug
     def __str__(self):
-        return '%s = %s' % (self.field_path, self.value_string)
+        return '%d - %s = %s' % (self.display_order, self.field_path, self.value_string)
     
 # the URL parameters to pass on when redirecting 
 # populated manually since the campaign is a singleton: 
