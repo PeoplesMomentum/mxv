@@ -534,7 +534,7 @@ def update_details(request, page):
         'fields_page_footer': campaign.fields_page_footer,
         'fields_form': fields_form,
         'tag_groups': tag_groups,
-        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],
+        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__'), 'unique_token'],
         'user_in_nation_builder': user_in_nation_builder,
         'error_mailto': error_mailto(''),
         'page': page })

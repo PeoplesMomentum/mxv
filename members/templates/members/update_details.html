@@ -21,7 +21,7 @@
                     {% for tag_group in tag_groups %}
                         <hr>
                         <p>{{ tag_group.header|safe }}</p>
-                        {% include 'mxv/includes/form.html' with form=tag_group.form exclude_from_form=exclude_from_form %}
+                        {% include 'mxv/includes/three_column_form.html' with form=tag_group.form exclude_from_form=exclude_from_form %}
                         <p>{{ tag_group.footer|safe }}</p>
                     {% endfor %}
                     
