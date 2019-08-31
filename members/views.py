@@ -421,27 +421,18 @@ def update_details(request, page):
     profile_fields = None
     well_known_fields = WellKnownFields()
     if page == 1:
-        # get all the tag groups
-        tag_groups = list(campaign.tag_groups.all())
-    elif page == 2:
         # build the profile fields from the well-known full name field and the campaign fields
         profile_fields = list(campaign.fields.all())
         profile_fields.append(well_known_fields.full_name)
+    elif page == 2:
+        # get all the tag groups
+        tag_groups = list(campaign.tag_groups.all())
 
     if request.method == 'GET':
         # if the user is known in nation builder...
         if user_in_nation_builder:
         
             if page == 1:
-                # get the tags
-                member_tags = nb.GetPersonTags(user.nation_builder_id)
-                for tag_group in tag_groups:
-                    tags = list(tag_group.tags.all())
-                    for tag in tags:
-                        tag.value_string = 'True' if tag.tag in member_tags else 'False'
-                    tag_group.form = UserDetailsForm(prefix = 'tags%d' % tag_group.display_order, instance = user, tags = tags)
-                
-            elif page == 2:          
                 # get the user's NationBuilder record
                 user_fields = nb.PersonFieldsAndValues(user.nation_builder_id)
                 
@@ -462,8 +453,49 @@ def update_details(request, page):
                         user.member.save()
  
                 fields_form = UserDetailsForm(prefix = 'fields', instance = user, profile_fields = profile_fields)
+                
+            elif page == 2:          
+                # get the tags
+                member_tags = nb.GetPersonTags(user.nation_builder_id)
+                for tag_group in tag_groups:
+                    tags = list(tag_group.tags.all())
+                    for tag in tags:
+                        tag.value_string = 'True' if tag.tag in member_tags else 'False'
+                    tag_group.form = UserDetailsForm(prefix = 'tags%d' % tag_group.display_order, instance = user, tags = tags)
     else:
         if page == 1:    
+            # we're assuming here that there must be a user if there is a POST
+            if profile_fields:
+                # update member name here in case first or last name have been edited here or in nation builder
+                # (not redirecting back to here after successful post so can't deal with this in the GET as we do for the profile page)
+                if user and user.member:
+                    nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
+                    if nb_full_name != user.member.name and nb_full_name != '':
+                        user.member.name = nb_full_name
+                        user.member.save()
+    
+                # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
+                profile_fields.remove(well_known_fields.full_name)
+
+            # if the fields form is valid...
+            fields_form = UserDetailsForm(request.POST, prefix = 'fields', instance = user, profile_fields = profile_fields)
+            if fields_form.is_valid():
+    
+                # get the extra field values
+                profile_field_values = fields_form.profile_field_values()
+        
+                # write the profile fields
+                nb.SetFieldPathValues(user.nation_builder_id, profile_field_values)
+             
+                # redirect to page 2 (with all GET parameters re-encoded)
+                url_parameter_string = campaign.url_parameter_string(request)
+                return HttpResponseRedirect('%s?%s' % (reverse('members:update_details', kwargs = {'page': 2}), url_parameter_string))
+            
+            else:
+                #show errors
+                messages.error(request, 'Please correct the errors below.')
+                
+        elif page == 2:
             # if the tag forms are all valid...
             for tag_group in tag_groups:
                 tag_group.form = UserDetailsForm(request.POST, prefix = 'tags%d' % tag_group.display_order, instance = user, tags = list(tag_group.tags.all()))
@@ -490,48 +522,16 @@ def update_details(request, page):
                 if len(tags_to_clear) > 0:
                     nb.ClearPersonTags(user.nation_builder_id, tags_to_clear)
                 
-                # redirect to page 2 (with all GET parameters re-encoded)
-                url_parameter_string = campaign.url_parameter_string(request)
-                return HttpResponseRedirect('%s?%s' % (reverse('members:update_details', kwargs = {'page': 2}), url_parameter_string))
-            
-            else:
-                messages.error(request, 'Please correct the errors below.')
-                
-        elif page == 2:
-            # we're assuming here that there must be a user if there is a POST
-            if profile_fields:
-                # update member name here in case first or last name have been edited here or in nation builder
-                # (not redirecting back to here after successful post so can't deal with this in the GET as we do for the profile page)
-                if user and user.member:
-                    nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
-                    if nb_full_name != user.member.name and nb_full_name != '':
-                        user.member.name = nb_full_name
-                        user.member.save()
-    
-                # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
-                profile_fields.remove(well_known_fields.full_name)
-
-            # if the fields form is valid...
-            fields_form = UserDetailsForm(request.POST, prefix = 'fields', instance = user, profile_fields = profile_fields)
-            if fields_form.is_valid():
-    
-                # get the extra field values
-                profile_field_values = fields_form.profile_field_values()
-        
-                # write the profile fields
-                nb.SetFieldPathValues(user.nation_builder_id, profile_field_values)
-             
                 # redirect to campaign URL (with all GET parameters re-encoded)
                 url_parameter_string = campaign.url_parameter_string(request)
                 return redirect('?'.join([campaign.redirect_url, url_parameter_string]))
             
             else:
-                #show errors
                 messages.error(request, 'Please correct the errors below.')
     
     return render(request, 'members/update_details.html', { 
-        'pre_text': campaign.second_page_pre_text,
-        'post_text': campaign.second_page_post_text,
+        'fields_page_header': campaign.fields_page_header,
+        'fields_page_footer': campaign.fields_page_footer,
         'fields_form': fields_form,
         'tag_groups': tag_groups,
         'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],

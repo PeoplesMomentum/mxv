@@ -217,7 +217,7 @@ class UpdateDetailsCampaignAdmin(nested.NestedModelAdmin, SingletonModelAdmin):
     inlines = [CampaignTagGroupInline, CampaignFieldInline, UrlParameterInline ]
     model = UpdateDetailsCampaign
     fields = (
-        ('second_page_pre_text', 'second_page_post_text', ),
+        ('fields_page_header', 'fields_page_footer', ),
         ('redirect_url'),
         ('nation_builder_url'))
     readonly_fields = ('nation_builder_url',)

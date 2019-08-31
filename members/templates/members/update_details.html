@@ -27,11 +27,11 @@
                     
                     <!-- fields form -->
                     {% if fields_form %}
-                        <p>{{ pre_text|safe }}</p>
+                        <p>{{ fields_page_header|safe }}</p>
                         <hr>
                         {% include 'mxv/includes/form.html' with form=fields_form exclude_from_form=exclude_from_form %}
                         <hr>
-                        <p>{{ post_text|safe }}</p>
+                        <p>{{ fields_page_footer|safe }}</p>
                     {% endif %}
                     
                     <button type="submit" class="btn btn-success">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>

@@ -136,8 +136,8 @@ class ProfileField(models.Model):
 
 # update details campaign
 class UpdateDetailsCampaign(SingletonModel):
-    second_page_pre_text = models.TextField()
-    second_page_post_text = models.TextField()
+    fields_page_header = models.TextField()
+    fields_page_footer = models.TextField()
     redirect_url = models.CharField(max_length = 255)
     
     # returns the URL parameters as the parameter string of a URL
