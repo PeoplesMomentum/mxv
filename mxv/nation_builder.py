@@ -26,7 +26,7 @@ class NationBuilder:
     rate_limit_remaining = None
     
     # how long to wait in seconds for connect/read from NationBuilder
-    default_timeout = 30
+    default_timeout = 10
     
     # true if the rate limit has not been hit or is unknown
     def api_calls_available(self, required):
