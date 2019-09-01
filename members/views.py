@@ -452,7 +452,7 @@ def update_details(request, page):
                         user.member.name = nb_full_name
                         user.member.save()
  
-                fields_form = UserDetailsForm(prefix = 'fields', instance = user, profile_fields = profile_fields)
+                fields_form = UserDetailsForm(prefix = 'fields', profile_fields = profile_fields)
                 
             elif page == 2:          
                 # get the tags
@@ -461,7 +461,7 @@ def update_details(request, page):
                     tags = list(tag_group.tags.all())
                     for tag in tags:
                         tag.value_string = 'True' if tag.tag in member_tags else 'False'
-                    tag_group.form = UserDetailsForm(prefix = 'tags%d' % tag_group.display_order, instance = user, tags = tags)
+                    tag_group.form = UserDetailsForm(prefix = 'tags%d' % tag_group.display_order, tags = tags)
     else:
         if page == 1:    
             # we're assuming here that there must be a user if there is a POST
@@ -478,7 +478,7 @@ def update_details(request, page):
                 profile_fields.remove(well_known_fields.full_name)
 
             # if the fields form is valid...
-            fields_form = UserDetailsForm(request.POST, prefix = 'fields', instance = user, profile_fields = profile_fields)
+            fields_form = UserDetailsForm(request.POST, prefix = 'fields', profile_fields = profile_fields)
             if fields_form.is_valid():
     
                 # get the extra field values
@@ -498,7 +498,7 @@ def update_details(request, page):
         elif page == 2:
             # if the tag forms are all valid...
             for tag_group in tag_groups:
-                tag_group.form = UserDetailsForm(request.POST, prefix = 'tags%d' % tag_group.display_order, instance = user, tags = list(tag_group.tags.all()))
+                tag_group.form = UserDetailsForm(request.POST, prefix = 'tags%d' % tag_group.display_order, tags = list(tag_group.tags.all()))
             if all(tag_group.form.is_valid() for tag_group in tag_groups):    
             
                 # get the tag values
@@ -529,17 +529,12 @@ def update_details(request, page):
             else:
                 messages.error(request, 'Please correct the errors below.')
                 
-    # exclude the full name field and tag group unique token fields from the form 
-    exclude_from_form = [well_known_fields.full_name.field_path.replace('.', '__')]
-    if not fields_form:
-        exclude_from_form.append('unique_token')
-    
     return render(request, 'members/update_details.html', { 
         'fields_page_header': campaign.fields_page_header,
         'fields_page_footer': campaign.fields_page_footer,
         'fields_form': fields_form,
         'tag_groups': tag_groups,
-        'exclude_from_form': exclude_from_form,
+        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],
         'user_in_nation_builder': user_in_nation_builder,
         'error_mailto': error_mailto(''),  
         'page': page })

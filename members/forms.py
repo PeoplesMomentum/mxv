@@ -61,14 +61,7 @@ class MemberProfileForm(forms.ModelForm):
         return values
     
 # user details form
-class UserDetailsForm(forms.ModelForm):
-
-    # a model form needs a model with at least one field but we don't want to show any of the user fields directly, just via NationBuildeer
-    # so we include a read-only and hidden token field 
-    class Meta:
-        model = NationBuilderPerson
-        fields = ['unique_token', ]
-    unique_token = forms.CharField(label = '', widget = forms.TextInput(attrs = { 'readonly': True, 'hidden': True, 'height': 1 }))
+class UserDetailsForm(forms.Form):
 
     # adds the tags and profile fields to the form in display order
     def __init__(self, *args, **kwargs):
