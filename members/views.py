@@ -215,7 +215,7 @@ class WellKnownFields:
         return names
 
 # returns a mailto link that creates an error email for the member to send    
-def error_mailto(name):
+def profile_error_mailto(name):
     return 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + name + '.'    
 
 # displays the member's profile page
@@ -318,7 +318,7 @@ def profile(request):
         'exclude_from_form': well_known_fields.all_names(),
         'hide_other_email': well_known_fields.other_email.value_string == well_known_fields.login_email.value_string,
         'member_in_nation_builder': member_in_nation_builder,
-        'error_mailto': error_mailto(member.name)
+        'error_mailto': profile_error_mailto(member.name)
         })
     
 # allows the member to enter a new login email and sends a verification email to it
@@ -401,6 +401,10 @@ def verify_login_email(request, login_email_verification_key):
     return render(request, 'members/verify_login_email.html', { 
         'form': form,
         'verification_key_found': verification_key_found })    
+
+# returns a mailto link that creates an error email for the member to send    
+def update_details_error_mailto(token):
+    return 'mailto:membership@peoplesmomentum.com?subject=Update%20details%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20update%20my%20details%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20details%20for%20' + token + '.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks.'    
 
 # displays the update details campaign pages
 def update_details(request, page):
@@ -536,7 +540,7 @@ def update_details(request, page):
         'tag_groups': tag_groups,
         'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],
         'user_in_nation_builder': user_in_nation_builder,
-        'error_mailto': error_mailto(''),  
+        'error_mailto': update_details_error_mailto(unique_token if unique_token else "[missing token]"),  
         'page': page })
 
 # returns the person dictionary if the web hook request is valid
