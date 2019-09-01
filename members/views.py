@@ -528,15 +528,20 @@ def update_details(request, page):
             
             else:
                 messages.error(request, 'Please correct the errors below.')
+                
+    # exclude the full name field and tag group unique token fields from the form 
+    exclude_from_form = [well_known_fields.full_name.field_path.replace('.', '__')]
+    if not fields_form:
+        exclude_from_form.append('unique_token')
     
     return render(request, 'members/update_details.html', { 
         'fields_page_header': campaign.fields_page_header,
         'fields_page_footer': campaign.fields_page_footer,
         'fields_form': fields_form,
         'tag_groups': tag_groups,
-        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__'), 'unique_token'],
+        'exclude_from_form': exclude_from_form,
         'user_in_nation_builder': user_in_nation_builder,
-        'error_mailto': error_mailto(''),
+        'error_mailto': error_mailto(''),  
         'page': page })
 
 # returns the person dictionary if the web hook request is valid
