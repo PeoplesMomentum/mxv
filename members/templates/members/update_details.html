@@ -11,7 +11,9 @@
     <div class="row">
         <div class="col-sm">
             {% if not user_in_nation_builder %}
-                Can't look up details, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a>
+                <p>Can't look up details, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a></p>
+            {% elif nation_builder_busy %}
+                <p>Sorry, the site is too busy right now to load your details.  Please <a href="{{ page_url }}">try again</a> in a little while.</p>
             {% else %}
                 <h5>Page {{ page }} of 2</h5><br/>
                 <form method="post" novalidate>
