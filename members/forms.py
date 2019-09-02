@@ -2,6 +2,7 @@ from django import forms
 from mxv.models import EmailSettings
 from members.models import Member, NationBuilderPerson
 from django.contrib.auth.hashers import check_password
+from django.utils.safestring import mark_safe
 
 # form for sending member activation email
 class SendMemberActivationEmailsForm(forms.ModelForm):
@@ -115,7 +116,7 @@ class UserDetailsForm(forms.Form):
         field = forms.BooleanField()
         
         # set the field parameters
-        field.label = tag.display_text
+        field.label = mark_safe(tag.display_text)
         field.initial = field.to_python(tag.value_string)
         field.required = False
         
