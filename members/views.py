@@ -533,7 +533,7 @@ def update_details(request, page):
                             tag_values[key] = tag_group_tag_values[key]
                     
                     # set and clear the tags
-                    tags_to_set = []
+                    tags_to_set = ['GE_updatedetails']
                     tags_to_clear = []
                     for tag_group in tag_groups:
                         for tag in tag_group.tags.all():
