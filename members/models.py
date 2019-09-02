@@ -160,6 +160,10 @@ class UpdateDetailsCampaign(SingletonModel):
                     field = self.fields.filter(matching_url_parameter_name = url_parameter.name).first()
                     if field:
                         value = field_values[field.field_path]
+                        
+                # set a default value if none was supplied in the request and one is set for the URL parameter
+                if (not value or value == '') and url_parameter.default_value_if_no_nation_builder_value:
+                    value = url_parameter.default_value_if_no_nation_builder_value
 
                 url_parameters_present.append((url_parameter.name, value))
         
@@ -222,9 +226,10 @@ class CampaignField(models.Model):
 # populated manually since the campaign is a singleton: 
 #   insert into members_urlparameter (consultation_id, name, nation_builder_value) select 1, name, nation_builder_value from mxv_defaulturlparameter;
 class UrlParameter(models.Model):
-    consultation = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
     nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
+    default_value_if_no_nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter if NationBuilder does not supply one')
     
     def __str__(self):
         return self.name
