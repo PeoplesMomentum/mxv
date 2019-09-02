@@ -140,14 +140,30 @@ class UpdateDetailsCampaign(SingletonModel):
     fields_page_footer = models.TextField()
     redirect_url = models.CharField(max_length = 255)
     
-    # returns the URL parameters as the parameter string of a URL
-    def url_parameter_string(self, request):
+    # returns the URL parameters as a URL parameter string with values from the request GET overridden by the profile fields 
+    def url_parameter_string(self, request, field_values = None):
         url_parameters_present = []
+        
+        # for each URL parameter...
         for url_parameter in self.url_parameters.all().order_by('name'):
+            
+            # if its name is in the GET...
             if url_parameter.name in request.GET:
-                name = url_parameter.name if not url_parameter.pass_on_name or url_parameter.pass_on_name == '' else url_parameter.pass_on_name
+                
+                # use the value from the GET
                 value = request.GET[url_parameter.name]
-                url_parameters_present.append((name, value))
+                
+                # possibly override the value if field values were supplied
+                if field_values:
+                
+                    # use the matching field value if present
+                    field = self.fields.filter(matching_url_parameter_name = url_parameter.name).first()
+                    if field:
+                        value = field_values[field.field_path]
+
+                url_parameters_present.append((url_parameter.name, value))
+        
+        # build the URL parameter string
         url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
         return url_parameter_string
 
@@ -194,6 +210,7 @@ class CampaignField(models.Model):
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
+    matching_url_parameter_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The name of the matching URL parameter to update when this field changes')
     display_order = models.IntegerField(default = next_campaign_field_display_order)
     value_string = ''
     
@@ -207,7 +224,6 @@ class CampaignField(models.Model):
 class UrlParameter(models.Model):
     consultation = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
-    pass_on_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'Set this to pass the parameter on with a different name')
     nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
     
     def __str__(self):
