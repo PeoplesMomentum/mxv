@@ -506,13 +506,13 @@ def update_details(request, page):
                 if fields_form.is_valid():
         
                     # get the extra field values
-                    profile_field_values = fields_form.profile_field_values()
+                    field_values = fields_form.profile_field_values()
             
                     # write the profile fields
-                    nb.SetFieldPathValues(user.nation_builder_id, profile_field_values)
-                 
+                    nb.SetFieldPathValues(user.nation_builder_id, field_values)
+                    
                     # redirect to page 2 (with all GET parameters re-encoded)
-                    url_parameter_string = campaign.url_parameter_string(request)
+                    url_parameter_string = campaign.url_parameter_string(request, field_values)
                     return HttpResponseRedirect('%s?%s' % (reverse('members:update_details', kwargs = {'page': 2}), url_parameter_string))
                 
                 else:
