@@ -1,6 +1,6 @@
 from django import forms
 from mxv.models import EmailSettings
-from members.models import Member, NationBuilderPerson
+from members.models import Member, ProfileFieldType
 from django.contrib.auth.hashers import check_password
 from django.utils.safestring import mark_safe
 from django.core.validators import RegexValidator
@@ -22,6 +22,9 @@ class MemberProfileForm(forms.ModelForm):
         model = Member
         fields = ['name', ]
     name = forms.CharField(label = '', widget = forms.TextInput(attrs = { 'readonly': True, 'hidden': True, 'height': 1 }))
+
+    # tracks which fields are negated
+    negated_field_paths = []
 
     # adds the profile fields to the form in display order
     def __init__(self, *args, **kwargs):
@@ -45,6 +48,15 @@ class MemberProfileForm(forms.ModelForm):
         field.initial = field.to_python(profile_field.value_string)
         field.required = profile_field.required
         
+        # validate phone number fields
+        if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
+            field.validators = [RegexValidator('^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
+        
+        # negate checkbox fields
+        if profile_field.field_type == 'Boolean' and profile_field.negate_value:
+            self.negated_field_paths.append(profile_field.field_path)
+            field.initial = True if field.initial == False else False
+        
         return(field)
     
     # turns a dotted field path into a valid field name
@@ -60,10 +72,19 @@ class MemberProfileForm(forms.ModelForm):
         values = {}
         for name, value in self.cleaned_data.items():
             values[self.name_to_field_path(name)] = value
+
+        # negate values for negated checkboxes
+        for field_path in values.keys():
+            if field_path in self.negated_field_paths:
+                values[field_path] = True if values[field_path] == False else False
+        
         return values
 
 # user details form
 class UserDetailsForm(forms.Form):
+    
+    # tracks which fields are negated
+    negated_field_paths = []
 
     # adds the tags and profile fields to the form in display order
     def __init__(self, *args, **kwargs):
@@ -93,8 +114,15 @@ class UserDetailsForm(forms.Form):
         field.label = mark_safe(profile_field.display_text)
         field.initial = field.to_python(profile_field.value_string)
         field.required = profile_field.required
+        
+        # validate phone number fields
         if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
             field.validators = [RegexValidator('^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
+        
+        # negate checkbox fields
+        if profile_field.field_type == 'Boolean' and profile_field.negate_value:
+            self.negated_field_paths.append(profile_field.field_path)
+            field.initial = True if field.initial == False else False
         
         return(field)
     
@@ -111,6 +139,12 @@ class UserDetailsForm(forms.Form):
         values = {}
         for name, value in self.cleaned_data.items():
             values[self.name_to_field_path(name)] = value
+        
+        # negate values for negated checkboxes
+        for field_path in values.keys():
+            if field_path in self.negated_field_paths:
+                values[field_path] = True if values[field_path] == False else False
+        
         return values
     
     # returns a field created from the tag
