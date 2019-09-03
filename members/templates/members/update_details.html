@@ -13,7 +13,7 @@
             {% if not user_in_nation_builder %}
                 <p>Can't look up details, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a></p>
             {% elif nation_builder_busy %}
-                <p>Sorry, the site is too busy right now to load your details.  Please <a href="{{ page_url }}">try again</a> in a little while.</p>
+                <p>Whoops, lots of people are getting involved at the moment and there was an error. Click <a href="{{ page_url }}">here</a> to try again.</p>
             {% else %}
                 <h5>Page {{ page }} of 2</h5><br/>
                 <form method="post" novalidate>
