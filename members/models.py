@@ -128,6 +128,7 @@ class ProfileField(models.Model):
     display_order = models.IntegerField(default = next_profile_field_display_order)
     admin_only = models.BooleanField(default = True)
     is_phone_number = models.BooleanField(default = False)
+    negate_value = models.BooleanField(default = False, help_text = 'Use with Checkbox fields only, returns True instead of False and vice versa')
     value_string = ''
     is_member_field = False
     
@@ -218,6 +219,7 @@ class CampaignField(models.Model):
     matching_url_parameter_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The name of the matching URL parameter to update when this field changes')
     display_order = models.IntegerField(default = next_campaign_field_display_order)
     is_phone_number = models.BooleanField(default = False)
+    negate_value = models.BooleanField(default = False, help_text = 'Use with Checkbox fields only, returns True instead of False and vice versa')
     value_string = ''
     
     # debug
