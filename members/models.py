@@ -127,6 +127,7 @@ class ProfileField(models.Model):
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = next_profile_field_display_order)
     admin_only = models.BooleanField(default = True)
+    is_phone_number = models.BooleanField(default = False)
     value_string = ''
     is_member_field = False
     
@@ -216,6 +217,7 @@ class CampaignField(models.Model):
     display_text = models.CharField(max_length = 255, default = '')
     matching_url_parameter_name = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The name of the matching URL parameter to update when this field changes')
     display_order = models.IntegerField(default = next_campaign_field_display_order)
+    is_phone_number = models.BooleanField(default = False)
     value_string = ''
     
     # debug
