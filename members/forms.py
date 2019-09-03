@@ -3,6 +3,7 @@ from mxv.models import EmailSettings
 from members.models import Member, NationBuilderPerson
 from django.contrib.auth.hashers import check_password
 from django.utils.safestring import mark_safe
+from django.core.validators import RegexValidator
 
 # form for sending member activation email
 class SendMemberActivationEmailsForm(forms.ModelForm):
@@ -60,7 +61,7 @@ class MemberProfileForm(forms.ModelForm):
         for name, value in self.cleaned_data.items():
             values[self.name_to_field_path(name)] = value
         return values
-    
+
 # user details form
 class UserDetailsForm(forms.Form):
 
@@ -81,7 +82,7 @@ class UserDetailsForm(forms.Form):
             tags.sort(key = lambda tag: tag.display_order)
             for tag in tags:
                 self.fields[tag.tag] = self.CreateFieldFromTag(tag)
-    
+        
     # returns a field created from the profile field
     def CreateFieldFromProfileField(self, profile_field):
         # create the field
@@ -92,6 +93,8 @@ class UserDetailsForm(forms.Form):
         field.label = profile_field.display_text
         field.initial = field.to_python(profile_field.value_string)
         field.required = profile_field.required
+        if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
+            field.validators = [RegexValidator('^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
         
         return(field)
     
