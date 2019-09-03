@@ -41,7 +41,7 @@ class MemberProfileForm(forms.ModelForm):
         field = field_class()
         
         # set the field parameters
-        field.label = profile_field.display_text
+        field.label = mark_safe(profile_field.display_text)
         field.initial = field.to_python(profile_field.value_string)
         field.required = profile_field.required
         
@@ -90,7 +90,7 @@ class UserDetailsForm(forms.Form):
         field = field_class()
         
         # set the field parameters
-        field.label = profile_field.display_text
+        field.label = mark_safe(profile_field.display_text)
         field.initial = field.to_python(profile_field.value_string)
         field.required = profile_field.required
         if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
