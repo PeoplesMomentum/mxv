@@ -38,4 +38,7 @@ urlpatterns = [
     
     # task queueing
     url(r'^django-rq/', include('django_rq.urls')),
+    
+    # short URL redirects so that the links can be used in SMS
+    url(r'^u/(?P<unique_token>[a-zA-Z0-9]+)/$', views.redirect_to_update_details, name = 'redirect_to_update_details'),
 ]
