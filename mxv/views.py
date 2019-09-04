@@ -9,6 +9,8 @@ from django.shortcuts import render, redirect
 from mxv.models import Reconsent
 from mxv.forms import ReconsentForm
 from django.contrib import messages
+from django.http.response import HttpResponseRedirect
+from django.urls.base import reverse
 
 
 # landing page
@@ -102,3 +104,7 @@ def reconsent_complete(request):
     return render(request, 'mxv/reconsent_complete.html', { 
         'title' : 'Re-consent complete'})
     
+# /u/[unique_token] redirects to /members/update_details/1?unique_token=[unique_token]
+def redirect_to_update_details(request, unique_token):
+    return HttpResponseRedirect('%s?unique_token=%s' % (reverse('members:update_details', kwargs = {'page': 1}), unique_token))
+
