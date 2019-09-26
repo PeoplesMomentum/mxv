@@ -78,7 +78,6 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name
 
-    # debug
     def __str__(self):
         return self.email
     
@@ -102,7 +101,6 @@ class NationBuilderPerson(models.Model):
     unique_token = models.CharField(max_length = unique_token_length, default = unused_unique_token)
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
 
-    # debug
     def __str__(self):
         return '%s - %s (%s, %s)' % ('Member' if self.member else 'Supporter', self.email, self.unique_token, str(self.nation_builder_id) if self.nation_builder_id else '')
 
@@ -129,10 +127,13 @@ class ProfileField(models.Model):
     admin_only = models.BooleanField(default = True)
     is_phone_number = models.BooleanField(default = False)
     negate_value = models.BooleanField(default = False, help_text = 'Use with Checkbox fields only, returns True instead of False and vice versa')
-    value_string = ''
-    is_member_field = False
     
-    # debug
+    # defines instance-level non-database fields
+    def __init__(self, *args, **kwargs):
+        super(ProfileField, self).__init__(*args, **kwargs)
+        self.value_string = ''
+        self.is_member_field = False
+    
     def __str__(self):
         return '%d - %s = %s' % (self.display_order, self.field_path, self.value_string)
 
@@ -199,7 +200,11 @@ class CampaignTag(models.Model):
     display_text = models.CharField(max_length = 255)
     tag = models.CharField(max_length = 255)
     display_order = models.IntegerField(default = next_campaign_tag_display_order)
-    value_string = ''
+    
+    # defines instance-level non-database fields
+    def __init__(self, *args, **kwargs):
+        super(CampaignTag, self).__init__(*args, **kwargs)
+        self.value_string = ''
       
     def __str__(self):
         return '%d - %s / %s = %s' % (self.display_order, self.display_text, self.tag, self.value_string)
@@ -220,9 +225,12 @@ class CampaignField(models.Model):
     display_order = models.IntegerField(default = next_campaign_field_display_order)
     is_phone_number = models.BooleanField(default = False)
     negate_value = models.BooleanField(default = False, help_text = 'Use with Checkbox fields only, returns True instead of False and vice versa')
-    value_string = ''
     
-    # debug
+    # defines instance-level non-database fields
+    def __init__(self, *args, **kwargs):
+        super(CampaignField, self).__init__(*args, **kwargs)
+        self.value_string = ''
+    
     def __str__(self):
         return '%d - %s = %s' % (self.display_order, self.field_path, self.value_string)
     
