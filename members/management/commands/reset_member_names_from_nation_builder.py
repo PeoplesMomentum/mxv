@@ -36,20 +36,23 @@ class Command(BaseCommand):
         # set up logging
         self.log_filename = options['log_filename']
         self.log('Log file: %s' % self.log_filename, new = True)
-        self.log('Dry run:  %s' % 'True' if dry_run else 'False')
+        self.log('Dry run:  %s' % ('True' if dry_run else 'False'))
         self.log()
         
-        # for each member...
         processed = 0
         no_person = 0
         no_nation_builder_id = 0
         identical = 0
         different = 0
+
+        # for each member...
         members = Member.objects.using('live').all()
         total = members.count()
         for member in members:
+            result = ''
+            name = ''
+            nation_builder_id = None
             try:
-                result = ''
                 
                 # get the NationBuilder id
                 person = member.nation_builder_person
