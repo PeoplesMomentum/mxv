@@ -191,29 +191,6 @@ def request_activation_email(request):
     return render(request, 'members/request_activation_email.html', { 
         'form': form })
 
-# well-known fields are always displayed on the profile
-class WellKnownFields:
-    full_name = ProfileField(field_path = 'person.full_name', display_text = 'Full name', field_type = 'Char', required = True, admin_only = False)
-    first_name = ProfileField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
-    last_name = ProfileField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
-    login_email = ProfileField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
-    other_email = ProfileField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
-    
-    # sets login email to be a member field instead of a nation builder field
-    def __init__(self):
-        self.login_email.is_member_field = True
-    
-    # returns all the well-known fields
-    def all(self):
-        return [self.full_name, self.first_name, self.last_name, self.login_email, self.other_email]
-    
-    # returns all the well-known fields' names (in valid field name format)
-    def all_names(self):
-        names = []
-        for field in self.all():
-            names.append(field.field_path.replace('.', '__'))
-        return names
-
 # returns a mailto link that creates an error email for the member to send    
 def profile_error_mailto(name):
     return 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + name + '.'    
@@ -231,6 +208,30 @@ def profile(request):
     # calculate the full page URL in case it's needed for user-initiated reloading
     page_url = reverse('members:profile')
 
+    # well-known fields are always displayed on the profile
+    class WellKnownFields:
+        full_name = ProfileField(field_path = 'person.full_name', display_text = 'Full name', field_type = 'Char', required = True, admin_only = False)
+        first_name = ProfileField(field_path = 'person.first_name', display_text = 'First name', field_type = 'Char', required = True, admin_only = False)
+        last_name = ProfileField(field_path = 'person.last_name', display_text = 'Last name', field_type = 'Char', required = True, admin_only = False)
+        login_email = ProfileField(field_path = 'email', display_text = 'Login email', field_type = 'Email', required = True, admin_only = False)
+        other_email = ProfileField(field_path = 'person.email', display_text = 'Other email', field_type = 'Email', required = True, admin_only = False)
+        
+        # sets login email to be a member field instead of a nation builder field
+        def __init__(self, *args, **kwargs):
+            super(WellKnownFields, self).__init__(*args, **kwargs)
+            self.login_email.is_member_field = True
+        
+        # returns all the well-known fields
+        def all(self):
+            return [self.full_name, self.first_name, self.last_name, self.login_email, self.other_email]
+        
+        # returns all the well-known fields' names (in valid field name format)
+        def all_names(self):
+            names = []
+            for field in self.all():
+                names.append(field.field_path.replace('.', '__'))
+            return names
+    
     # build the profile fields from the well-known fields and profile fields
     well_known_fields = WellKnownFields()
     profile_fields = well_known_fields.all()        
@@ -314,7 +315,7 @@ def profile(request):
                         profile_field.value_string = field_path_value(member_fields, profile_field.field_path)
     
                 # update member name here in case first or last name have been edited here or in nation builder
-                nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
+                nb_full_name = field_path_value(member_fields, well_known_fields.full_name.field_path)
                 if nb_full_name != member.name and nb_full_name != '':
                     member.name = nb_full_name
                     member.save()
@@ -423,6 +424,7 @@ def update_details(request, page):
     campaign = UpdateDetailsCampaign.get_solo()
     page = int(page)
     fields_form = None
+    full_name_field_path = 'person.full_name'
 
     # calculate the full page URL with URL parameters in case it's needed for user-initiated reloading
     url_parameter_string = campaign.url_parameter_string(request)
@@ -443,11 +445,9 @@ def update_details(request, page):
         # get the fields for the page
         tag_groups = None
         profile_fields = None
-        well_known_fields = WellKnownFields()
         if page == 1:
-            # build the profile fields from the well-known full name field and the campaign fields
+            # build the profile fields from the campaign fields
             profile_fields = list(campaign.fields.all())
-            profile_fields.append(well_known_fields.full_name)
         elif page == 2:
             # get all the tag groups
             tag_groups = list(campaign.tag_groups.all())
@@ -456,31 +456,34 @@ def update_details(request, page):
             # if the user is known in nation builder...
             if user_in_nation_builder:
             
+                # get the user's NationBuilder record
+                user_fields = nb.PersonFieldsAndValues(user.nation_builder_id)
+                
+                # returns the field's value or an empty string
+                def field_path_value(fields, field_path):
+                    values = [field[1] for field in fields if field[0] == field_path]
+                    return values[0] if len(values) > 0 else ''
+                
+                # update member name here in case first or last name have been edited here or in nation builder
+                if user.member:
+                    nb_full_name = field_path_value(user_fields, full_name_field_path)
+                    if nb_full_name != user.member.name and nb_full_name != '':
+                        user.member.name = nb_full_name
+                        user.member.save()
+ 
                 if page == 1:
-                    # get the user's NationBuilder record
-                    user_fields = nb.PersonFieldsAndValues(user.nation_builder_id)
-                    
-                    # returns the field's value or an empty string
-                    def field_path_value(fields, field_path):
-                        values = [field[1] for field in fields if field[0] == field_path]
-                        return values[0] if len(values) > 0 else ''
-                    
                     # set values for the profile fields
                     for profile_field in profile_fields:
                         profile_field.value_string = field_path_value(user_fields, profile_field.field_path)
                         
-                    # update member name here in case first or last name have been edited here or in nation builder
-                    if user and user.member:
-                        nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
-                        if nb_full_name != user.member.name and nb_full_name != '':
-                            user.member.name = nb_full_name
-                            user.member.save()
-     
+                    # build the fields form
                     fields_form = UserDetailsForm(prefix = 'fields', profile_fields = profile_fields)
                     
                 elif page == 2:          
                     # get the tags
                     member_tags = nb.GetPersonTags(user.nation_builder_id)
+                    
+                    # get the tag values and build the tag forms
                     for tag_group in tag_groups:
                         tags = list(tag_group.tags.all())
                         for tag in tags:
@@ -488,19 +491,6 @@ def update_details(request, page):
                         tag_group.form = UserDetailsForm(prefix = 'tags%d' % tag_group.display_order, tags = tags)
         else:
             if page == 1:    
-                # we're assuming here that there must be a user if there is a POST
-                if profile_fields:
-                    # update member name here in case first or last name have been edited here or in nation builder
-                    # (not redirecting back to here after successful post so can't deal with this in the GET as we do for the profile page)
-                    if user and user.member:
-                        nb_full_name = [field.value_string for field in profile_fields if field.field_path == well_known_fields.full_name.field_path][0]
-                        if nb_full_name != user.member.name and nb_full_name != '':
-                            user.member.name = nb_full_name
-                            user.member.save()
-        
-                    # remove the full_name field as it is only there so that nation builder name changes can be detected during a GET
-                    profile_fields.remove(well_known_fields.full_name)
-    
                 # if the fields form is valid...
                 fields_form = UserDetailsForm(request.POST, prefix = 'fields', profile_fields = profile_fields)
                 if fields_form.is_valid():
@@ -560,7 +550,7 @@ def update_details(request, page):
         'fields_page_footer': campaign.fields_page_footer,
         'fields_form': fields_form,
         'tag_groups': tag_groups,
-        'exclude_from_form': [well_known_fields.full_name.field_path.replace('.', '__')],
+        'exclude_from_form': [],
         'user_in_nation_builder': user_in_nation_builder,
         'nation_builder_busy': nation_builder_busy,
         'page_url': page_url,

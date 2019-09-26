@@ -64,3 +64,41 @@ select * from crosstab(
 -- voters with choices <> 6
 select email, count(*) from members_member m inner join consultations_vote v on m.id = v.member_id inner join consultations_consultation co on v.consultation_id = co.id inner join consultations_answer a on v.id = a.vote_id inner join consultations_choice ch on a.choice_id = ch.id inner join consultations_question q on ch.question_id = q.id where co.id = 1 group by email having count(*) <> 6 order by count(*) desc;
 
+-- consultation 3 votes (1654)
+
+\copy (
+select * from crosstab(
+    'select distinct m.name, m.email, nb.nation_builder_id, q.number, ch.display_order
+    from    members_member m 
+            left outer join members_nationbuilderperson nb on m.id = nb.member_id
+            inner join consultations_vote v on m.id = v.member_id 
+            inner join consultations_consultation co on v.consultation_id = co.id
+            left outer join consultations_answer a on v.id = a.vote_id 
+            inner join consultations_choice ch on a.choice_id = ch.id
+            inner join consultations_question q on a.question_id = q.id        
+    where co.id = 3
+    order by 1,2',
+    $$values ('1'::text), ('2'::text)$$ 
+    ) as ct("Name" text, "Email" text, "NationBuilder Id" int, "Q1" int, "Q2" int)
+) to '~/Desktop/consultation_3_voters_and_choices.csv' CSV 
+
+\copy (select * from crosstab('select distinct m.name, m.email, nb.nation_builder_id, q.number, ch.display_order from    members_member m left outer join members_nationbuilderperson nb on m.id = nb.member_id inner join consultations_vote v on m.id = v.member_id inner join consultations_consultation co on v.consultation_id = co.id left outer join consultations_answer a on v.id = a.vote_id inner join consultations_choice ch on a.choice_id = ch.id inner join consultations_question q on a.question_id = q.id        where co.id = 3 order by 1,2',$$values ('1'::text), ('2'::text)$$ ) as ct("Name" text, "Email" text, "NationBuilder Id" int, "Q1" int, "Q2" int)) to '~/Desktop/consultation_3_voters_and_choices.csv' CSV
+ 
+-- consultation 3 votes without any answers
+select count(*) from consultations_vote v left outer join consultations_answer a on v.id = a.vote_id where v.consultation_id = 3 and a.vote_id is null; -- 283
+
+
+
+
+-- consultation 3 voters with at least one answer to a question (1697)
+\copy (
+select distinct m.name, m.email 
+from    members_member m 
+        inner join consultations_vote v on m.id = v.member_id 
+        inner join consultations_consultation c on v.consultation_id = c.id
+        inner join consultations_answer a on v.id = a.vote_id 
+where c.id = 3) 
+to '~/Desktop/consultation_3_voters.csv' CSV FORCE QUOTE name, email
+
+\copy (select distinct m.name, m.email from    members_member m inner join consultations_vote v on m.id = v.member_id inner join consultations_consultation c on v.consultation_id = c.id inner join consultations_answer a on v.id = a.vote_id where c.id = 3) to '~/Desktop/consultation_3_voters.csv' CSV FORCE QUOTE name, email
+
