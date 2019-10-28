@@ -19,12 +19,10 @@
                     {% csrf_token %}
                     
                     <!-- name -->
-                    <h5 class="mb-4">Name</h5>
                     {% include 'mxv/includes/form_field.html' with field=form.person__first_name %}
                     {% include 'mxv/includes/form_field.html' with field=form.person__last_name %}
                     
                     <!-- emails -->
-                    <h5 class="mb-4">Email</h5>
                     {% include 'mxv/includes/form_field.html' with field=form.email|attr:"readonly:True" %}
                     {% if not hide_other_email %}
                         {% include 'mxv/includes/form_field.html' with field=form.person__email|attr:"readonly:True" %}
@@ -35,10 +33,9 @@
                     {% endif %}
                     
                     <!-- change login email -->
-                    <a href="{% url 'members:change_login_email' %}" class="btn btn-primary mb-4">Change login email</a>
+                    <a href="{% url 'members:change_login_email' %}" class="btn btn-primary">Change login email</a>
                                  
                     <!-- extra fields -->
-                    <h5 class="mb-4">Other</h5>
                     {% include 'mxv/includes/form.html' with exclude_from_form=exclude_from_form %}
                     <button type="submit" class="btn btn-success">Save changes</button>
                 </form>

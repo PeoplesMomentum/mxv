@@ -250,3 +250,9 @@ PROFILES_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_PROFILES_VISIBLE_TO_
 # get the secret used by the NationBuilder web hooks
 WEB_HOOK_SECRET = os.environ.get('MXV_WEB_HOOK_SECRET', 'mxv')
 
+# NCG voting
+NCG_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_NCG_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+NCG_VOTING_URL = os.environ.get('MXV_NCG_VOTING_URL', '')
+NCG_VOTING_IV = os.environ.get('MXV_NCG_VOTING_IV', '')
+NCG_VOTING_KEY = os.environ.get('MXV_NCG_VOTING_KEY', '')
+

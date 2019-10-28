@@ -156,7 +156,7 @@ class ProfileFieldAdmin(admin.ModelAdmin):
         form.current_user = request.user
         return form
         
-    list_display = ('display_order', 'display_text', 'field_path', 'field_type', 'required', 'admin_only')
+    list_display = ('display_order', 'display_text', 'field_path', 'field_type', 'required', 'admin_only', 'is_phone_number', 'negate_value')
     ordering = ('display_order', )
 
 # campaign tag admin
