@@ -116,30 +116,35 @@ def redirect_to_update_details(request, unique_token):
 @login_required
 def ncg_election(request):
     
-    # redirect to index if not voting
-    if not NCG_VOTING_VISIBLE_TO_NON_STAFF and not request.user.is_staff:
+    try:  
+        # redirect to index if not voting
+        if not NCG_VOTING_VISIBLE_TO_NON_STAFF and not request.user.is_staff:
+            return redirect('index')
+        
+        # get the member's NationBuilder id
+        member = request.user
+        if not member.nation_builder_person.nation_builder_id:
+            nb = NationBuilder()
+            member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
+            member.nation_builder_person.save()
+        
+        # redirect to profile if no NationBuilder id as that page has help for this situation
+        if member.nation_builder_person.nation_builder_id == None:
+            return redirect('members:profile')
+    
+        # encrypt the NationBuilder id    
+        cypher = SimpleEncryption(NCG_VOTING_IV, NCG_VOTING_KEY)
+        encrypted_nb_id = cypher.encrypt(str(member.nation_builder_person.nation_builder_id))
+        
+        # redirect to voting page
+        response = redirect(NCG_VOTING_URL)
+    
+        # create cookie of encrypted NationBuilder id for top-level domain
+        response.set_cookie('nb_id', encrypted_nb_id, domain = 'peoplesmomentum.com')
+    
+        return response
+    
+    except:
         return redirect('index')
     
-    # get the member's NationBuilder id
-    member = request.user
-    if not member.nation_builder_person.nation_builder_id:
-        nb = NationBuilder()
-        member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
-        member.nation_builder_person.save()
     
-    # redirect to profile if no NationBuilder id as that page has help for this situation
-    if member.nation_builder_person.nation_builder_id == None:
-        return redirect('members:profile')
-
-    # encrypt the NationBuilder id    
-    cypher = SimpleEncryption(NCG_VOTING_IV, NCG_VOTING_KEY)
-    encrypted_nb_id = cypher.encrypt(str(member.nation_builder_person.nation_builder_id))
-    
-    # redirect to voting page
-    response = redirect(NCG_VOTING_URL)
-
-    # create cookie of encrypted NationBuilder id for top-level domain
-    response.set_cookie('nb_id', encrypted_nb_id, domain = 'peoplesmomentum.com')
-
-    return response
-
