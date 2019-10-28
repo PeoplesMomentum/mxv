@@ -41,4 +41,7 @@ urlpatterns = [
     
     # short URL redirects so that the links can be used in SMS
     url(r'^u/(?P<unique_token>[a-zA-Z0-9]+)/$', views.redirect_to_update_details, name = 'redirect_to_update_details'),
+    
+    # NCG voting redirect
+    url(r'^ncg_election/$', views.ncg_election, name = 'ncg_election'),
 ]
