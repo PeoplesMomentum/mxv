@@ -124,7 +124,7 @@ class ProfileField(models.Model):
     required = models.BooleanField(default = False)
     display_text = models.CharField(max_length = 255, default = '')
     display_order = models.IntegerField(default = next_profile_field_display_order)
-    admin_only = models.BooleanField(default = True)
+    admin_only = models.BooleanField(default = False)
     is_phone_number = models.BooleanField(default = False)
     negate_value = models.BooleanField(default = False, help_text = 'Use with Checkbox fields only, returns True instead of False and vice versa')
     
