@@ -323,6 +323,7 @@ def profile(request):
             form = MemberProfileForm(instance = member, profile_fields = profile_fields)
     except:
         nation_builder_busy = True
+        member_in_nation_builder = False
         
     return render(request, 'members/profile.html', { 
         'form': form,
@@ -375,20 +376,26 @@ def login_email_verification_sent(request):
 # lets the member log in with their new login email
 @login_required
 def verify_login_email(request, login_email_verification_key):
-    verification_key_found = True
+
+    # get the member for the verification key
+    member = Member.objects.filter(login_email_verification_key = login_email_verification_key).first()
     
     # if valid post...
-    if request.method == 'POST':
-        form = VerifyEmailForm(request = request, data = request.POST)
+    if member and request.method == 'POST':
+        form = VerifyEmailForm(password_digest = member.password, data = request.POST)
         if form.is_valid():
             
             # change the login email and clear the key and new email from the member's record
-            member = request.user
             member.email = member.new_login_email
-            member.nation_builder_person.email = member.new_login_email
             member.new_login_email = None
             member.login_email_verification_key = None
             member.save()
+
+            # remove any supporter records for the member's new email and update their nation builder link
+            supporter = NationBuilderPerson.objects.filter(email = member.email, member__isnull = True).first()
+            if supporter:
+                supporter.delete()
+            member.nation_builder_person.email = member.email
             member.nation_builder_person.save()
             
             # change the nation builder email
@@ -403,17 +410,14 @@ def verify_login_email(request, login_email_verification_key):
             #show errors
             messages.error(request, 'Please correct the errors below.')
     else:
-        # get the member for the verification key
-        member = Member.objects.filter(login_email_verification_key = login_email_verification_key).first()
         if member:
-            form = VerifyEmailForm(request = request, initial = {'email': member.new_login_email})
+            form = VerifyEmailForm(password_digest = member.password, initial = {'email': member.new_login_email})
         else:            
-            verification_key_found = False
-            form = VerifyEmailForm()
+            form = VerifyEmailForm(password_digest = '')
 
     return render(request, 'members/verify_login_email.html', { 
         'form': form,
-        'verification_key_found': verification_key_found })    
+        'verification_key_found': member != None })    
 
 # returns a mailto link that creates an error email for the member to send    
 def update_details_error_mailto(token):

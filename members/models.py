@@ -79,7 +79,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return self.name
 
     def __str__(self):
-        return self.email
+        return '%s (%s)' % (self.name, self.email)
     
     @property
     def is_staff(self):
