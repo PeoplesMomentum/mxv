@@ -173,13 +173,13 @@ class VerifyEmailForm(forms.Form):
     
     # stores the request
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
+        self.password_digest = kwargs.pop('password_digest')
         super(VerifyEmailForm, self).__init__(*args, **kwargs)
         
     # checks the entered password against the member's password
     def clean(self):
         form_data = self.cleaned_data
-        if not check_password(form_data['password'], self.request.user.password):
+        if not check_password(form_data['password'], self.password_digest):
             self._errors["password"] = ["Password is incorrect"]
             del form_data['password']
         return form_data
