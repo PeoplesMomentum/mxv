@@ -323,6 +323,7 @@ def profile(request):
             form = MemberProfileForm(instance = member, profile_fields = profile_fields)
     except:
         nation_builder_busy = True
+        member_in_nation_builder = False
         
     return render(request, 'members/profile.html', { 
         'form': form,
@@ -386,10 +387,15 @@ def verify_login_email(request, login_email_verification_key):
             
             # change the login email and clear the key and new email from the member's record
             member.email = member.new_login_email
-            member.nation_builder_person.email = member.new_login_email
             member.new_login_email = None
             member.login_email_verification_key = None
             member.save()
+
+            # remove any supporter records for the member's new email and update their nation builder link
+            supporter = NationBuilderPerson.objects.filter(email = member.email, member__isnull = True).first()
+            if supporter:
+                supporter.delete()
+            member.nation_builder_person.email = member.email
             member.nation_builder_person.save()
             
             # change the nation builder email
