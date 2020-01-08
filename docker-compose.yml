@@ -1,0 +1,16 @@
+version: "3"
+services:
+  mxv_postgres:
+    image: kartoza/postgis:latest
+    hostname: postgres
+    volumes:
+        - mxv_postgres:/var/lib/postgresql
+    ports:
+        - 5432:5432
+    environment:
+        - POSTGRES_PASS=mxv
+        - POSTGRES_USER=mxv
+        - POSTGRES_DBNAME=mxv
+volumes:
+  mxv_postgres:
+    external: true

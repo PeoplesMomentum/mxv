@@ -27,15 +27,17 @@ Do you have development skills (see below for the technologies we've used)?  The
 1. `git clone https://github.com/PeoplesMomentum/mxv.git` to get the code.
 2. `cd mxv`, `pipenv --three` and `pipenv install` to configure a virtual environment.
 3. `pipenv shell` to start the virtual environment (you'll want to do this whenever working on the app).
-4. `python manage.py collectstatic` to complete local Django setup.
-5. Create a Postgres database called 'mxv' and a Postgres user called 'mxv' with a password of 'mxv' and grant all permissions to that user in the new database (these settings are only for the local database so don't worry about the obvious password!).  Here are the commands to use in `psql`:
+4. Copy the example environment file in in `configs/example.env` to `mxv/.env`
+5. `python manage.py collectstatic` to complete local Django setup.
+6a. Run `docker-compose up` to create the database if you have docker installed. OR:
+6b. Create a Postgres database called 'mxv' and a Postgres user called 'mxv' with a password of 'mxv' and grant all permissions to that user in the new database (these settings are only for the local database so don't worry about the obvious password!).  Here are the commands to use in `psql`:
 	- `create database mxv;`
 	- `create user mxv with password 'mxv';`
 	- `grant all privileges on database mxv to mxv;`
 	- `alter user mxv createdb;`
-6. `python manage.py migrate` to populate the database with tables by running the migrations.
-7. `python manage.py createsuperuser` to add yourself as an admin.
-8. `python manage.py runserver` to run the application locally.
+7. `python manage.py migrate` to populate the database with tables by running the migrations.
+8. `python manage.py createsuperuser` to add yourself as an admin.
+9. `python manage.py runserver` to run the application locally.
 	- Site accessible at [http://localhost:8000](http://localhost:8000).
 	- Admin site accessible at [http://localhost:8000/admin](http://localhost:8000/admin).
 
