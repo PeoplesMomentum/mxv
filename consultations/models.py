@@ -45,7 +45,7 @@ class Consultation(models.Model):
         if today < self.voting_start:
             return 'Voting on this consultation will be starting on %s.' % formats.date_format(self.voting_start, 'l jS F')
         elif self.voting_in_range():
-            return 'Voting on this consultation is now live - and closes at midnight on %s.' % formats.date_format(self.voting_end, 'l jS F')
+            return 'Voting on this consultation is now live.'
         else:
             return 'Voting on this consultation has ended.'
     
