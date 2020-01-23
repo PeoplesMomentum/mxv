@@ -26,6 +26,7 @@ Do you have development skills (see below for the technologies we've used)?  The
 
 1. `git clone https://github.com/PeoplesMomentum/mxv.git` to get the code.
 2. `cd mxv`, `pipenv --three` and `pipenv install` to configure a virtual environment.
+2a. If you have an error with -lssl, see https://stackoverflow.com/questions/11538249/python-pip-install-psycopg2-install-error
 3. `pipenv shell` to start the virtual environment (you'll want to do this whenever working on the app).
 4. Copy the example environment file in in `configs/example.env` to `mxv/.env`
 5. `python manage.py collectstatic` to complete local Django setup.
