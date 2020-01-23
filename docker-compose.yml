@@ -11,6 +11,8 @@ services:
         - POSTGRES_PASS=mxv
         - POSTGRES_USER=mxv
         - POSTGRES_DBNAME=mxv
+        - POSTGRES_MULTIPLE_EXTENSIONS=citext
+        - POSTGRES_TEMPLATE_EXTENSIONS=true
 volumes:
   mxv_postgres:
     external: true
