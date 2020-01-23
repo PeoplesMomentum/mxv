@@ -40,7 +40,7 @@ def index(request):
             url_parameters_present = []
             for url_parameter in vote.url_parameters.all():
                 if url_parameter.name in request.GET:
-                    name = url_parameter.name if url_parameter.pass_on_name == '' else url_parameter.pass_on_name
+                    name = url_parameter.pass_on_name if url_parameter.pass_on_name else url_parameter.name
                     value = request.GET[url_parameter.name]
                     url_parameters_present.append((name, value))
             url_parameter_string = '&'.join('='.join(present) for present in url_parameters_present)
