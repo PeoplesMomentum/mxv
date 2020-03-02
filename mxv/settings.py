@@ -174,6 +174,9 @@ AUTH_USER_MODEL = 'members.Member'
 # get the secret used by the join page to create inactive members
 CREATE_INACTIVE_MEMBER_SECRET = os.environ.get('MXV_CREATE_INACTIVE_MEMBER_SECRET', 'mxv')
 
+# get the secret used by the GDPR tool to delete members
+GDPR_TOOL_SECRET = os.environ.get('MXV_GDPR_TOOL_SECRET', 'mxv')
+
 # set up HTML editor
 TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",

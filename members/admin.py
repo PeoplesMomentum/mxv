@@ -76,6 +76,7 @@ class MemberAdmin(BaseUserAdmin):
         ('Personal info', {'fields': ('name',)}),
         ('Permissions', {'fields': ('is_superuser', 'is_ncg', 'is_members_council')}),
         ('Important dates', {'fields': ('last_login',)}),
+        ('GDPR', {'fields': ('is_anonymised',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -88,7 +89,8 @@ class MemberAdmin(BaseUserAdmin):
     search_fields = ('email', 'name')
     ordering = ('email',)
     filter_horizontal = ()
-    readonly_fields = ('activation_key', 'last_login', 'last_emailed', )
+    readonly_fields = ('activation_key', 'last_login', 'last_emailed','is_anonymised' )
+    actions = ['make_anonymised']
 
     # sends the activation email to the member
     def response_change(self, request, obj):
@@ -110,6 +112,10 @@ class MemberAdmin(BaseUserAdmin):
                     messages.error(request, repr(e))
 
             messages.info(request, "%d member%s emailed" % (sent, 's' if sent != 1 else ''))
+        
+        # if a post requesting the member be anonymised...
+        if request.method == 'POST' and 'anonymise_member' in request.POST:
+            member.anonymise_user()
             
         # call the inherited
         return admin.ModelAdmin.response_change(self, request, obj)

@@ -66,6 +66,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     is_members_council = models.BooleanField(default=False, verbose_name = "Members' council (can act on behalf of the member's council)")
     new_login_email = CIEmailField(max_length=255, blank=True, null=True, default=None)
     login_email_verification_key = models.CharField(max_length=activation_key_length, blank=True, null=True, default=None)
+    is_anonymised = models.BooleanField(default=False, verbose_name = "Personal data has been anonymised")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
@@ -80,7 +81,14 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.email)
-    
+    anonymise_string_length = 20
+    def anonymise_user(self):
+        self.name = get_random_string(self.anonymise_string_length)
+        self.email = get_random_string(self.anonymise_string_length) +'@void.com'
+        self.is_active = False
+        self.is_anonymised = True
+        self.save()
+
     @property
     def is_staff(self):
         return self.is_superuser

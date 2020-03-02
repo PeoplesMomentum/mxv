@@ -6,7 +6,7 @@ from django.contrib.admin import site
 from members.forms import SendMemberActivationEmailsForm, MemberProfileForm, VerifyEmailForm, UserDetailsForm
 from django.contrib import messages
 from django.urls import reverse
-from mxv.settings import JOIN_URL, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF, WEB_HOOK_SECRET
+from mxv.settings import JOIN_URL, GDPR_TOOL_SECRET, CREATE_INACTIVE_MEMBER_SECRET, PROFILES_VISIBLE_TO_NON_STAFF, WEB_HOOK_SECRET
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, redirect
@@ -21,6 +21,30 @@ from django.db.models import Q
 # signals that a conflict occurred
 class HttpResponseConflict(HttpResponse):
     status_code = 409
+
+# anonymises a member by email address (post with email and secret)
+@csrf_exempt
+def anonymise_member(request):
+    if request.method == 'POST' and request.POST['secret'] == GDPR_TOOL_SECRET:
+        if Member.objects.filter(email = request.POST['email']).exists():
+            [r.anonymise_user() for r in Member.objects.filter(email = request.POST['email'])]
+            return HttpResponse(content = 'Anonymised member with email address ' + request.POST['email'])
+        else:
+            return HttpResponse(content = 'No record with email address ' + request.POST['email'])
+    else:
+            return HttpResponseForbidden()
+
+# anonymises a member by email address (post with email and secret)
+@csrf_exempt
+def delete_member(request):
+    if request.method == 'POST' and request.POST['secret'] == GDPR_TOOL_SECRET:
+        if Member.objects.filter(email = request.POST['email']).exists():
+            Member.objects.filter(email = request.POST['email']).delete()
+            return HttpResponse(content = 'Deleted member with email address ' + request.POST['email'])
+        else:
+            return HttpResponse(content = 'No record with email address ' + request.POST['email'])
+    else:
+            return HttpResponseForbidden()
 
 # creates an inactive member for the email and name (POST with email, name and secret)
 @csrf_exempt
