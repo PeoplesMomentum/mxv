@@ -6,6 +6,9 @@ urlpatterns = [
     # called by the join page
     url(r'^create_inactive_member/$', views.create_inactive_member, name='create_inactive_member'), 
     
+    # called by GDPR tool
+    url(r'^anonymise_member/$', views.anonymise_member, name='anonymise_member'),
+    
     # activation
     url(r'^request_activation_email/$', views.request_activation_email, name='request_activation_email'), 
     url(r'^activate/(?P<activation_key>[a-zA-Z0-9]+)/$', views.activate, name='activate'),  
