@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "087a207ccb08342ce73d4941f9ba4e805828dd4f8fd8f56577f3c17f6c7e5767"
+            "sha256": "c9969a86122cbfc1fdebb4bdd56c45a893b0e9674d60e59f32f9be1282c8dca9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -58,11 +58,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:52a66d7f8b036d02da0a4472359e8be1727424fc1e4b4f5c684ef97de7b569e1",
-                "sha256:c85b8c95366e187ca0581d45a6e508107ca4bd38cb45c24aa09d3572074c523d"
+                "sha256:014e3392058d94f40569206a24523ce254d55ad2f9f46c6550b0fe2e4f94cf3f",
+                "sha256:4200aefb6678019a0acf0005cd14cfce3a5e6b9b90d06145fcdd2e474ad4329c"
             ],
             "index": "pypi",
-            "version": "==1.11.23"
+            "version": "==1.11.29"
         },
         "django-anymail": {
             "hashes": [
@@ -196,11 +196,11 @@
         },
         "python-dotenv": {
             "hashes": [
-                "sha256:debd928b49dbc2bf68040566f55cdb3252458036464806f4094487244e2a4093",
-                "sha256:f157d71d5fec9d4bd5f51c82746b6344dffa680ee85217c123f4a0c8117c4544"
+                "sha256:25c0ff1a3e12f4bde8d592cc254ab075cfe734fc5dd989036716fd17ee7e5ec7",
+                "sha256:3b9909bc96b0edc6b01586e1eed05e71174ef4e04c71da5786370cebea53ad74"
             ],
             "index": "pypi",
-            "version": "==0.10.3"
+            "version": "==0.13.0"
         },
         "python-monkey-business": {
             "hashes": [
