@@ -2,7 +2,7 @@ from Crypto.Cipher import AES
 import base64
 import hashlib
 
-# key or IV generation (from https://pypi.org/project/pycrypto/): 
+# key or IV generation (from https://pypi.org/project/pycryptodome/): 
 #
 # from django.utils.crypto import get_random_string
 # get_random_string(50)
