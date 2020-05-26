@@ -9,6 +9,7 @@
   "private": false,
   "scripts": {
     "develop": "yarn python manage.py runserver",
+    "migrate": "yarn python manage.py makemigrations questions && yarn python manage.py migrate",
     "psql": "psql -U mxv",
     "python": "pipenv run python"
   }

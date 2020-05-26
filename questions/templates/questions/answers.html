@@ -1,0 +1,59 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Answers{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'questions:index' %}">Questions</a></li>
+    <li class="breadcrumb-item active">Answers</li>
+{% endblock %}
+
+{% block content %}
+    <p>Answers to question: <i>{{ question.text }}</i></p>
+    {% if has_pending %}
+    <div class="row">
+      <div class="col-sm-12">
+        <p>Your answer is awaiting moderation.</p>
+      </div>
+    </div>
+    {% endif %}
+    {% if reject %}
+    <div class="row">
+      <div class="col-sm-12">
+        <p>Your answer was <b>rejected</b></p>
+        <p>Your text: {{ reject.text }} </p>
+        <p>Reason for rejection: {{ reject.reject_reason }} </p>
+      </div>
+    </div>
+    {% endif %}
+    <div class="row mb-4">
+      {% for answer in answers %}
+        <div class="card bg-light border-secondary mt-4">
+          <div class="card-body">
+            <table class="small">
+              <tr><td><b>Answered by</b></td><td>{{ answer.candidate.member.name }}</td></tr>
+              <tr><td><b>Position</b></td><td>{{ answer.candidate.position }}</td></tr>
+              <tr><td><b>Answered at</b></td><td>{{ answer.created_at }}</td></tr>
+            </table>
+            <hr>
+            <p class="card-text">{{ answer.text }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if allow_answer %}
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Submit your own answer to this question</p>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {# TODO some way of limiting question to 200 words #}
+            {% include 'mxv/includes/form.html' %}
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>      
+        </div>
+      </div>
+    {% endif %}    
+{% endblock %}

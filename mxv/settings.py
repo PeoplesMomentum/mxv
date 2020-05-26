@@ -17,6 +17,9 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from dotenv import load_dotenv
 
+def bool_env(name):
+    return True if os.environ.get(name, 'False') == 'True' else False
+
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'voting_intentions.apps.VotingIntentionsConfig',    
     'consultations.apps.ConsultationsConfig',
     'tasks.apps.TasksConfig',
+    'questions.apps.QuestionsConfig',
     # admin, Django and third party
     'nested_admin',
     'django.contrib.admin',
@@ -256,6 +260,7 @@ PROFILES_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_PROFILES_VISIBLE_TO_
 WEB_HOOK_SECRET = os.environ.get('MXV_WEB_HOOK_SECRET', 'mxv')
 
 # NCG voting
+QUESTIONS_VISIBLE_TO_NON_STAFF = bool_env('MXV_QUESTIONS_VISIBLE_TO_NON_STAFF')
 NCG_VOTING_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_NCG_VOTING_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
 NCG_VOTING_URL = os.environ.get('MXV_NCG_VOTING_URL', '')
 NCG_VOTING_IV = os.environ.get('MXV_NCG_VOTING_IV', '')

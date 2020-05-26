@@ -19,6 +19,21 @@
     {% endif %}
     <div class="row">
 
+        {% if show_questions %}
+            <div class="col-sm d-flex align-items-stretch pt-4">
+                <div class="card bg-light border-secondary" style="width: 20rem;">               
+                    <div class="card-body">
+                        <a href="{% url 'questions:index' %}"><h4 class="card-title">Questions for NCG Candidates</h4></a>
+                        <hr class="border-secondary">
+                        <p class="card-text">Questions and answers for NCG candidates.</p>
+                        <div class="text-right align-bottom">
+                            <a href="{% url 'questions:index' %}">View <i class="fa fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
         {% if show_consultations %}
             <div class="col-sm d-flex align-items-stretch pt-4">
                 <div class="card bg-light border-secondary" style="width: 20rem;">               
@@ -28,25 +43,6 @@
                         <p class="card-text">We're running a series of consultations on subjects that are important to our members.  Take part here.</p>
                         <div class="text-right align-bottom">
                             <a href="{% url 'consultations:index' %}">View <i class="fa fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
-        {% if show_track3_voting %}
-            <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card bg-light border-secondary" style="width: 20rem;">               
-                    <div class="card-body">
-                        <a href="{% url 'review:track_voting' 3 %}"><h4 class="card-title">Labour's Democracy Review - Track 3 Results</h4></a>
-                        <table class="card-text text-muted small">
-                            <tr><td><b>Voting</b></td><td>{{ track3_voting.voting_date_text }}</td></tr>
-                        </table>
-                        <hr class="border-secondary">
-                        <p class="card-text">See the Track 3 voting results, and submit them to Labour.</p>
-                        <p class="card-text {{ track3_voting.guidance_class }}">{{ track3_voting.guidance }}</p>
-                        <div class="text-right align-bottom">
-                            <a href="{% url 'review:track_voting' 3 %}">View <i class="fa fa-chevron-right"></i></a>
                         </div>
                     </div>
                 </div>

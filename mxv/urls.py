@@ -44,4 +44,5 @@ urlpatterns = [
     
     # NCG voting redirect
     url(r'^ncg_election/$', views.ncg_election, name = 'ncg_election'),
+    url(r'^questions/', include('questions.urls'))
 ]
