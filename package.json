@@ -1,0 +1,15 @@
+{
+  "name": "mxv",
+  "version": "1.0.0",
+  "description": "Momentum's digital platform for members",
+  "main": "Procfile",
+  "repository": "git@github.com:PeoplesMomentum/mxv.git",
+  "author": "Tyrone Nicholas <tyrone.nicholas@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "develop": "yarn python manage.py runserver",
+    "psql": "psql -U mxv",
+    "python": "pipenv run python"
+  }
+}
