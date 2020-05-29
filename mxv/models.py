@@ -1,6 +1,6 @@
 from django.db import models
 from tinymce.models import HTMLField
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.urls import reverse
 from datetime import date, datetime
 from members.models import Member
@@ -39,28 +39,26 @@ class Email(models.Model):
         
     # sends the email to the specified addresses
     def send_to(self, request, recipient_email_addresses):
-        
-        # create the message with place-holders replaced with Mailgun recipient variables
-        message = EmailMultiAlternatives(
-            subject = self.place_holders_to_site_variables(self.subject), 
-            body = self.place_holders_to_Mailgun_recipient_variables(self.place_holders_to_site_variables(self.text_content)),
-            to = recipient_email_addresses)
-        message.attach_alternative(
-            content = self.place_holders_to_Mailgun_recipient_variables(self.place_holders_to_site_variables(self.html_content)), 
-            mimetype = "text/html")
-        
-        # get the members for the email addresses
-        members = Member.objects.filter(email__in=recipient_email_addresses)
-        
-        # build the merge data for the recipients
-        message.merge_data = { 
-            member.email: { 
-                'name': member.name, 
-                'link': request.build_absolute_uri(reverse('members:activate', kwargs = {'activation_key': member.activation_key})) } 
-            for member in members }
-        
-        # send the message to the recipients
-        message.send()
+        subject_template = self.place_holders_to_site_variables(self.subject)
+        text_template = self.place_holders_to_site_variables(self.text_content)
+        html_template = self.place_holders_to_site_variables(self.html_content)
+        messages = []
+        members = []
+        for recipient_email_address in recipient_email_addresses:
+            member = Member.objects.get(email=recipient_email_address)
+            message = EmailMultiAlternatives(
+                subject = subject_template, 
+                body = self.place_holders_to_member_data(text_template, member, request),
+                to = [recipient_email_address])
+            message.attach_alternative(
+                content = self.place_holders_to_member_data(html_template, member, request), 
+                mimetype = "text/html")
+            messages.append(message)
+            members.append(member)
+        connection = get_connection()
+        connection.open()
+        connection.send_messages(messages)
+        connection.close()
         
         # track when the members were last sent an email
         for member in members:
@@ -68,12 +66,12 @@ class Email(models.Model):
             member.save()
         
         # return the number of members emailed
-        return members.count() 
+        return len(members)
     
-    # replaces place-holders with Mailgun recipient variables
-    def place_holders_to_Mailgun_recipient_variables(self, content):
-        content = content.replace('[name]', '%recipient.name%')
-        content = content.replace('[link]', '%recipient.link%')
+    def place_holders_to_member_data(self, content, member, request):
+        content = content.replace('[name]', member.name.split(' ')[0])
+        link = request.build_absolute_uri(reverse('members:activate', kwargs = {'activation_key': member.activation_key}))
+        content = content.replace('[link]', link)
         return content
         
     # replaces place-holders with site variables

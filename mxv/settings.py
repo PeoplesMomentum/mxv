@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'solo.apps.SoloAppConfig',
     'tinymce',
-    'anymail',
     'widget_tweaks',
     'django_rq',
     'polymorphic',
@@ -186,11 +185,12 @@ TINYMCE_DEFAULT_CONFIG = {
     'relative_urls' : False,
 }
 
-# Mailgun
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-ANYMAIL = {
-    "MAILGUN_API_KEY": os.environ.get('MXV_MAILGUN_API_KEY', "mxv"),
-    'MAILGUN_SENDER_DOMAIN': os.environ.get('MXV_MAILGUN_SENDER_DOMAIN', "mxv")
+# Postmark
+EMAIL_BACKEND = 'postmarker.django.EmailBackend'
+POSTMARK = {
+    'TOKEN': os.environ.get('POSTMARK_SERVER_TOKEN', "mxv"),
+    'TEST_MODE': False,
+    'VERBOSITY': 0,
 }
 DEFAULT_FROM_EMAIL = "Team Momentum <mymomentum@peoplesmomentum.com>"
 
