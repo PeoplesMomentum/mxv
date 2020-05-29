@@ -38,9 +38,9 @@ Do you have development skills (see below for the technologies we've used)?  The
 	- `alter user mxv createdb;`
   - `\c mxv`
   - `create extension citext`
-7. `python manage.py migrate` to populate the database with tables by running the migrations.
-8. `python manage.py createsuperuser` to add yourself as an admin.
-9. `python manage.py runserver` to run the application locally.
+7. `yarn python manage.py migrate` to populate the database with tables by running the migrations.
+8. `yarn python manage.py createsuperuser` to add yourself as an admin.
+9. `yarn develop` to run the application locally.
 	- Site accessible at [http://localhost:8000](http://localhost:8000).
 	- Admin site accessible at [http://localhost:8000/admin](http://localhost:8000/admin).
 
