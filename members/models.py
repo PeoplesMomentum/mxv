@@ -104,7 +104,8 @@ def unused_unique_token():
 
 # a member's link to their NationBuilder record
 class NationBuilderPerson(models.Model):
-    member = models.OneToOneField(Member, related_name = 'nation_builder_person', blank = True, null = True, default = None)
+    member = models.OneToOneField(Member, related_name = 'nation_builder_person',
+                                  blank = True, null = True, default = None, on_delete=models.CASCADE)
     email = CIEmailField(max_length=255, unique=True) # duplicate of member.email so that supporters can be promoted to members when joining
     unique_token = models.CharField(max_length = unique_token_length, default = unused_unique_token)
     nation_builder_id = models.IntegerField(blank=True, null=True, default=None)
@@ -189,7 +190,7 @@ def next_campaign_tag_group_display_order():
   
 # a group of campaign tags
 class CampaignTagGroup(models.Model):
-    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tag_groups')
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'tag_groups', on_delete=models.CASCADE)
     header = models.TextField()
     footer = models.TextField()
     display_order = models.IntegerField(default = next_campaign_tag_group_display_order)
@@ -204,7 +205,7 @@ def next_campaign_tag_display_order():
   
 # sets a tag in nation builder if checked by the member
 class CampaignTag(models.Model):
-    group = models.ForeignKey(CampaignTagGroup, related_name = 'tags')
+    group = models.ForeignKey(CampaignTagGroup, related_name = 'tags', on_delete=models.CASCADE)
     display_text = models.CharField(max_length = 255)
     tag = models.CharField(max_length = 255)
     display_order = models.IntegerField(default = next_campaign_tag_display_order)
@@ -224,7 +225,7 @@ def next_campaign_field_display_order():
 
 # fields in the members' NationBuilder records that are editable by the member on the update details campaign page
 class CampaignField(models.Model):
-    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields')
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name = 'fields', on_delete=models.CASCADE)
     field_path = models.CharField(max_length = 255)
     field_type = models.CharField(max_length = 8, choices = [(choice.name, choice.value) for choice in ProfileFieldType], default = ProfileFieldType.Char)
     required = models.BooleanField(default = False)
@@ -246,7 +247,7 @@ class CampaignField(models.Model):
 # populated manually since the campaign is a singleton: 
 #   insert into members_urlparameter (consultation_id, name, nation_builder_value) select 1, name, nation_builder_value from mxv_defaulturlparameter;
 class UrlParameter(models.Model):
-    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters')
+    campaign = models.ForeignKey(UpdateDetailsCampaign, related_name='url_parameters', on_delete=models.CASCADE)
     name = models.CharField(max_length = 100, help_text = 'The name of the URL parameter to pass on when redirecting')
     nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter in the NationBuilder URL above')
     default_value_if_no_nation_builder_value = models.CharField(max_length = 100, blank=True, null=True, default=None, help_text = 'The value for this parameter if NationBuilder does not supply one')

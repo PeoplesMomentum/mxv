@@ -511,7 +511,7 @@ def track_voting(request, pk):
         return redirect('index')
     
     # if there is a logged-in member...
-    if not request.user.is_anonymous():
+    if not request.user.is_anonymous:
 
         # ensure there is a vote for the member
         vote = request.user.votes.filter(track_voting = track_voting).first()

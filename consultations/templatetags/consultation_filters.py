@@ -41,7 +41,7 @@ def question_and_choices(voting_context, question_id):
         
     # voting in progress
     elif voting_context.consultation.voting_in_range():
-        if not voting_context.request.user.is_anonymous():
+        if not voting_context.request.user.is_anonymous:
             for choice in choices:
                 if question.guidance == "" and choice.display_order == 1:
                     choice_html += '<br/>'
@@ -79,7 +79,7 @@ def question_and_choices(voting_context, question_id):
             choice_html += '<br/>'
             if len(current_answers) > 0:
                 choice_html += '<label class="ml-4">[You voted %s]</label><br/>' % comma_and(['\'%s\'' % answer.choice.text for answer in current_answers])
-            elif not voting_context.request.user.is_anonymous():
+            elif not voting_context.request.user.is_anonymous:
                 choice_html += '<label class="ml-4">[You didn\'t vote on this question]</label><br/>'
           
     # layout    

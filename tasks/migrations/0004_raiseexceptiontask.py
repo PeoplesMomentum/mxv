@@ -18,9 +18,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('task_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='tasks.Task')),
             ],
-            options={
-                'manager_inheritance_from_future': True,
-            },
             bases=('tasks.task',),
         ),
     ]
