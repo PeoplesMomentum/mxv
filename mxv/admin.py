@@ -2,6 +2,7 @@ from django.contrib import admin
 from mxv.models import Email, EmailSettings, DefaultUrlParameter
 from members.models import Member
 from django.contrib import messages
+from solo.admin import SingletonModelAdmin
 
 # admin site title
 admin.site.site_header = 'My Momentum - Administration'
@@ -55,3 +56,4 @@ class DefaultUrlParameterAdmin(admin.ModelAdmin):
 
 admin.site.register(DefaultUrlParameter, DefaultUrlParameterAdmin)
 admin.site.register(Email, EmailAdmin)
+admin.site.register(EmailSettings, SingletonModelAdmin)
