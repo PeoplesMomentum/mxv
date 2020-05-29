@@ -50,7 +50,7 @@ class MemberProfileForm(forms.ModelForm):
         
         # validate phone number fields
         if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
-            field.validators = [RegexValidator('^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
+            field.validators = [RegexValidator(r'^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
         
         # negate checkbox fields
         if profile_field.field_type == 'Boolean' and profile_field.negate_value:
@@ -117,7 +117,7 @@ class UserDetailsForm(forms.Form):
         
         # validate phone number fields
         if profile_field.is_phone_number:   # from http://regexlib.com/REDetails.aspx?regexp_id=589
-            field.validators = [RegexValidator('^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
+            field.validators = [RegexValidator(r'^((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$', 'Please enter a valid phone number')]
         
         # negate checkbox fields
         if profile_field.field_type == 'Boolean' and profile_field.negate_value:

@@ -47,7 +47,7 @@ def consultation(request, pk):
         return redirect('index')
     
     # if there is a logged-in member...
-    if not request.user.is_anonymous():
+    if not request.user.is_anonymous:
 
         # ensure there is a vote for the member
         vote = request.user.consultation_votes.filter(consultation = consultation).first()
