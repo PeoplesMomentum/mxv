@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0868875abd3e1b6d1593a6696e7703befd56fb2b8bdd2270d50cbf3ab65f59af"
+            "sha256": "c3fe42f6608fdf12c2666d98b2fef520c670b5eb9c63448a16b7a20e1d27ef3f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,13 @@
         ]
     },
     "default": {
+        "asgiref": {
+            "hashes": [
+                "sha256:8036f90603c54e93521e5777b2b9a39ba1bad05773fcf2d208f0299d1df58ce5",
+                "sha256:9ca8b952a0a9afa61d30aa6d3d9b570bb3fd6bafcf7ec9e6bed43b936133db1c"
+            ],
+            "version": "==3.2.7"
+        },
         "certifi": {
             "hashes": [
                 "sha256:244be0d93b71e93fc0a0a479862051414d0e00e16435707e5bf5000f92e04694",
@@ -58,35 +65,35 @@
         },
         "django": {
             "hashes": [
-                "sha256:69897097095f336d5aeef45b4103dceae51c00afa6d3ae198a2a18e519791b7a",
-                "sha256:6ecd229e1815d4fc5240fc98f1cca78c41e7a8cd3e3f2eefadc4735031077916"
+                "sha256:051ba55d42daa3eeda3944a8e4df2bc96d4c62f94316dea217248a22563c3621",
+                "sha256:9aaa6a09678e1b8f0d98a948c56482eac3e3dd2ddbfb8de70a868135ef3b5e01"
             ],
             "index": "pypi",
-            "version": "==2.2.12"
+            "version": "==3.0.6"
         },
         "django-nested-admin": {
             "hashes": [
-                "sha256:4fc5025e1525c3c56e8458041bb490551d58b62f61fe9ada702a09e3dc9c6d0d",
-                "sha256:d6abd568e36213818618636f9be5be32007bf218e9c4002bfa2670ba7039d0a5"
+                "sha256:46ef9d15a9c88ca967757af83e68d37029b33531c768971198d10bce4c494399",
+                "sha256:a87be64016d1926f2dd30f4a5f8d96b06e21f22cf6e4f5016f1e4b81efcdfc14"
             ],
             "index": "pypi",
-            "version": "==3.1.2"
+            "version": "==3.3.0"
         },
         "django-polymorphic": {
             "hashes": [
-                "sha256:1fb5505537bcaf71cfc951ff94c4e3ba83c761eaca04b7b2ce9cb63937634ea5",
-                "sha256:79e7df455fdc8c3d28d38b7ab8323fc21d109a162b8ca282119e0e9ce8db7bdb"
+                "sha256:0a25058e95e5e99fe0beeabb8f4734effe242d7b5b77dca416fba9fd3062da6a",
+                "sha256:6e08a76c91066635ccb7ef3ebbe9a0ad149febae6b30be2579716ec16d3c6461"
             ],
             "index": "pypi",
-            "version": "==2.0.3"
+            "version": "==2.1.2"
         },
         "django-rq": {
             "hashes": [
-                "sha256:2855d50dcf909b69a36268347d38b3ca8e5111bbb7503a322d85137c13907a5f",
-                "sha256:f2a9a85d8567254ecf97052e27eb6168ef94a2fd6da850e70677e9b08b482c80"
+                "sha256:ee9aefba814ae00b6d6a566ed0cd2a0a090e0e42d90bb9c4f1c70d3cacb47a52",
+                "sha256:f0bd7ac3b8b4b4abb161646e80a8751c81664beaa810e92fdbcf9fb3e7d72727"
             ],
             "index": "pypi",
-            "version": "==2.0"
+            "version": "==2.3.2"
         },
         "django-solo": {
             "hashes": [
@@ -264,10 +271,11 @@
         },
         "rq": {
             "hashes": [
-                "sha256:22de332ed7e061634eb893dc8cc9ca96c8641480f46c403cabef8d43a2eca867"
+                "sha256:ef61f4517a1dc499b57bc0fa9e8a8f1c561e1f72abab936dbe9081a4508f8874",
+                "sha256:f680c52c7079266465d5e5c49679fab0d14db11d70fec6f1470423408b6bbcf6"
             ],
             "index": "pypi",
-            "version": "==1.0"
+            "version": "==1.4.2"
         },
         "rq-scheduler": {
             "hashes": [
@@ -310,11 +318,11 @@
         },
         "whitenoise": {
             "hashes": [
-                "sha256:15f43b2e701821b95c9016cf469d29e2a546cb1c7dead584ba82c36f843995cf",
-                "sha256:9d81515f2b5b27051910996e1e860b1332e354d9e7bcf30c98f21dcb6713e0dd"
+                "sha256:60154b976a13901414a25b0273a841145f77eb34a141f9ae032a0ace3e4d5b27",
+                "sha256:6dd26bfda3af29177d8ab7333a0c7b7642eb615ce83764f4d15a9aecda3201c4"
             ],
             "index": "pypi",
-            "version": "==3.3.1"
+            "version": "==5.1.0"
         }
     },
     "develop": {}
