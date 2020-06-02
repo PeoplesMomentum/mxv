@@ -34,7 +34,7 @@ class VotingIntentionTagTask(Task):
             if intention:
                 
                 # if this is the first access to NationBuilder and the rate limit is immediately hit then no id is returned but the email might still be known so abandon this run
-                intention.nation_builder_id = nb.GetIdFromEmail(intention.email)
+                intention.nation_builder_id = nb.GetFromEmail(intention.email)['id']
                 rate_limit_hit = nb.rate_limit_remaining == 0
                 if not rate_limit_hit:
                 
