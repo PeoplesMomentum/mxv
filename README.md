@@ -43,6 +43,7 @@ Do you have development skills (see below for the technologies we've used)?  The
 9. `yarn develop` to run the application locally.
 	- Site accessible at [http://localhost:8000](http://localhost:8000).
 	- Admin site accessible at [http://localhost:8000/admin](http://localhost:8000/admin).
+10. `yarn test` to run unit tests, of which there are only a few.
 
 ### Bookmarks
 

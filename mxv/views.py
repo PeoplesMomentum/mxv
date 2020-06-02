@@ -113,7 +113,8 @@ def reconsent_complete(request):
 def redirect_to_update_details(request, unique_token):
     return HttpResponseRedirect('%s?unique_token=%s' % (reverse('members:update_details', kwargs = {'page': 1}), unique_token))
 
-# redirects to the NCG election page 
+# redirects to the NCG election page
+# TODO not sure we will ever use this: current plan is to email everyone a code
 @login_required
 def ncg_election(request):
     
@@ -126,7 +127,7 @@ def ncg_election(request):
         member = request.user
         if not member.nation_builder_person.nation_builder_id:
             nb = NationBuilder()
-            member.nation_builder_person.nation_builder_id = nb.GetIdFromEmail(member.email)
+            member.nation_builder_person.nation_builder_id = nb.GetFromEmail(member.email)['id']
             member.nation_builder_person.save()
         
         # redirect to profile if no NationBuilder id as that page has help for this situation

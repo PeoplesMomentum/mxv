@@ -115,15 +115,16 @@ class NationBuilder:
         self._process_response(response)
 
     # returns the NB id for an email
-    def GetIdFromEmail(self, email):
+    def GetFromEmail(self, email):
 
         # get the matching NB record
-        response = requests.get(self.MATCH_URL % (urlencode({ 'email': email }), NATIONBUILDER_API_TOKEN), timeout = self.default_timeout)
+        url = self.MATCH_URL % (urlencode({ 'email': email }), NATIONBUILDER_API_TOKEN)
+        response = requests.get(url, timeout = self.default_timeout)
         self._process_response(response)
         
         # return the requested fields if the person was found
         if response.status_code == 200:
             record = response.json()
-            return(record['person']['id'])
+            return(record['person'])
         else:
             return None
