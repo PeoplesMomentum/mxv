@@ -68,6 +68,9 @@ class Vote(models.Model):
     member = models.ForeignKey(AUTH_USER_MODEL, related_name='question_votes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'Upvote by {self.member.email}'
+
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
