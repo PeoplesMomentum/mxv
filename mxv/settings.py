@@ -18,7 +18,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from dotenv import load_dotenv
 
 def bool_env(name):
-    return True if os.environ.get(name, 'False') == 'True' else False
+    return True if os.environ.get(name, 'False').upper() == 'TRUE' else False
 
 load_dotenv()
 

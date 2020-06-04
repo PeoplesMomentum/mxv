@@ -28,6 +28,11 @@
     </div>
     {% endif %}
     <div class="row mb-4">
+      {% if not answers %}
+      <div class="col-sm-12">
+        <p>No answers have been approved for this question yet.</p>
+      </div>
+      {% endif %}
       {% for answer in answers %}
         <div class="card bg-light border-secondary mt-4">
           <div class="card-body">
