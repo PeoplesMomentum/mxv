@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from mxv.settings import AUTH_USER_MODEL
 
@@ -36,9 +37,21 @@ STATUS_CHOICES = [
     ('rejected', 'Rejected')
 ]
 
+def text_length(text, name, maxlen):
+    textlen = len(text.split())
+    if textlen > maxlen:
+        raise ValidationError(f'{name}s are limited to {maxlen} words; you had {textlen}')
+
+def question_length(text):
+    text_length(text, 'Question', 40)
+
+def answer_length(text):
+    text_length(text, 'Answer', 200)
+
+
 class Question(models.Model):
-    text = models.TextField(max_length=255)
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    text = models.TextField(max_length=255, validators=[question_length], help_text="Maximum 40 words")
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(AUTH_USER_MODEL, related_name='questions', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(default='pending', choices=STATUS_CHOICES, max_length=16)
@@ -59,7 +72,7 @@ class Vote(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-    text = models.TextField(max_length=2048)
+    text = models.TextField(max_length=2048, validators=[answer_length], help_text="Maximum 200 words")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(default='pending', choices=STATUS_CHOICES, max_length=16)
     reject_reason = models.TextField(null=True, blank=True)
