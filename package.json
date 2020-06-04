@@ -12,6 +12,6 @@
     "migrate": "yarn python manage.py makemigrations questions && yarn python manage.py migrate",
     "psql": "yarn python manage.py dbshell",
     "python": "pipenv run python",
-    "test": "yarn python manage.py test"
+    "test": "yarn python manage.py test --no-input"
   }
 }

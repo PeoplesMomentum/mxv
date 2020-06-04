@@ -11,13 +11,23 @@
 {% block content %}
     <p>Your chance to submit question to the NCG candidates, and see their responses. Take part here.</p>
     <p>You may vote for up to one question per category. Candidates may take votes into account when answering questions.</p>
-    {% if pending_count > 0 %}
-    <div class="row">
-      <div class="col-sm-12">
-        <p>You have {{ pending_count }} questions awaiting moderation.</p>
+
+    {% if pending_question %}
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Your question is awaiting moderation.</p>
+        </div>
       </div>
-    </div>
     {% endif %}
+    
+    {% if pending_answers > 0 %}
+      <div class="row">
+        <div class="col-sm-12">
+          <p>You have {{ pending_answers }} answers awaiting moderation.</p>
+        </div>
+      </div>
+    {% endif %}
+    
     {% if rejects %}
       <div class="row">
         <div class="col-sm-12">
@@ -25,46 +35,68 @@
           <table>
             <tr><th>Category</th><th>Text</th><th>Reason for rejection</th></tr>
             {% for question in rejects %}
-              <tr><td>{{ question.category.title }}</td><td>{{ question.text }}</td><td>{{ question.reject_reason }}</td></tr>
+              <tr><td>{{ question.category.title }}</td><td>{{ question.text | truncatechars:80 }}</td><td>{{ question.reject_reason }}</td></tr>
             {% endfor %}
           </table>
         </div>
       </div>
     {% endif %}
+    
     <div class="row mb-4">
-        {% for question in questions %}
+      {% for question in questions %}
         <div class="card bg-light border-secondary mt-4">
           <div class="card-body">
-              <p class="card-title">Category {{ question.category.number}}: {{ question.category.title }}</p>
               <table class="small">
+                  <tr><td><b>Category</b></td><td>{{ question.category.number}}: {{ question.category.title }}</td></tr>
                   <tr><td><b>Created by</b></td><td>{{ question.author.name }}</td></tr>
                   <tr><td><b>Created at</b></td><td>{{ question.created_at }}</td></tr>
                   <tr><td><b>{{ question.num_votes }} votes</b></td></tr>
               </table>
               <hr>
               <p class="card-text">{{ question.text }}</p>
-              {% if question.can_vote %}
-                <a href="{% url 'questions:vote' question.pk %}" class="btn btn-success">Vote for this question</a>
+              {% if is_candidate %}
+                <div class="text-right">
+                  <a href="{% url 'questions:answers' question.pk %}" class="btn btn-success">
+                    <i class="fa fa-chevron-right">Answer question</i>
+                  </a>
+                </div>
+              {% else %}
+                {% if question.voted %}
+                  <b>You have voted for this question</b>
+                {% else %}
+                  <a href="{% url 'questions:vote' question.pk %}">Vote for this question</a>
+                {% endif %}
+                <div class="text-right">
+                  {% if question.num_answers == 0 %}
+                    <p>No answers approved yet.</p>
+                  {% else %}
+                    <a href="{% url 'questions:answers' question.pk %}" class="btn btn-success">
+                      View <i class="fa fa-chevron-right">{{ question.num_answers }} answers</i>
+                    </a>
+                  {% endif %}
+                </div>
               {% endif %}
-              <div class="text-right">
-                <a href="{% url 'questions:answers' question.pk %}" class="btn btn-success">View <i class="fa fa-chevron-right"></i></a>
-              </div>
           </div>
         </div>
-        {% endfor %}
+      {% endfor %}
     </div>
 
-    <div class="row">
-      <div class="col-sm-12">
-        <p>Submit your own question to the NCG. <b>You may only submit one question per category</b></p>
-        <p>Please do not duplicate existing questions.</p>
-        <form method="post" novalidate>
-          {% csrf_token %}
-          {# TODO some way of limiting question to 40 words #}
-          {% include 'mxv/includes/form.html' %}
-          <button type="submit" class="btn btn-success">Submit</button>
-      </form>      
+    {% if not is_candidate %}
+      <div class="row">
+        <div class="col-sm-12">
+          {% if not has_question %}
+            <p>Submit your own question to the NCG candidates. <b>You may only submit one question.</b></p>
+            <p>Please do not duplicate existing questions.</p>
+            <form method="post" novalidate>
+              {% csrf_token %}
+              {% include 'mxv/includes/form.html' %}
+              <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+          {% else %}
+            <p>You have already submitted a question to the candidates. Only one question per member is permitted.</p>
+          {% endif %}
+        </div>
       </div>
-    </div>
+    {% endif %}
     
 {% endblock %}
