@@ -16,6 +16,7 @@ from mxv.nation_builder import NationBuilder
 from mxv.simple_encryption import SimpleEncryption
 
 # landing page
+@login_required
 def index(request):
     template = loader.get_template('mxv/index.html')
     context = {
