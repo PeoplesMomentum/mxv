@@ -16,7 +16,7 @@ class Candidate(models.Model):
     position = models.CharField(max_length=6, choices=POSITION_CHOICES)
 
     def __str__(self):
-        return f'{self.member.name} - {self.position}'
+        return f'{self.member.name} - {self.get_position_display()}'
 
 
 class Category(models.Model):

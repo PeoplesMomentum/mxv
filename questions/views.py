@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from questions.models import Question, Answer, Candidate, Vote
 from questions.forms import QuestionForm, AnswerForm
-from mxv.settings import QUESTIONS_VISIBLE_TO_NON_STAFF
+from mxv.settings import QUESTIONS_VISIBLE_TO_NON_STAFF, NCG_VOTING_URL
 from django.contrib.auth.decorators import login_required
 from django.db.models import *
+from django.db.models.functions import *
 import logging
 import pprint
 
@@ -99,6 +100,7 @@ def answers(request, pk):
 def show_answers(request, question, form=None):
     answers = Answer.objects \
         .filter(question__id=question.id, status='approved') \
+        .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
         .order_by('candidate__position', 'created_at')
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
