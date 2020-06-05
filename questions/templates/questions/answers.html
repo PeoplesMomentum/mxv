@@ -38,7 +38,7 @@
           <div class="card-body">
             <table class="small">
               <tr><td><b>Answered by</b></td><td>{{ answer.candidate.member.name }}</td></tr>
-              <tr><td><b>Position</b></td><td>{{ answer.candidate.position }}</td></tr>
+              <tr><td><b>Position</b></td><td>{{ answer.candidate.get_position_display }}</td></tr>
               <tr><td><b>Answered at</b></td><td>{{ answer.created_at }}</td></tr>
             </table>
             <hr>
