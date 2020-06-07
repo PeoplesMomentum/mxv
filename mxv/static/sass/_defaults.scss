@@ -1,0 +1,91 @@
+@import "typography";
+@import "variables";
+
+h1 {
+  @extend .hed-1;
+}
+
+h2 {
+  @extend .hed-2;
+  margin: 15px 0px;
+}
+
+h3 {
+  @extend .hed-3;
+}
+
+p {
+  @extend .body-1;
+}
+
+a { 
+  color: $primary; 
+  transition: color 0.1s ease-in-out;
+  &:hover {
+    color: $mtm-pink-lighter;
+  }
+}
+
+li {
+  @extend .body-1;
+}
+
+hr {
+  border-top: 1px solid $mtm-neutral-200;
+}
+
+// component elements
+
+.form-group {
+  label {
+    @extend .label-1;
+  }
+  .input-field {
+    @extend .body-1;
+  }
+}
+
+.form-check {
+  display: grid;
+  padding-left: 0px;
+}
+
+footer {
+  background-color: $mtm-neutral-100;
+  box-shadow: 0 50vh 0 50vh $mtm-neutral-100;
+}
+
+.dropdown-toggle {
+  white-space: normal;
+  max-width: 80vw;
+}
+.dropdown-item {
+  @extend .label-1;
+  color: $mtm-neutral-400;
+  max-width: 80vw;
+  white-space: unset;
+  padding: 15px;
+}
+
+.dropdown-divider {
+  margin: 0px;
+}
+
+.dropdown-menu {
+  padding: 0px;
+}
+
+.btn {
+  background-color: $mtm-neutral-000;
+}
+
+.sticky {
+  position: sticky;
+  top: 90px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+}
+

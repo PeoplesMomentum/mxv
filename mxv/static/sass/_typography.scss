@@ -1,0 +1,79 @@
+@import "utils";
+
+
+.hed-1 {
+  @include font-normal(700);
+  font-size: 29px;
+  line-height: 108.5%;
+  letter-spacing: -0.03em;
+  @media screen and (min-width: 1000px) {
+    font-size: 35px;
+  }
+}
+
+.hed-2 {
+  @include font-normal(500);
+  font-size: 22px;
+  line-height: 128%;
+}
+
+.hed-3 {
+  @include font-normal(500);
+  font-size: 16px;
+  line-height: 128%;
+}
+
+.hed-5 {
+  // used for .card h5
+  @include font-normal(500);
+  font-size: 20px;
+  line-height: 100%;
+}
+
+
+.label-1 {
+  @include font-normal(500);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.label-2 {
+  @include font-normal(500);
+  font-size: 12px;
+  line-height: 133%;
+}
+
+.label-3 {
+  @extend .label-2;
+  color: $primary;
+  text-decoration: underline;
+}
+
+.body-1 {
+  @include font-normal();
+  font-size: 16px;
+  line-height: 125%;
+}
+
+.body-2 {
+  @include font-normal();  
+  font-size: 16px;
+  line-height: 128%;
+}
+
+.body-sm-1 {
+  @include font-normal();
+  font-size: 12px;
+  line-height: 133%;
+}
+
+.body-sm-1-bold {
+  @extend .body-sm-1;
+  @include font-normal(500);
+}
+
+.body-xs-1 {
+  @include font-normal();
+  font-size: 9px;
+  line-height: 150%;
+}

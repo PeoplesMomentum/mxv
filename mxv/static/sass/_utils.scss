@@ -1,0 +1,53 @@
+// utility mixins
+
+@mixin hideOnMobile($display-state: block) {
+  display: none;
+  @media (min-width: 768px) {       
+    display: $display-state;
+  }
+}
+
+@mixin hideOnDesktop($display-state: block) {
+  display: $display-state;
+  @media (min-width: 768px) {       
+    display: none;
+  }
+}
+
+@mixin font-normal($weight: 400) {
+  font-family: $fontstack-text;
+  font-style: normal;
+  font-weight: $weight;
+}
+
+@mixin pseudoContainer($width: 540px) {
+  // gives container-full children rows normal behaviour 
+  $padding-width: $width/2 - 10px;
+  padding-left: calc(50vw - #{$padding-width});
+  padding-right: calc(50vw -#{$padding-width});
+  >.row {
+    max-width: $width;
+  }
+}
+
+@mixin buttonOutliner($color: $mtm-neutral-500) {
+  border: thin solid $color;
+  background-color: $mtm-neutral-000;
+  $color-lighter: lighten($color, 10%);
+  color: $primary;
+  &:hover {
+    background-color: $color;
+    border-color: $color;
+    color: $mtm-neutral-000;
+  }
+  &:focus {
+    box-shadow: 0 0 0 .2rem $color-lighter;
+  }
+  &:active, &.active {
+    background-color: $color !important;
+    border-color: $color !important;
+    &:focus {
+      box-shadow: 0 0 0 .2rem $color-lighter !important;
+    }
+  }
+}

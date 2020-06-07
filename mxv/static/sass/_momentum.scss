@@ -1,0 +1,372 @@
+@import "variables";
+@import "typography";
+@import "utils";
+
+// area for modifications to standard classes, new classes, new components
+
+html {
+  overflow: scroll;
+}
+
+.container, .container-full {
+  margin-top: 15px;
+}
+
+.img-scale {
+  object-fit: contain;
+}
+
+// input 
+
+.form-group {
+  input {
+    min-height: 44px;
+    border: 1px solid $mtm-neutral-400;
+  }
+}
+
+.input-group-append, .input-group-prepend {
+  >.btn {
+    min-height: 38px;
+  }
+}
+
+.form-check {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  margin: 15px 0px;
+  label {
+    @extend .label-2;
+  }
+}
+
+// btns
+
+.btn {
+  @extend .label-1;
+  background-color: $mtm-neutral-000;
+  text-align: center;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
+  min-height: 31px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: $mtm-neutral-000;
+  transition: background-color .3s, color .3s, border-color .3s, box-shadow 0.1s;
+  text-decoration: none;
+}
+
+a.btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: $primary !important;
+}
+
+.btn-outline-primary {
+  @include buttonOutliner($primary);
+  min-height: 44px;
+  margin-bottom: 20px;
+  text-transform: uppercase; 
+}
+
+.btn-outline-secondary {
+  @include buttonOutliner();
+}
+
+// cards
+
+.card {
+  $card-gutter: 10px; 
+  $img-size: 350px;
+
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+  .card-img-top {
+    padding: $card-gutter;
+    border-radius: 14px;
+    object-fit: cover;
+    height: 95vw;
+    @media (min-width: 576px) { 
+      height: 508px;
+    }
+    // Medium devices (tablets, 768px and up)
+    @media (min-width: 768px) { 
+      height: 328px;
+    }
+
+    // Large devices (desktops, 992px and up)
+    @media (min-width: 992px) { 
+      height: 448px;
+    }
+
+    // Extra large devices (large desktops, 1200px and up)
+    @media (min-width: 1200px) { 
+      height: 530px;
+    }
+  }
+  .card-body {
+    padding: $card-gutter;
+    .card-row-title {
+      margin-bottom: $card-gutter;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: thin solid $mtm-neutral-200;
+      >* {
+       margin-bottom: $card-gutter; 
+      }
+      .card-title {
+        @extend .hed-5;
+      }
+    }
+    .card-row-body {
+      p {
+        margin-bottom: $card-gutter;
+      }
+    }
+    
+  }
+  .card-button-wrapper {
+    padding: 0px $card-gutter $card-gutter $card-gutter;
+    button {
+      margin: $card-gutter 0px;
+    }
+  }
+}
+
+.card-compare {
+  @extend .card;
+  $card-gutter: 10px;
+  $img-size: 350px;
+  margin: $card-gutter;
+  .card-img-top {
+    height: 71vw;
+    max-height: 400px;
+    @media (min-width: 576px) { 
+      height: unset;
+    }
+    // Medium devices (tablets, 768px and up)
+    @media (min-width: 768px) { 
+      height: 328px;
+    }
+
+    // Large devices (desktops, 992px and up)
+    @media (min-width: 992px) { 
+      height: 448px;
+    }
+    @media (min-width: 1200px) { 
+      height: 28vw;
+    }
+  }
+  @media (min-width: 576px) { 
+    margin: $card-gutter * 3;
+  }
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) { 
+    min-height: 681px;
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) { 
+    min-height: 698px;
+  }
+  @media (min-width: 1200px) { 
+    min-height: 666px;
+  }
+}
+
+.card-focus {
+  @extend .card;
+  // position: sticky; set in _default
+}
+
+.grey-backing {
+  // responsive color scheme
+  margin: 0px;
+  padding: 15px;
+  background-color: $mtm-neutral-100;
+  border-top: 1px solid $mtm-neutral-300;
+}
+
+.grey-backing-mb {
+  @extend .grey-backing;
+  @media (min-width: 576px) {
+    background: none;
+    border-top: none;
+  }
+}
+
+.grey-backing-strict {
+  @extend .grey-backing;
+  @media (min-width: 576px) { 
+    @include pseudoContainer(540px);
+  }
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) { 
+    @include pseudoContainer(720px);
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) { 
+    @include pseudoContainer(960px);
+  }
+
+  // Extra large devices (large desktops, 1200px and up)
+  @media (min-width: 1200px) { 
+    @include pseudoContainer(1140px);
+  }
+}
+
+// navs
+
+.navbar {
+  // position: sticky; set in _defaults 
+  background-color: $mtm-red;
+  padding: 0px 20px;
+  z-index: 999;
+  .navbar-brand svg{
+    width: 100px;
+    @media (min-width: 768px) {       
+      position: absolute;
+      width: 225px;
+      top: 30px;
+      left: 30px;
+    }
+  }
+  &.navbar-transparent {
+    position: absolute;
+    z-index: 999;
+    background: none;
+  }
+  &.navbar-neutral {
+    background-color: $mtm-neutral-200;
+  }
+  .navbar-text>a {
+    @extend .hed-3;
+    color: $mtm-neutral-000;
+  }
+}
+
+.nav-pills {
+  >.nav-item {
+    margin: 5px 5px 0px 0px;
+    >a {
+      @include buttonOutliner($primary);
+      @extend .label-1;
+    }
+  }
+}
+
+// dropdown
+.dropdown-toggle {
+  white-space: normal;
+  max-width: 80vw;
+  .dropdown-item {
+    @extend .label-1;
+    max-width: 80vw;
+    white-space: unset;
+  }
+}
+
+// checkbox, radio btn styling
+// via https://css-tricks.com/custom-styling-form-inputs-with-modern-css-features/
+
+@supports(-webkit-appearance: none) or (-moz-appearance: none) {
+  // requires sass vars, set above
+  input[type='checkbox'], input[type='radio'] {
+    --active: #{$primary};
+    --active-inner: #{$mtm-neutral-000};
+    --focus: 2px #{$primary};
+    --border: #{$primary-lighter};
+    --border-hover: #{$primary};
+    --background: #{$mtm-neutral-000};
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    height: 21px;
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    transition: background .3s, border-color .3s, box-shadow .2s;
+    outline: none;
+
+    &:after {
+      content: '';
+      display: block;
+      left: 2px;
+      top: 2px;
+      position: absolute;
+      transition: transform var(--d-t, .3s) var(--d-t-e, ease), opacity var(--d-o, .2s);
+    }
+    &:checked {
+      --b: #{$primary};
+      --bc: #{$primary};
+      --d-o: .3s;
+      --d-t: .6s;
+      --d-t-e: cubic-bezier(.2, .85, .32, 1.2);
+    }
+    &:hover {
+      &:not(:checked) {
+        &:not(:disabled) {
+          --bc: var(--border-hover);
+        }
+      }
+    }
+    &:focus {
+      box-shadow: 0 0 0 var(--focus);
+    }
+    &:not(.switch) {
+      &:after {
+        opacity: var(--o, 0);
+      }
+      &:checked {
+        --o: 1;
+      }
+    }
+  }
+
+  input[type='checkbox'] {
+    border: 1px solid var(--bc, var(--border));
+    background: var(--b, var(--background));
+    width: 21px;
+
+    border-radius: 2px;
+    &:after {
+      width: 5px;
+      height: 9px;
+      border: 2px solid var(--active-inner);
+      border-top: 0;
+      border-left: 0;
+      left: 7px;
+      top: 4px;
+      transform: rotate(var(--r, 20deg));
+    }
+    &:checked {
+      --r: 43deg;
+    }
+  }
+
+  input[type='radio'] {
+    border: 2px solid var(--bc, var(--border));
+    background: var(--background);
+    width: 17px;
+    height: 17px;
+    
+    border-radius: 50%;
+    &:after {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--active);
+      opacity: 0;
+    }
+    &:checked {
+      --s: .5;
+    }
+  }
+}
