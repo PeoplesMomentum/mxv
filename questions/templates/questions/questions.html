@@ -109,21 +109,17 @@
 <!-- select cats -->
 
 <div class="container">
-  <h1>Change Primary Interest: currently -- {{ category }}</h1>
-  <form action="{% url 'questions:index' %}" method="POST" id="interest-select">
+  <h1>Change current_category: currently -- {{ current_category }}</h1>
+  <form action="{% url 'questions:index' %}" method="POST" id="category_select">
     {% csrf_token %}
-    <select id="id_interest" name="interest">
+    <select id="id_category_select" name="category_select">
       <option disabled selected> -- select an option -- </option>
-      {% for category in Categories %}
-      <option value="{ category.number }">{ category.title }</option>
+      <option value="none">All</option>
+      {% for category in categories %}
+      <option value="{{ category.number }}">{{ category.title }}</option>
       {% endfor %}
-      <option value='alan'>alan</option>
-      <option value='bart'>bart</option>
-      <option value='carl'>carl</option>
-      <option value='dave'>dave</option>
-      <option value='eric'>eric</option>
     </select>
-    <input type="submit" value="Load Disciplines" />
+    <input type="submit" value="category_select" />
   </form>
 </div>
 

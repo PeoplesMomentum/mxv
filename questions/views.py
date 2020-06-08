@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from questions.models import Question, Answer, Candidate, Vote
+from questions.models import Question, Answer, Candidate, Vote, Category
 from questions.forms import QuestionForm, AnswerForm
 from mxv.settings import QUESTIONS_VISIBLE_TO_NON_STAFF, NCG_VOTING_URL
 from django.contrib.auth.decorators import login_required
@@ -19,12 +19,12 @@ def index(request):
         return redirect('index')
     if request.method == 'POST':
         # and there's no cat req
-        if (request.POST.get('interest') is None):
+        if (request.POST.get('category_select') is None):
             return handle_question_submission(request)
         # else return the cat
         else: 
-            category = request.POST.get('interest')
-            return show_questions(request, form=None, category=category)
+            current_category = request.POST.get('category_select')
+            return show_questions(request, form=None, current_category=current_category)
     else:
         return show_questions(request)
 
@@ -32,7 +32,7 @@ def index(request):
 def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
-def show_questions(request, form=None, category=None):
+def show_questions(request, form=None, current_category=None):
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
@@ -48,7 +48,7 @@ def show_questions(request, form=None, category=None):
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
         .order_by('category__number', '-num_votes')
-
+    categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
     pending_question = their_questions.filter(status='pending').exists()
     rejects = their_questions.filter(status='rejected').order_by('created_at')
@@ -67,7 +67,8 @@ def show_questions(request, form=None, category=None):
         'pending_answers': pending_answers,
         'questions': questions,
         'rejects': rejects,
-        'category': category
+        'current_category': current_category,
+        'categories': categories
     }
     return render(request, 'questions/questions.html', context)
 
