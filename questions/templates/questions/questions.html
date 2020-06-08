@@ -57,75 +57,90 @@
 
 <!-- DISPLAY QUESTIONS -->
 </div>
+
+<!-- select cats -->
+
+<div class="container">
+  <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
+    {% csrf_token %}
+    <select id="id_category_select" name="category_select" onchange="this.form.submit()">
+      <option disabled selected style="display: none;">
+            {% for category in categories %}
+              {% if current_category == category.number%}
+                {{ category.title }}
+              {% endif %}
+            {% endfor %}
+            {% if current_category == 0 %}
+              All topics
+            {% endif %}
+      </option>
+      <option value="0">All topics</option>
+      {% for category in categories %}
+      <option value="{{ category.number }}">{{ category.title }}</option>
+      {% endfor %}
+    </select>
+    <!-- <input type="submit" value="category_select" /> -->
+  </form>
+</div>
+
+<h1>{{ current_category_title }}</h1>
+
 <div class="container-full grey-backing-strict">
   <div class="row justify-content-center">
     <div class="col-sm-12 col-lg-6">
       <h2>Questions asked</h2>
     </div>
+  </div>
     <div class="row">
       {% for question in questions %}
+      {% if current_category == question.category.number or current_category == 0 %}
+      
       <div class="col-sm-12 col-md-6">
         <div class="card">
           <div class="card-body">
             <div class="card-row-body">
               <p class="label-2">Posted by {{ question.author.name }} in <br>{{ question.category.title }} at
                 {{ question.created_at }} </p>
-              <p class="label-4 mb-0">{{ question.text }}</p>
-              <hr class="my-2" />
-            </div>
-            <div class="card-row-body">
-              <button href="{% url 'questions:vote' question.pk %}"
+                <p class="label-4 mb-0">{{ question.text }}</p>
+                <hr class="my-2" />
+              </div>
+              <div class="card-row-body">
+                <button href="{% url 'questions:vote' question.pk %}"
                 class="btn btn-outline-primary btn-sm {% if question.voted %}active{% endif %}">
                 {% if question.voted %}
                 <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M 8,1 8.35355,0.646447 8,0.292893 7.64645,0.646447 Z m 6,6 v 0.5 h 1.2071 L 14.3536,6.64645 Z M 10.5,7 V 6.5 H 10 V 7 Z m 0,6 v 0.5 H 11 V 13 Z m -5,0 H 5 v 0.5 h 0.5 z m 0,-6 H 14 L 8,1 5.5,6.5 Z M 2,7 1.64645,6.64645 0.792893,7.5 H 2 Z m 5.64645,-5.64645 5.99995,6 0.7072,-0.7071 L 8.35355,0.646447 Z M 14,6.5 h -3.5 v 1 H 14 Z M 10,7 v 6 h 1 V 7 Z m 0.5,5.5 h -5 v 1 h 5 z m 0,0.5 V 6.5 L 5,7 v 6 z M 8,1 2,6.5 v 1 h 3.5 z m -5.64645,6.35355 6,-6 -0.7071,-0.707103 -6,6.000003 z"
-                    fill="#FF0F80" />
-                </svg>
-                {% else %}
-                <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M8 1L8.35355 0.646447L8 0.292893L7.64645 0.646447L8 1ZM14 7V7.5H15.2071L14.3536 6.64645L14 7ZM10.5 7V6.5H10V7H10.5ZM10.5 13V13.5H11V13H10.5ZM5.5 13H5V13.5H5.5V13ZM5.5 7H6V6.5H5.5V7ZM2 7L1.64645 6.64645L0.792893 7.5H2V7ZM7.64645 1.35355L13.6464 7.35355L14.3536 6.64645L8.35355 0.646447L7.64645 1.35355ZM14 6.5H10.5V7.5H14V6.5ZM10 7V13H11V7H10ZM10.5 12.5H5.5V13.5H10.5V12.5ZM6 13V7H5V13H6ZM5.5 6.5H2V7.5H5.5V6.5ZM2.35355 7.35355L8.35355 1.35355L7.64645 0.646447L1.64645 6.64645L2.35355 7.35355Z"
-                    fill="#FF0F80" />
-                </svg>
-                {% endif %}
-                {{ question.num_votes }}
-              </button>
-              <span class="align-top">
-                <span class="badge-primary badge-pill body-sm-1">{{ question.num_answers }}</span> <span
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                d="M 8,1 8.35355,0.646447 8,0.292893 7.64645,0.646447 Z m 6,6 v 0.5 h 1.2071 L 14.3536,6.64645 Z M 10.5,7 V 6.5 H 10 V 7 Z m 0,6 v 0.5 H 11 V 13 Z m -5,0 H 5 v 0.5 h 0.5 z m 0,-6 H 14 L 8,1 5.5,6.5 Z M 2,7 1.64645,6.64645 0.792893,7.5 H 2 Z m 5.64645,-5.64645 5.99995,6 0.7072,-0.7071 L 8.35355,0.646447 Z M 14,6.5 h -3.5 v 1 H 14 Z M 10,7 v 6 h 1 V 7 Z m 0.5,5.5 h -5 v 1 h 5 z m 0,0.5 V 6.5 L 5,7 v 6 z M 8,1 2,6.5 v 1 h 3.5 z m -5.64645,6.35355 6,-6 -0.7071,-0.707103 -6,6.000003 z"
+                fill="#FF0F80" />
+              </svg>
+              {% else %}
+              <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+              d="M8 1L8.35355 0.646447L8 0.292893L7.64645 0.646447L8 1ZM14 7V7.5H15.2071L14.3536 6.64645L14 7ZM10.5 7V6.5H10V7H10.5ZM10.5 13V13.5H11V13H10.5ZM5.5 13H5V13.5H5.5V13ZM5.5 7H6V6.5H5.5V7ZM2 7L1.64645 6.64645L0.792893 7.5H2V7ZM7.64645 1.35355L13.6464 7.35355L14.3536 6.64645L8.35355 0.646447L7.64645 1.35355ZM14 6.5H10.5V7.5H14V6.5ZM10 7V13H11V7H10ZM10.5 12.5H5.5V13.5H10.5V12.5ZM6 13V7H5V13H6ZM5.5 6.5H2V7.5H5.5V6.5ZM2.35355 7.35355L8.35355 1.35355L7.64645 0.646447L1.64645 6.64645L2.35355 7.35355Z"
+              fill="#FF0F80" />
+            </svg>
+                  {% endif %}
+                  {{ question.num_votes }}
+                </button>
+                <span class="align-top">
+                  <span class="badge-primary badge-pill body-sm-1">{{ question.num_answers }}</span> <span
                   class="label-1 secondary">answers</span>
-              </span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
+        {% endif %}
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </div>
-</div>
-
-<!-- select cats -->
-
-<div class="container">
-  <h1>Change current_category: currently -- {{ current_category }}</h1>
-  <form action="{% url 'questions:index' %}" method="POST" id="category_select">
-    {% csrf_token %}
-    <select id="id_category_select" name="category_select">
-      <option disabled selected> -- select an option -- </option>
-      <option value="none">All</option>
-      {% for category in categories %}
-      <option value="{{ category.number }}">{{ category.title }}</option>
-      {% endfor %}
-    </select>
-    <input type="submit" value="category_select" />
-  </form>
-</div>
-
-<!-- IF NOT CANDIDATE + NO Q, DISPLAY ASK Q -->
-
-{% if not is_candidate %}
+  
+  <!-- IF NOT CANDIDATE + NO Q, DISPLAY ASK Q -->
+  
+  {% if not is_candidate %}
 {% if not has_question %}
 <div class="container">
   <div class="row">

@@ -32,7 +32,7 @@ def index(request):
 def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
-def show_questions(request, form=None, current_category=None):
+def show_questions(request, form=None, current_category=0):
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
@@ -67,7 +67,7 @@ def show_questions(request, form=None, current_category=None):
         'pending_answers': pending_answers,
         'questions': questions,
         'rejects': rejects,
-        'current_category': current_category,
+        'current_category': int(current_category),
         'categories': categories
     }
     return render(request, 'questions/questions.html', context)
