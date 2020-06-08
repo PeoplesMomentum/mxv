@@ -4,51 +4,94 @@
 {% block title%}Home{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item active">Home</li>
+<li class="breadcrumb-item active">Home</li>
 {% endblock %}
 
 {% block content %}
-    <p>Welcome to My Momentum, the digital platform that enables members to learn, organise and make decisions together.</p>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-lg-6">
+            <h2>Welcome to My Momentum, the digital platform that enables members to learn, organise and make decisions together.</h2>
+            <hr class="hr-primary mb-1"/>
+            <h3 class="red">What's on</h3>
+        </div>
+    </div>
     {% if member_logged_in %}
         {% if show_ncg_voting %}
-            <p>You can now <a href="{% url 'ncg_election' %}" target="_blank">vote in the NCG election</a>.</p>
-        {% endif %}
-    {% else %}
-        <p>If you’re a member of Momentum but haven't activated your account yet, just check your email for your activation link from <a href="mailto:mymomentum@peoplesmomentum.com">mymomentum@peoplesmomentum.com</a> or <a href="{% url 'members:request_activation_email' %}">request a new account activation email</a>.</p>
-        <p>Not a member of Momentum yet? <a href="https://join.peoplesmomentum.com/" target="_blank">Sign up today</a> and join the discussion.</p>
-    {% endif %}
-    <div class="row">
-
-        {% if show_questions %}
-            <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card bg-light border-secondary" style="width: 20rem;">               
-                    <div class="card-body">
-                        <a href="{% url 'questions:index' %}"><h4 class="card-title">Questions for NCG Candidates</h4></a>
-                        <hr class="border-secondary">
-                        <p class="card-text">Questions and answers for NCG candidates.</p>
-                        <div class="text-right align-bottom">
-                            <a href="{% url 'questions:index' %}">View <i class="fa fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-                </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <h2>Our Leadership Elections</h2>
+                <h3>Nominations close Thursday 11th June</h3>
+                <p>Momentum’s leadership is directly elected by its members every two years. From political education to supporting trade
+                union struggles and training a new generation of socialist leaders, there is so much Momentum could do. Now is your
+                chance to get involved and help shape the future of our movement.</p>
+                <a href="{% url 'ncg_election' %}" class="btn btn-outline-secondary btn-block">Read More</a>
             </div>
-        {% endif %}
-
-        {% if show_consultations %}
-            <div class="col-sm d-flex align-items-stretch pt-4">
-                <div class="card bg-light border-secondary" style="width: 20rem;">               
-                    <div class="card-body">
-                        <a href="{% url 'consultations:index' %}"><h4 class="card-title">Consultations</h4></a>
-                        <hr class="border-secondary">
-                        <p class="card-text">We're running a series of consultations on subjects that are important to our members.  Take part here.</p>
-                        <div class="text-right align-bottom">
-                            <a href="{% url 'consultations:index' %}">View <i class="fa fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="col-sm d-flex align-items-stretch pt-4">
         </div>
+        {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <hr class="hr-primary mb-1">
+                <h3 class="red">Current activities</h3>
+            </div>
+        </div>
+        {% if show_questions %}
+        <div class="row justify-content-center mb-4">
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="card">
+                    <img class="img-fluid" src="{% static 'mxv/images/ncg.jpg' %}"/>
+                    <div class="card-body">
+                        <div class="card-row-title">
+                            <h2>Questions for candidates</h2>
+                        </div>
+                        <div class="card-row-body">
+                            <p class="body-sm-1">Questions and answers for NCG Candidates</p>
+                        </div>
+                    </div>
+                    <div class="card-button-wrapper">
+                        <a href="{% url 'questions:index' %}" class="btn btn-outline-primary btn-block">View</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+        
+        {% if show_consultations %}
+        <div class="row justify-content-center">
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-row-title">
+                            <h2>Consulations</h2>
+                        </div>
+                        <div class="card-row-body">
+                            <p class="body-sm-1">Questions and answers for NCG Candidates</p>
+                        </div>
+                    </div>
+                    <div class="card-button-wrapper">
+                        <a href="{% url 'consultations:index' %}" class="btn btn-outline-primary btn-block">View</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {% endif %}
+        
+        {% else %}
+        
+        <div class="row justify-content-center">
+        
+            <div class="col-sm-12">
+                <p>If you’re a member of Momentum but haven't activated your account yet, just check your email for your activation link from <a href="mailto:mymomentum@peoplesmomentum.com">mymomentum@peoplesmomentum.com</a> or <a href="{% url 'members:request_activation_email' %}">request a new account activation email</a>.</p>
+                <p>Not a member of Momentum yet? <a href="https://join.peoplesmomentum.com/" target="_blank">Sign up today</a> and join the discussion.</p>
+            </div>
+        
+        </div>
+        
+        {% endif %}
+    
     </div>
 {% endblock %}

@@ -17,8 +17,17 @@
     <body>
         {% include "mxv/navbar.html" %}
         {% include "mxv/messages.html" %}        
+        <div class="container-full m-0 bg-light">
+            <div class="pseudocontainer">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-6">
+                        <ol class="breadcrumb p-0 m-0">{% block breadcrumb %}{% endblock %}</ol>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-2"/>
+        </div>
         <div class="container">
-            <ol class="breadcrumb my-4">{% block breadcrumb %}{% endblock %}</ol>
             {% block content %}{% endblock %}
             {% include "mxv/footer.html" %}
             <br/><br/>

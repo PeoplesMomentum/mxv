@@ -15,6 +15,7 @@ $mtm-neutral-000: #ffffff;
 $mtm-neutral-100: #F8F8F8;
 $mtm-neutral-200: #f4eff0;
 $mtm-neutral-300: #E5E5E5;
+$mtm-neutral-375: #00000038;
 $mtm-neutral-400: #81777bcc;
 $mtm-neutral-500: #646575;
 $mtm-pink-lighter: lighten($mtm-pink, 10%);
@@ -54,7 +55,7 @@ $blue:    #007bff !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
-$red:     #dc3545 !default;
+$red:     $mtm-red !default;
 $orange:  #fd7e14 !default;
 $yellow:  #ffc107 !default;
 $green:   #28a745 !default;
@@ -102,7 +103,7 @@ $theme-colors: map-merge(
     "info":       $info,
     "warning":    $warning,
     "danger":     $danger,
-    "light":      $light,
+    "light":      $mtm-neutral-100,
     "dark":       $dark
   ),
   $theme-colors

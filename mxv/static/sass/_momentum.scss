@@ -15,13 +15,24 @@ html {
 .img-scale {
   object-fit: contain;
 }
-
 // input 
 
 .form-group {
   input {
     min-height: 44px;
     border: 1px solid $mtm-neutral-400;
+  }
+
+  select {
+    // further stuff set in default
+    @extend .label-1;
+    
+    min-height: 44px;
+    -webkit-appearance: none;
+    appearance: none;
+    ::-ms-expand {
+      display: none;
+    }
   }
 }
 
@@ -71,6 +82,11 @@ a.btn {
   min-height: 44px;
   margin-bottom: 20px;
   text-transform: uppercase; 
+  &.btn-sm {
+    min-height: unset;
+    margin-bottom: unset;
+    border-radius: 7px;
+  }
 }
 
 .btn-outline-secondary {
@@ -81,9 +97,14 @@ a.btn {
 
 .card {
   $card-gutter: 10px; 
-  $img-size: 350px;
+  $img-size: 174px;
 
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+  .img-fluid {
+    max-height: $img-size;
+    object-fit: cover;
+  }
 
   .card-img-top {
     padding: $card-gutter;
@@ -236,13 +257,22 @@ a.btn {
       left: 30px;
     }
   }
+  .navbar-toggler {
+    border: none;
+  }
+
   &.navbar-transparent {
     position: absolute;
     z-index: 999;
     background: none;
   }
-  &.navbar-neutral {
-    background-color: $mtm-neutral-200;
+  &.bg-light {
+    // have to !important to "beat" BS
+    background-color: $mtm-neutral-100 !important;
+    .navbar-toggler-icon {
+      // mtm-red hardcoded -- $mtm-red: rgba(226,6,19,1);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28 226,6,19,1 %29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
   }
   .navbar-text>a {
     @extend .hed-3;
@@ -259,6 +289,8 @@ a.btn {
     }
   }
 }
+
+// breadcrumbs
 
 // dropdown
 .dropdown-toggle {

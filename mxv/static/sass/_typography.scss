@@ -49,6 +49,12 @@
   text-decoration: underline;
 }
 
+.label-4 {
+  @include font-normal(500);
+  font-size: 14px;
+  line-height: 128%;
+}
+
 .body-1 {
   @include font-normal();
   font-size: 16px;
@@ -76,4 +82,12 @@
   @include font-normal();
   font-size: 9px;
   line-height: 150%;
+}
+
+.primary {
+  color: $primary;
+}
+
+.red {
+  color: $red;
 }

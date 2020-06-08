@@ -18,14 +18,21 @@ def index(request):
     if not (QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff):
         return redirect('index')
     if request.method == 'POST':
-        return handle_question_submission(request)
+        # and there's no cat req
+        if (request.POST.get('interest') is None):
+            return handle_question_submission(request)
+        # else return the cat
+        else: 
+            category = request.POST.get('interest')
+            return show_questions(request, form=None, category=category)
     else:
         return show_questions(request)
+
 
 def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
-def show_questions(request, form=None):
+def show_questions(request, form=None, category=None):
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
@@ -60,6 +67,7 @@ def show_questions(request, form=None):
         'pending_answers': pending_answers,
         'questions': questions,
         'rejects': rejects,
+        'category': category
     }
     return render(request, 'questions/questions.html', context)
 

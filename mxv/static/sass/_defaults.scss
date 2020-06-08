@@ -31,7 +31,10 @@ li {
 }
 
 hr {
-  border-top: 1px solid $mtm-neutral-200;
+  border-top: 1px solid $mtm-neutral-375;
+  &.hr-primary {
+    border-top: 2px solid $red;
+  }
 }
 
 // component elements
@@ -40,8 +43,26 @@ hr {
   label {
     @extend .label-1;
   }
-  .input-field {
-    @extend .body-1;
+  
+  select {
+    @extend .custom-select;
+    border-radius: 7px;
+    border: 1px solid $primary;
+    background-color: $primary;
+    color: $mtm-neutral-000;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='6' height='10' viewBox='0 0 6 10' %3e%3cpath fill='white' d='M6.00016 0.5V2L6 9.5C6 10.3 5.33333 9.83333 5 9.5C3.66672 8.33333 0.900158 5.9 0.500158 5.5C0.100158 5.1 0.333491 4.66667 0.500158 4.5C2.00016 3 5.10016 0 5.50016 0C5.90016 0 6.00016 0.333333 6.00016 0.5Z'/%3e%3c/svg%3e");
+    transition: color .3s, background-color .3s, background-image .3s;
+    &:hover, &:focus{
+      background-color: $mtm-neutral-000;
+      color: $primary;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='6' height='10' viewBox='0 0 6 10' %3e%3cpath fill='%23FF0F80' d='M6.00016 0.5V2L6 9.5C6 10.3 5.33333 9.83333 5 9.5C3.66672 8.33333 0.900158 5.9 0.500158 5.5C0.100158 5.1 0.333491 4.66667 0.500158 4.5C2.00016 3 5.10016 0 5.50016 0C5.90016 0 6.00016 0.333333 6.00016 0.5Z'/%3e%3c/svg%3e");
+    }
+  }
+  option {
+    color: yellowgreen;
   }
 }
 
@@ -55,6 +76,14 @@ footer {
   box-shadow: 0 50vh 0 50vh $mtm-neutral-100;
 }
 
+
+.card {
+  $border-radius: 7px;
+  border-radius: $border-radius;
+  .img-fluid {
+    border-radius: $border-radius $border-radius 0px 0px;
+  }
+}
 .dropdown-toggle {
   white-space: normal;
   max-width: 80vw;
@@ -87,5 +116,18 @@ footer {
 .navbar {
   position: sticky;
   top: 0;
+}
+
+.breadcrumb {
+  background: none;
+  .breadcrumb-item {
+    @extend .label-2;
+  }
+  .breadcrumb-item>a {
+    color: $mtm-neutral-375;
+  }
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+  }
 }
 
