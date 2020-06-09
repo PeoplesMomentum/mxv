@@ -36,6 +36,10 @@ html {
   }
 }
 
+.is-invalid {
+  color: $red !important;
+}
+
 .input-group-append, .input-group-prepend {
   >.btn {
     min-height: 38px;

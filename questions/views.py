@@ -18,13 +18,19 @@ def index(request):
     if not (QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff):
         return redirect('index')
     if request.method == 'POST':
-        # and there's no cat req
-        if (request.POST.get('category_select') is None):
-            return handle_question_submission(request)
-        # else return the cat
-        else: 
+        if request.POST.get('category_select'):
             current_category = request.POST.get('category_select')
-            return show_questions(request, form=None, current_category=current_category)
+            return show_questions(request, None, current_category)
+        elif request.POST.get('answer_display_data'):
+            response = request.POST.get('answer_display_data').split()
+            question_pk = response[0]
+            current_region = int(response[1])
+            print(current_region)
+            question = get_object_or_404(Question, pk=question_pk)
+            current_category = request.POST.get('category_select')
+            return show_answers(request, question, None, current_region)
+        else: 
+            return handle_question_submission(request)
     else:
         return show_questions(request)
 
@@ -50,8 +56,11 @@ def show_questions(request, form=None, current_category=0):
         .order_by('category__number', '-num_votes')
     categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
-    pending_question = their_questions.filter(status='pending').exists()
-    rejects = their_questions.filter(status='rejected').order_by('created_at')
+    pending_question = their_questions.filter(status='pending')
+    try:
+        rejects = their_questions.latest('reject_reason')
+    except:
+        rejects =  None
     has_question = their_questions.exclude(status='rejected').exists()
 
     is_candidate = check_candidate(request)
@@ -106,7 +115,7 @@ def answers(request, pk):
     else:
         return show_answers(request, question)
 
-def show_answers(request, question, form=None):
+def show_answers(request, question, form=None, current_region=0):
     answers = Answer.objects \
         .filter(question__id=question.id, status='approved') \
         .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
@@ -114,7 +123,20 @@ def show_answers(request, question, form=None):
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
     allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
-    has_pending = is_candidate and candidate_answers.filter(status='pending').exists()
+    has_answered = is_candidate and candidate_answers.filter(status='approved').exists()
+    region_list = [
+        {'code': 'all', 'readable' : 'All regions'},
+        {'code': 'ysn', 'readable' : 'Yorkshire and the Humber, Cumbria, North East, Scotland, and International'},
+        {'code': 'nww', 'readable' : 'North West and Wales'},
+        {'code': 'mide', 'readable':  'Midlands and the East'},
+        {'code': 'sesw', 'readable':  'South East and South West'},
+        {'code': 'lon', 'readable' : 'London'},
+        {'code': 'mper', 'readable':  'MPs and elected representatives'},
+    ]
+    try: 
+        pending_answer = is_candidate and candidate_answers.filter(status='pending')
+    except:
+        pending_answer = None
     rejects =  candidate_answers.filter(status='rejected').order_by('-created_at')
     if rejects.count() > 0:
         reject = rejects[0]
@@ -126,9 +148,14 @@ def show_answers(request, question, form=None):
         'allow_answer': allow_answer,
         'answers': answers,
         'form': form,
-        'has_pending': has_pending,
+        'pending_answer': pending_answer,
         'question': question,
         'reject': reject,
+        'has_answered': has_answered,
+        'region_list': region_list,
+        'current_region': current_region,
+        'current_region_code': region_list[current_region]['code'],
+        'current_region_readable': region_list[current_region]['readable']
     })
 
 def handle_answer_submission(request, question):
@@ -136,7 +163,7 @@ def handle_answer_submission(request, question):
     if not candidates.exists():
         return redirect('questions:answers', pk=question.id)
     candidate = candidates.get()
-    if Answer.objects.filter(candidate=candidate, question=question).exists():
+    if Answer.objects.filter(candidate=candidate, question=question).exclude(status='rejected').exists():
         return redirect('questions:answers', pk=question.id)
     form = AnswerForm(request.POST)
     if not form.is_valid():

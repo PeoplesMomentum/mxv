@@ -23,35 +23,50 @@
 <!-- IF APPROVED OR PENDING QUESTION -->
 
 {% if pending_question %}
-<div class="row">
-  <div class="col-sm-12">
-    <h1>PENDING STATE</h1>
+  {% for pending_question in pending_question %}
+  <div class="row">
+    <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p class="label-2">Posted by {{ pending_question.author.name }} in <br>{{ pending_question.category.title }} at
+            {{ pending_question.created_at }} </p>
+            <p class="label-4 mb-0">{{ pending_question.text }}</p>
+            <hr class="my-2" />
+          </div>
+          <div class="card-row-body">
+            <span class="badge badge-secondary">This question is pending moderation</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+  {% endfor %}
 {% endif %}
 
 <!-- ELSE SHOW MOST RECENT REJECT -->
 
-{% if rejects %}
-<div class="row">
-  <div class="col-sm-12">
+{% if rejects and not pending_question and not has_question %}
     <!-- TODO: SHOW ONLY MOST RECENT -->
-    <p>The following questions have been rejected: </p>
-    <table>
-      <tr>
-        <th>Category</th>
-        <th>Text</th>
-        <th>Reason for rejection</th>
-      </tr>
-      {% for question in rejects %}
-      <tr>
-        <td>{{ question.category.title }}</td>
-        <td>{{ question.text | truncatechars:80 }}</td>
-        <td>{{ question.reject_reason }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-row-body">
+              <p class="label-2">Posted by {{ rejects.author.name }} in <br>{{ rejects.category.title }}
+                at
+                {{ rejects.created_at }} </p>
+              <p class="label-4 mb-0">{{ rejects.text }}</p>
+              <hr class="my-2" />
+            </div>
+            <div class="card-row-body">
+              <p><span class="badge badge-secondary">This question is rejects moderation</span></p>
+              <p>Reason for rejection: {{ rejects.reject_reason }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 {% endif %}
 
@@ -60,37 +75,41 @@
 
 <!-- select cats -->
 
-<div class="container">
-  <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
-    {% csrf_token %}
-    <select id="id_category_select" name="category_select" onchange="this.form.submit()">
-      <option disabled selected style="display: none;">
-            {% for category in categories %}
-              {% if current_category == category.number%}
-                {{ category.title }}
-              {% endif %}
-            {% endfor %}
-            {% if current_category == 0 %}
-              All topics
-            {% endif %}
-      </option>
-      <option value="0">All topics</option>
-      {% for category in categories %}
-      <option value="{{ category.number }}">{{ category.title }}</option>
-      {% endfor %}
-    </select>
-    <!-- <input type="submit" value="category_select" /> -->
-  </form>
-</div>
+
 
 <h1>{{ current_category_title }}</h1>
 
-<div class="container-full grey-backing-strict">
-  <div class="row justify-content-center">
-    <div class="col-sm-12 col-lg-6">
-      <h2>Questions asked</h2>
+  <div class="container-full grey-backing-strict">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-6">
+        <h2>Questions asked</h2>
+      </div>
     </div>
-  </div>
+    <div class="row">
+      <div class="col-sm-12">
+      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
+        {% csrf_token %}
+        <select id="id_category_select" name="category_select" onchange="this.form.submit()">
+          <option disabled selected style="display: none;">
+            {% for category in categories %}
+            {% if current_category == category.number%}
+            {{ category.title }}
+            {% endif %}
+            {% endfor %}
+            {% if current_category == 0 %}
+            All topics
+            {% endif %}
+          </option>
+          <option value="0">All topics</option>
+          {% for category in categories %}
+          <option value="{{ category.number }}">{{ category.title }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    </div>
+  
+
     <div class="row">
       {% for question in questions %}
       {% if current_category == question.category.number or current_category == 0 %}
@@ -101,12 +120,12 @@
             <div class="card-row-body">
               <p class="label-2">Posted by {{ question.author.name }} in <br>{{ question.category.title }} at
                 {{ question.created_at }} </p>
-                <p class="label-4 mb-0">{{ question.text }}</p>
+                <a class="label-4 mb-0" href="{% url 'questions:answers' question.pk %}" class="btn btn-success">{{question.text}}</a>
                 <hr class="my-2" />
               </div>
               <div class="card-row-body">
-                <button href="{% url 'questions:vote' question.pk %}"
-                class="btn btn-outline-primary btn-sm {% if question.voted %}active{% endif %}">
+                <a {%if not is_candidate %} href="{% url 'questions:vote' question.pk %}" {% endif %}><button href="{% url 'questions:vote' question.pk %}"
+                class="btn btn-sm {% if question.voted or is_candidate%}btn-outline-secondary active  {% else %} btn-outline-primary{% endif %}"  {%if is_candidate %} style="cursor: default !important; color: white !important;"  disabled {% endif %}>
                 {% if question.voted %}
                 <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +142,7 @@
             </svg>
                   {% endif %}
                   {{ question.num_votes }}
-                </button>
+                </button></a>
                 <span class="align-top">
                   <span class="badge-primary badge-pill body-sm-1">{{ question.num_answers }}</span> <span
                   class="label-1 secondary">answers</span>
@@ -137,7 +156,7 @@
       </div>
     </div>
   </div>
-  
+  <!-- <pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre> -->
   <!-- IF NOT CANDIDATE + NO Q, DISPLAY ASK Q -->
   
   {% if not is_candidate %}
@@ -151,10 +170,10 @@
     <form method="post" novalidate>
       {% csrf_token %}
       {% include 'mxv/includes/form.html' %}
-      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
+      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#submitModal">
         SUBMIT
       </button>
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -166,7 +185,6 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-secondary btn-block" data-dismiss="modal">Go back</button>
               <button type="submit" class="btn btn-outline-primary btn-block">SUBMIT</button>
-    
             </div>
           </div>
         </div>
