@@ -53,7 +53,7 @@ def show_questions(request, form=None, current_category=0):
         .annotate(num_votes=Count('votes')) \
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
-        .order_by('category__number', '-num_votes')
+        .order_by('-num_votes','category__number',)
     categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
     pending_question = their_questions.filter(status='pending')
@@ -116,10 +116,6 @@ def answers(request, pk):
         return show_answers(request, question)
 
 def show_answers(request, question, form=None, current_region=0):
-    answers = Answer.objects \
-        .filter(question__id=question.id, status='approved') \
-        .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
-        .order_by('candidate__position', 'created_at')
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
     allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
@@ -133,6 +129,17 @@ def show_answers(request, question, form=None, current_region=0):
         {'code': 'lon', 'readable' : 'London'},
         {'code': 'mper', 'readable':  'MPs and elected representatives'},
     ]
+    if current_region is not 0:
+        answers = Answer.objects \
+            .filter(question__id=question.id, status='approved') \
+            .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
+            .order_by('candidate__position', 'created_at') \
+            .filter(candidate__position=region_list[current_region]['code'])
+    else:
+        answers = Answer.objects \
+            .filter(question__id=question.id, status='approved') \
+            .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
+            .order_by('candidate__position', 'created_at')
     try: 
         pending_answer = is_candidate and candidate_answers.filter(status='pending')
     except:
