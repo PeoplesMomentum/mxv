@@ -67,12 +67,13 @@
       <div class="col-sm-12">
         <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
           {% csrf_token %}
-          <select id="id_answer_display_data" name="answer_display_data" onchange="this.form.submit()">
+          <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
+          <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
             <option disabled selected style="display: none;">
               <p>{{current_region_readable}}</p>
             </option>
             {% for region in region_list %}
-              <option value="{{question.id}} {{forloop.counter0}}">{{ region.readable }}</option>
+              <option value="{{region.code}}">{{ region.readable }}</option>
             {% endfor %}
           </select>
         </form>

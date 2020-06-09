@@ -21,11 +21,11 @@ def index(request):
         if request.POST.get('category_select'):
             current_category = request.POST.get('category_select')
             return show_questions(request, None, current_category)
-        elif request.POST.get('answer_display_data'):
-            response = request.POST.get('answer_display_data').split()
-            question_pk = response[0]
-            current_region = int(response[1])
-            print(current_region)
+        elif request.POST.get('answer_display_region'):
+            question_pk = request.POST.get('answer_display_question')
+            current_region = request.POST.get('answer_display_region')
+            if current_region == "None":
+                current_region = None
             question = get_object_or_404(Question, pk=question_pk)
             current_category = request.POST.get('category_select')
             return show_answers(request, question, None, current_region)
@@ -115,13 +115,13 @@ def answers(request, pk):
     else:
         return show_answers(request, question)
 
-def show_answers(request, question, form=None, current_region=0):
+def show_answers(request, question, form=None, current_region=None):
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
     allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
     has_answered = is_candidate and candidate_answers.filter(status='approved').exists()
     region_list = [
-        {'code': 'all', 'readable' : 'All regions'},
+        {'code': None, 'readable' : 'All regions'},
         {'code': 'ysn', 'readable' : 'Yorkshire and the Humber, Cumbria, North East, Scotland, and International'},
         {'code': 'nww', 'readable' : 'North West and Wales'},
         {'code': 'mide', 'readable':  'Midlands and the East'},
@@ -129,17 +129,17 @@ def show_answers(request, question, form=None, current_region=0):
         {'code': 'lon', 'readable' : 'London'},
         {'code': 'mper', 'readable':  'MPs and elected representatives'},
     ]
-    if current_region is not 0:
-        answers = Answer.objects \
-            .filter(question__id=question.id, status='approved') \
-            .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
-            .order_by('candidate__position', 'created_at') \
-            .filter(candidate__position=region_list[current_region]['code'])
-    else:
-        answers = Answer.objects \
-            .filter(question__id=question.id, status='approved') \
-            .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
-            .order_by('candidate__position', 'created_at')
+    current_region_readable = "All regions"
+    for dict in region_list:
+        for key, value in dict.items():
+            if key=='code' and value == current_region:
+                current_region_readable = dict['readable']
+    answers = Answer.objects \
+        .filter(question__id=question.id, status='approved') \
+        .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
+        .order_by('candidate__position', 'created_at')
+    if current_region is not None:
+        answers = answers.filter(candidate__position=current_region)
     try: 
         pending_answer = is_candidate and candidate_answers.filter(status='pending')
     except:
@@ -160,9 +160,8 @@ def show_answers(request, question, form=None, current_region=0):
         'reject': reject,
         'has_answered': has_answered,
         'region_list': region_list,
-        'current_region': current_region,
-        'current_region_code': region_list[current_region]['code'],
-        'current_region_readable': region_list[current_region]['readable']
+        'current_region_code': current_region,
+        'current_region_readable': current_region_readable
     })
 
 def handle_answer_submission(request, question):
