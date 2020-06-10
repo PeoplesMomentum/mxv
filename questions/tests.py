@@ -47,6 +47,11 @@ class TestQuestions(test.TestCase):
         self.assertTrue(Member.objects.filter(name='My Voter').exists())
         self.assertTrue(Member.objects.filter(name='Candidate').exists())
 
+    def test_info_without_login(self):
+        resp = self.client.get('/questions/info')
+
+        self.assertEqual(200, resp.status_code)
+
     def test_questions_appear(self):
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
         self.client.force_login(self.voter)
@@ -59,6 +64,22 @@ class TestQuestions(test.TestCase):
         questions = resp.context['questions']
         self.assertEqual(1, len(questions))
         self.assertEqual('What is the meaning of life?', questions[0].text)
+        self.assertEqual(0, resp.context['current_category'])
+
+    def test_questions_by_category(self):
+        question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
+        question2 = Question.objects.create(category=self.category2, author=self.voter, status='approved', text='If not now, when?')
+        self.client.force_login(self.voter)
+
+        resp = self.client.post('/questions/', {'category_select': self.category2.id})
+        
+        self.assertIsNotNone(resp)
+        self.assertIsNotNone(resp.context)
+        self.assertFalse(resp.context['is_candidate'])
+        questions = resp.context['questions']
+        self.assertEqual(1, len(questions))
+        self.assertEqual('If not now, when?', questions[0].text)
+        self.assertEqual(self.category2.id, resp.context['current_category'])
 
     def test_new_question(self):
         self.client.force_login(self.voter)
@@ -133,6 +154,23 @@ class TestQuestions(test.TestCase):
         self.assertEqual('What is the meaning of life?', resp.context['question'].text)
         self.assertEqual(1, len(resp.context['answers']))
         self.assertEqual('Forty-two', resp.context['answers'][0].text)
+        self.assertIsNone(resp.context['current_region_code'])
+        self.assertEqual('All regions', resp.context['current_region_readable'])
+
+    def test_answers_by_region(self):
+        question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
+        answer1 = Answer.objects.create(candidate=self.candidate, question=question1, status='approved', text='Forty-two')
+        answer3 = Answer.objects.create(candidate=self.candidate3, question=question1, status='approved', text='Who cares')
+        self.client.force_login(self.voter)
+
+        resp = self.client.post(f'/questions/', {'answer_display_question': question1.id, 'answer_display_region': 'mide'})
+
+        self.assertFalse(resp.context['allow_answer'])
+        self.assertEqual('What is the meaning of life?', resp.context['question'].text)
+        self.assertEqual(1, len(resp.context['answers']))
+        self.assertEqual('Who cares', resp.context['answers'][0].text)
+        self.assertEqual('mide', resp.context['current_region_code'])
+        self.assertEqual('Midlands and the East', resp.context['current_region_readable'])
 
     def test_answer(self):
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
@@ -178,7 +216,6 @@ class TestQuestions(test.TestCase):
         self.assertEqual('Forty-two', Answer.objects.get(question=question1, candidate=self.candidate).text)
 
     def test_questions_returned(self):
-        logging.getLogger().info("\n\n--------------\n\ntest_questions_returned\n\n")
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
         question2 = Question.objects.create(category=self.category1, author=self.voter2, status='approved', text='What is your favourite colour?')
         question3 = Question.objects.create(category=self.category2, author=self.voter2, status='approved', text='No questions here mate')
@@ -197,5 +234,3 @@ class TestQuestions(test.TestCase):
         resp = self.client.get(f'/questions/question/{question1.id}/', {'answer_display_question': '1', 'answer_display_region': 'lon'}, follow=True)
 
         self.assertEqual(3, Answer.objects.filter().count())
-
-
