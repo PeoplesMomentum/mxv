@@ -14,10 +14,12 @@
 <h2>Questions for Candidates</h2>
 <!-- IF HAS QUESTION -->
 
-<h3>Ask a candidate a question</h3>
-<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
-{% if not has_question %}
-<a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+{% if not is_candidate %}
+  <h3>Ask a candidate a question</h3>
+  <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
+  {% if not has_question %}
+  <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+  {% endif %}
 {% endif %}
 
 <!-- IF APPROVED OR PENDING QUESTION -->
