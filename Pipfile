@@ -33,6 +33,7 @@ whitenoise = "==5.1.0"
 python-dotenv = "*"
 pycryptodome = "*"
 postmarker = "==0.14.1"
+django-livereload = "*"
 
 [dev-packages]
 
