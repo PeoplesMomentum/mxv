@@ -19,9 +19,11 @@ def index(request):
         return redirect('index')
     if request.method == 'POST':
         if request.POST.get('category_select'):
+            # TODO use a proper form
             current_category = request.POST.get('category_select')
             return show_questions(request, None, current_category)
         elif request.POST.get('answer_display_region'):
+            # TODO also use a form, and move to the answers backend
             question_pk = request.POST.get('answer_display_question')
             current_region = request.POST.get('answer_display_region')
             if current_region == "None":
@@ -56,7 +58,9 @@ def show_questions(request, form=None, current_category=0):
         .annotate(num_votes=Count('votes')) \
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
-        .order_by('-num_votes','category__number',)
+        .order_by('-num_votes','category__number')
+    if current_category:
+        questions = questions.filter(category__id=current_category)
     num_questions = questions.count()
     categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
@@ -73,16 +77,16 @@ def show_questions(request, form=None, current_category=0):
         form = QuestionForm() 
     
     context = { 
+        'categories': categories,
+        'current_category': int(current_category),
         'form': form,
         'has_question': has_question,
         'is_candidate': is_candidate,
         'pending_question': pending_question,
         'pending_answers': pending_answers,
+        'num_questions': num_questions,
         'questions': questions,
         'reject': reject,
-        'current_category': int(current_category),
-        'categories': categories,
-        'num_questions': num_questions
     }
     return render(request, 'questions/questions.html', context)
 
@@ -124,45 +128,43 @@ def show_answers(request, question, form=None, current_region=None):
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
     allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
-    has_answered = is_candidate and candidate_answers.filter(status='approved').exists()
-    region_list = [
-        {'code': None, 'readable' : 'All regions'},
-        {'code': 'ysn', 'readable' : 'Yorkshire and the Humber, Cumbria, North East, Scotland, and International'},
-        {'code': 'nww', 'readable' : 'North West and Wales'},
-        {'code': 'mide', 'readable':  'Midlands and the East'},
-        {'code': 'sesw', 'readable':  'South East and South West'},
-        {'code': 'lon', 'readable' : 'London'},
-        {'code': 'mper', 'readable':  'MPs and elected representatives'},
-    ]
-    current_region_readable = "All regions"
-    for dict in region_list:
-        for key, value in dict.items():
-            if key=='code' and value == current_region:
-                current_region_readable = dict['readable']
+    has_answered = is_candidate and candidate_answers.filter(status='approved').exists()    
     answers = Answer.objects \
         .filter(question__id=question.id, status='approved') \
         .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
         .order_by('candidate__position', 'created_at')
-    if current_region is not None:
+    if current_region:
         answers = answers.filter(candidate__position=current_region)
     pending_answers = is_candidate and candidate_answers.filter(status='pending')
-    if candidate_answers.filter(status='rejected').order_by('-created_at').count() > 0:
-        reject = candidate_answers.filter(status='rejected').order_by('-created_at')[0]
+    rejects = candidate_answers.filter(status='rejected')
+    if rejects.exists():
+        reject = rejects.order_by('-created_at')[0]
     else:
         reject = None
+    region_list = [
+        {'code': None, 'readable' : 'All regions'},
+    ]
+    region_list += [
+        {'code': position_tuple[0], 'readable': position_tuple[1]}
+        for position_tuple in Candidate.POSITION_CHOICES
+    ]
+    current_region_readable = next(
+        item['readable']
+        for item in region_list if item['code'] == current_region
+    )
     if not form:
         form = AnswerForm()
     return render(request, 'questions/answers.html', {
         'allow_answer': allow_answer,
         'answers': answers,
+        'current_region_code': current_region,
+        'current_region_readable': current_region_readable,
         'form': form,
+        'has_answered': has_answered,
         'pending_answer': pending_answers,
         'question': question,
         'reject': reject,
-        'has_answered': has_answered,
         'region_list': region_list,
-        'current_region_code': current_region,
-        'current_region_readable': current_region_readable
     })
 
 def handle_answer_submission(request, question):
