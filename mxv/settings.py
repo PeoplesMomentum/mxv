@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'consultations.apps.ConsultationsConfig',
     'tasks.apps.TasksConfig',
     'questions.apps.QuestionsConfig',
+    'livereload',
     # admin, Django and third party
     'nested_admin',
     'django.contrib.admin',
@@ -75,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'mxv.urls'

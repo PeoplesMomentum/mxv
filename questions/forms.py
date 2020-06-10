@@ -1,5 +1,5 @@
 from django import forms
-from questions.models import Question, Answer
+from questions.models import Question, Answer, Candidate
 
 class QuestionForm(forms.ModelForm):
     class Meta:
@@ -16,3 +16,8 @@ class AnswerForm(forms.ModelForm):
         widgets = {
           'text': forms.Textarea(attrs={'rows':10, 'cols':50}),
         }
+
+
+class PositionForm(forms.Form):
+    position = forms.ChoiceField(choices=Candidate.POSITION_CHOICES, widget=forms.Select(attrs={"onchange": "this.form.submit()"}))
+    question = forms.ModelChoiceField(queryset=Question.objects.filter(status='approved'), widget=forms.HiddenInput())

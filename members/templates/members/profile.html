@@ -28,15 +28,15 @@
                         {% include 'mxv/includes/form_field.html' with field=form.person__email|attr:"readonly:True" %}
                         <input type="radio" name="other_email" value="replace_other_with_login" class="mb-2 mr-2" id="other_email_replace"><label for="other_email_replace">Replace this other email with the login email</label><br>
                         <input type="radio" name="other_email" value="use_other_as_login" class="mb-4 mr-2" id="other_email_use"><label for="other_email_use">Use this other email as the login email instead</label><br>
-                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <button type="submit" class="btn btn-outline-primary btn-block">Save changes</button>
                     {% else %}
                         <input type="hidden" name="hide_other_email">
-                        <a href="{% url 'members:change_login_email' %}" class="btn btn-primary">Change login email</a>
+                        <a href="{% url 'members:change_login_email' %}" class="btn btn-outline-secondary btn-block">Change login email</a>
                     {% endif %}
                     
                     <!-- extra fields -->
                     {% include 'mxv/includes/form.html' with exclude_from_form=exclude_from_form %}
-                    <button type="submit" class="btn btn-success">Save changes</button>
+                    <button type="submit" class="btn btn-outline-primary btn-block">Save changes</button>
                 </form>
             {% endif %}
         </div>

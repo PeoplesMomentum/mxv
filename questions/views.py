@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from questions.models import Question, Answer, Candidate, Vote
+from questions.models import Question, Answer, Candidate, Vote, Category
 from questions.forms import QuestionForm, AnswerForm
 from mxv.settings import QUESTIONS_VISIBLE_TO_NON_STAFF, NCG_VOTING_URL
 from django.contrib.auth.decorators import login_required
@@ -18,14 +18,32 @@ def index(request):
     if not (QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff):
         return redirect('index')
     if request.method == 'POST':
-        return handle_question_submission(request)
+        if request.POST.get('category_select'):
+            # TODO use a proper form
+            current_category = request.POST.get('category_select')
+            return show_questions(request, None, current_category)
+        elif request.POST.get('answer_display_region'):
+            # TODO also use a form, and move to the answers backend
+            question_pk = request.POST.get('answer_display_question')
+            current_region = request.POST.get('answer_display_region')
+            if current_region == "None":
+                current_region = None
+            question = get_object_or_404(Question, pk=question_pk)
+            current_category = request.POST.get('category_select')
+            return show_answers(request, question, None, current_region)
+        else: 
+            return handle_question_submission(request)
     else:
         return show_questions(request)
+
+
+def info(request):
+    return render(request, 'questions/info.html')
 
 def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
-def show_questions(request, form=None):
+def show_questions(request, form=None, current_category=0):
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
@@ -40,11 +58,17 @@ def show_questions(request, form=None):
         .annotate(num_votes=Count('votes')) \
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
-        .order_by('category__number', '-num_votes')
-
+        .order_by('-num_votes','category__number')
+    if current_category:
+        questions = questions.filter(category__id=current_category)
+    num_questions = questions.count()
+    categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
-    pending_question = their_questions.filter(status='pending').exists()
-    rejects = their_questions.filter(status='rejected').order_by('created_at')
+    pending_question = their_questions.filter(status='pending')
+    try:
+        reject = their_questions.latest('reject_reason')
+    except:
+        reject =  None
     has_question = their_questions.exclude(status='rejected').exists()
 
     is_candidate = check_candidate(request)
@@ -53,13 +77,16 @@ def show_questions(request, form=None):
         form = QuestionForm() 
     
     context = { 
+        'categories': categories,
+        'current_category': int(current_category),
         'form': form,
         'has_question': has_question,
         'is_candidate': is_candidate,
         'pending_question': pending_question,
         'pending_answers': pending_answers,
+        'num_questions': num_questions,
         'questions': questions,
-        'rejects': rejects,
+        'reject': reject,
     }
     return render(request, 'questions/questions.html', context)
 
@@ -97,29 +124,48 @@ def answers(request, pk):
     else:
         return show_answers(request, question)
 
-def show_answers(request, question, form=None):
+def show_answers(request, question, form=None, current_region=None):
+    is_candidate = check_candidate(request)
+    candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
+    allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
+    has_answered = is_candidate and candidate_answers.filter(status='approved').exists()    
     answers = Answer.objects \
         .filter(question__id=question.id, status='approved') \
         .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
         .order_by('candidate__position', 'created_at')
-    is_candidate = check_candidate(request)
-    candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
-    allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
-    has_pending = is_candidate and candidate_answers.filter(status='pending').exists()
-    rejects =  candidate_answers.filter(status='rejected').order_by('-created_at')
-    if rejects.count() > 0:
-        reject = rejects[0]
+    if current_region:
+        answers = answers.filter(candidate__position=current_region)
+    pending_answers = is_candidate and candidate_answers.filter(status='pending')
+    rejects = candidate_answers.filter(status='rejected')
+    if rejects.exists():
+        reject = rejects.order_by('-created_at')[0]
     else:
         reject = None
+    region_list = [
+        {'code': None, 'readable' : 'All regions'},
+    ]
+    region_list += [
+        {'code': position_tuple[0], 'readable': position_tuple[1]}
+        for position_tuple in Candidate.POSITION_CHOICES
+    ]
+    current_region_readable = next(
+        item['readable']
+        for item in region_list if item['code'] == current_region
+    )
     if not form:
         form = AnswerForm()
     return render(request, 'questions/answers.html', {
         'allow_answer': allow_answer,
         'answers': answers,
+        'current_region_code': current_region,
+        'current_region_readable': current_region_readable,
         'form': form,
-        'has_pending': has_pending,
+        'has_answered': has_answered,
+        'pending_answer': pending_answers,
         'question': question,
         'reject': reject,
+        'region_list': region_list,
+        'vote_url': NCG_VOTING_URL,
     })
 
 def handle_answer_submission(request, question):
@@ -127,7 +173,7 @@ def handle_answer_submission(request, question):
     if not candidates.exists():
         return redirect('questions:answers', pk=question.id)
     candidate = candidates.get()
-    if Answer.objects.filter(candidate=candidate, question=question).exists():
+    if Answer.objects.filter(candidate=candidate, question=question).exclude(status='rejected').exists():
         return redirect('questions:answers', pk=question.id)
     form = AnswerForm(request.POST)
     if not form.is_valid():

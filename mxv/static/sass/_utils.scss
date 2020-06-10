@@ -1,0 +1,86 @@
+// utility mixins
+
+@mixin hideOnMobile($display-state: block) {
+  display: none;
+  @media (min-width: 768px) {       
+    display: $display-state;
+  }
+}
+
+@mixin hideOnDesktop($display-state: block) {
+  display: $display-state;
+  @media (min-width: 768px) {       
+    display: none;
+  }
+}
+
+@mixin font-normal($weight: 400) {
+  font-family: $fontstack-text;
+  font-style: normal;
+  font-weight: $weight;
+}
+
+@mixin pseudoContainer($width: 540px) {
+  // gives container-full children rows normal behaviour 
+  $padding-width: $width/2 - 10px;
+  padding-left: calc(50vw - #{$padding-width});
+  padding-right: calc(50vw -#{$padding-width});
+  >.row {
+    max-width: $width;
+  }
+}
+
+.pseudocontainer {
+
+  padding: 0px 15px;
+  // Mobile devices
+  @media (min-width: 576px) { 
+    @include pseudoContainer(540px);
+  }
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) { 
+    @include pseudoContainer(720px);
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) { 
+    @include pseudoContainer(960px);
+  }
+
+  // Extra large devices (large desktops, 1200px and up)
+  @media (min-width: 1200px) { 
+    @include pseudoContainer(1140px);
+  }
+}
+
+@mixin buttonOutliner($color: $mtm-neutral-500) {
+  border: thin solid $color;
+  background-color: $mtm-neutral-000;
+  $color-lighter: lighten($color, 10%);
+  color: $primary;
+  transition: color .3s, background-color .3s, border-color .3s, box-shadow .3s;
+  svg {
+    transition: fill .3s;
+  }
+  &:hover {
+    background-color: $color;
+    border-color: $color;
+    color: $mtm-neutral-000;
+    svg>path{
+      fill: $mtm-neutral-000;
+    }
+  }
+  &:focus {
+    box-shadow: 0 0 0 .2rem $color-lighter;
+  }
+  &:active, &.active {
+    background-color: $color !important;
+    border-color: $color !important;
+    svg>path{
+      fill: $mtm-neutral-000;
+    }
+    &:focus {
+      box-shadow: 0 0 0 .2rem $color-lighter !important;
+    }
+  }
+}
