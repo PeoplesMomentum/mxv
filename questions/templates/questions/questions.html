@@ -46,22 +46,22 @@
 
 <!-- ELSE SHOW MOST RECENT REJECT -->
 
-{% if rejects and not pending_question and not has_question %}
+{% if reject and not pending_question and not has_question %}
     <!-- TODO: SHOW ONLY MOST RECENT -->
     <div class="row">
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
             <div class="card-row-body">
-              <p class="label-2">Posted by {{ rejects.author.name }} in <br>{{ rejects.category.title }}
+              <p class="label-2">Posted by {{ reject.author.name }} in <br>{{ reject.category.title }}
                 at
-                {{ rejects.created_at }} </p>
-              <p class="label-4 mb-0">{{ rejects.text }}</p>
+                {{ reject.created_at }} </p>
+              <p class="label-4 mb-0">{{ reject.text }}</p>
               <hr class="my-2" />
             </div>
             <div class="card-row-body">
-              <p><span class="badge badge-secondary">This question is rejects moderation</span></p>
-              <p>Reason for rejection: {{ rejects.reject_reason }}</p>
+              <p><span class="badge badge-secondary">This question is reject moderation</span></p>
+              <p>Reason for rejection: {{ reject.reject_reason }}</p>
             </div>
           </div>
         </div>

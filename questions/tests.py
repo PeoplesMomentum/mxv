@@ -7,12 +7,12 @@ import pprint
 pp = pprint.PrettyPrinter()
 
 class TestQuestions(test.TestCase):
-    def _create_member(self, email, name, is_candidate):
+    def _create_member(self, email, name, is_candidate, position=None):
         member = Member.objects.create_member(email, name, 'password')
         member.is_active = True
         member.save()
         if is_candidate:
-            candidate = Candidate.objects.create(member=member)
+            candidate = Candidate.objects.create(member=member,position=position)
             return candidate
         else:
             return member
@@ -22,7 +22,10 @@ class TestQuestions(test.TestCase):
         self.client = test.Client()
         self.voter = self._create_member('voter@voter.com', 'My Voter', False)
         self.voter2 = self._create_member('voter2@voter.com', 'My Voter 2', False)
-        self.candidate = self._create_member('candidate@candidate.com', 'Candidate', True)
+        self.voter3 = self._create_member('voter3@voter.com', 'My Voter 3', False)
+        self.candidate = self._create_member('candidate@candidate.com', 'Candidate', True, 'lon')
+        self.candidate2 = self._create_member('candidate2@candidate.com', 'Candidate', True, 'lon')
+        self.candidate3 = self._create_member('candidate3@candidate.com', 'Candidate', True, 'mide')
         self.category1 = Category.objects.create(number=1, title='Category 1')
         self.category2 = Category.objects.create(number=2, title='Category 2')
 
@@ -168,3 +171,22 @@ class TestQuestions(test.TestCase):
         resp = self.client.post(f'/questions/question/{question1.id}/', {'text': 'I changed my mind'}, follow=True)
      
         self.assertEqual('Forty-two', Answer.objects.get(question=question1, candidate=self.candidate).text)
+
+    def questions_returned(self):
+        question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
+        question2 = Question.objects.create(category=self.category1, author=self.voter2, status='approved', text='What is your favourite colour?')
+        question3 = Question.objects.create(category=self.category2, author=self.voter2, status='approved', text='No questions here mate')
+
+        resp = self.client.post(f'/questions/', {'category_select': '1'}, follow=True)
+
+        self.assertEqual(2, Count(Question.objects.get()))
+    
+    def answers_returned(self):
+        answer1 = Answer.objects.create(candidate=self.candidate, question=question1, status='approved', text='Forty-two')
+        answer2 = Answer.objects.create(candidate=self.candidate2, question=question2, status='approved', text='Twenty-one')
+        answer3 = Answer.objects.create(candidate=self.candidate3, question=question1, status='approved', text='10.499999999999999999999')
+
+        resp = self.client.get(f'/questions/question{question1.id}/', {'answer_display_question': '1', 'answer_display_region': 'lon'}, follow=True)
+
+        # purposely wrong 
+        self.assertEqual(99, Count(Answer.objects.get()))

@@ -58,9 +58,9 @@ def show_questions(request, form=None, current_category=0):
     their_questions = Question.objects.filter(author__id=request.user.id)
     pending_question = their_questions.filter(status='pending')
     try:
-        rejects = their_questions.latest('reject_reason')
+        reject = their_questions.latest('reject_reason')
     except:
-        rejects =  None
+        reject =  None
     has_question = their_questions.exclude(status='rejected').exists()
 
     is_candidate = check_candidate(request)
@@ -75,7 +75,7 @@ def show_questions(request, form=None, current_category=0):
         'pending_question': pending_question,
         'pending_answers': pending_answers,
         'questions': questions,
-        'rejects': rejects,
+        'reject': reject,
         'current_category': int(current_category),
         'categories': categories
     }
@@ -140,13 +140,9 @@ def show_answers(request, question, form=None, current_region=None):
         .order_by('candidate__position', 'created_at')
     if current_region is not None:
         answers = answers.filter(candidate__position=current_region)
-    try: 
-        pending_answer = is_candidate and candidate_answers.filter(status='pending')
-    except:
-        pending_answer = None
-    rejects =  candidate_answers.filter(status='rejected').order_by('-created_at')
-    if rejects.count() > 0:
-        reject = rejects[0]
+    pending_answers = is_candidate and candidate_answers.filter(status='pending')
+    if candidate_answers.filter(status='rejected').order_by('-created_at').count() > 0:
+        reject = candidate_answers.filter(status='rejected').order_by('-created_at')[0]
     else:
         reject = None
     if not form:
@@ -155,7 +151,7 @@ def show_answers(request, question, form=None, current_region=None):
         'allow_answer': allow_answer,
         'answers': answers,
         'form': form,
-        'pending_answer': pending_answer,
+        'pending_answer': pending_answers,
         'question': question,
         'reject': reject,
         'has_answered': has_answered,
