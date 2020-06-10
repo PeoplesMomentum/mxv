@@ -62,7 +62,8 @@ hr {
     }
   }
   option {
-    color: yellowgreen;
+    @extend .body-1;
+    color: black !important;
   }
 }
 

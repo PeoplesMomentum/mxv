@@ -35,6 +35,9 @@ def index(request):
         return show_questions(request)
 
 
+def info(request):
+    return render(request, 'questions/info.html')
+
 def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
@@ -54,6 +57,7 @@ def show_questions(request, form=None, current_category=0):
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
         .order_by('-num_votes','category__number',)
+    num_questions = questions.count()
     categories = Category.objects.all()
     their_questions = Question.objects.filter(author__id=request.user.id)
     pending_question = their_questions.filter(status='pending')
@@ -77,7 +81,8 @@ def show_questions(request, form=None, current_category=0):
         'questions': questions,
         'reject': reject,
         'current_category': int(current_category),
-        'categories': categories
+        'categories': categories,
+        'num_questions': num_questions
     }
     return render(request, 'questions/questions.html', context)
 

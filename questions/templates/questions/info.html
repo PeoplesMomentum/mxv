@@ -1,0 +1,140 @@
+{% extends "mxv/base.html" %}
+{% load static %}
+
+{% block title%}Questions{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+<li class="breadcrumb-item active">Questions</li>
+{% endblock %}
+
+{% block content %}
+<h1>Candidate Q&A</h1>
+<p>
+  This is your chance to find out more about the Momentum members running for in the leadership election. 
+  You can ask a question, upvote questions submitted by other members and read candidate’s responses.
+</p>
+<h2>How do I ask a question?</h2>
+<p>
+Every member can submit one question on one of the topics listed below. Questions can be upvoted by other members and
+popular questions will rise to the top. All questions are moderated to make sure they aren’t repetitive and are in line
+with Momentum’s <a href='https://peoplesmomentum.com/code-of-ethics/'>code of ethics</a>.
+</p>
+<h2>Question examples</h2>
+
+<div class="accordion" id="accordionExample">
+  
+  <div class="card">
+    <a type="button" data-toggle="collapse" data-target="#collapseOne"
+      aria-expanded="true" aria-controls="collapseOne">
+    <div class="card-header" id="headingOne">
+
+          Winning Elections for Labour
+          
+        </div>
+      </a>
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "What do you think went wrong in the 2019 election?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <a type="button" data-toggle="collapse" data-target="#collapseTwo"
+    aria-expanded="false" aria-controls="collapseTwo">
+        <div class="card-header" id="headingTwo">
+          Build a social movement
+        </div>
+        </a>
+
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "How will you help Momentum members organise in their workplaces?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <a type="button" data-toggle="collapse" data-target="#collapseThree"
+    aria-expanded="false" aria-controls="collapseThree">
+    <div class="card-header" id="headingThree">
+      Build a sustainable organisation
+    </div>
+  </a>
+
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "How will you develop our ability to raise funds?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <a type="button" data-toggle="collapse" data-target="#collapseFour"
+    aria-expanded="false" aria-controls="collapseFour">
+        <div class="card-header" id="headingFour">
+          Transform the Labour Party
+        </div>
+        </a>
+
+    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "How will you campaign to make MPs accountable to the membership?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <a type="button" data-toggle="collapse" data-target="#collapseFive"
+    aria-expanded="false" aria-controls="collapseFive">
+        <div class="card-header" id="headingFive">
+          Train activists and build new leadership at all levels of the party
+        </div>
+        </a>
+
+    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "What are your plans for political education?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <a type="button" data-toggle="collapse" data-target="#collapseSix"
+    aria-expanded="false" aria-controls="collapseSix">
+        <div class="card-header" id="headingSix">
+          Other key political priorities
+        </div>
+        </a>
+
+    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+      <div class="card-body">
+        <div class="card-row-body">
+          <p>Example question: "Do you think protesters were right to pull down the statue of Edward Colston in Bristol?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<h2>Answer rules</h2>
+<p>Candidates can answer any questions they want and in any order. All answers will be moderated to ensure they comply with our <a href="https://peoplesmomentum.com/wp-content/uploads/2020/05/2020-05-27-CodeOfConduct.pdf?_ga=2.68239449.910429016.1591784033-1575617572.1584972237">candidate code of conduct</a></p>
+
+<a href="{% url 'questions:index' %}" class="btn btn-outline-primary btn-block">VIEW Q&A LIST</a>
+<a href="#" class="btn btn-outline-secondary btn-block">Find out more about NCG Elections</a>
+{% endblock %}

@@ -3,8 +3,13 @@ from questions.models import *
 from members.models import Member
 import logging
 import pprint
+import sys
 
 pp = pprint.PrettyPrinter()
+
+logger = logging.getLogger()
+logger.level = logging.DEBUG
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 class TestQuestions(test.TestCase):
     def _create_member(self, email, name, is_candidate, position=None):
@@ -172,21 +177,25 @@ class TestQuestions(test.TestCase):
      
         self.assertEqual('Forty-two', Answer.objects.get(question=question1, candidate=self.candidate).text)
 
-    def questions_returned(self):
+    def test_questions_returned(self):
+        logging.getLogger().info("\n\n--------------\n\ntest_questions_returned\n\n")
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
         question2 = Question.objects.create(category=self.category1, author=self.voter2, status='approved', text='What is your favourite colour?')
         question3 = Question.objects.create(category=self.category2, author=self.voter2, status='approved', text='No questions here mate')
 
         resp = self.client.post(f'/questions/', {'category_select': '1'}, follow=True)
-
-        self.assertEqual(2, Count(Question.objects.get()))
+        logging.getLogger().info(resp.render())        
+        self.assertEqual(3, Question.objects.filter().count())
     
-    def answers_returned(self):
+    def test_answers_returned(self):
+        question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
+        question2 = Question.objects.create(category=self.category1, author=self.voter2, status='approved', text='What is your favourite colour?')
         answer1 = Answer.objects.create(candidate=self.candidate, question=question1, status='approved', text='Forty-two')
         answer2 = Answer.objects.create(candidate=self.candidate2, question=question2, status='approved', text='Twenty-one')
         answer3 = Answer.objects.create(candidate=self.candidate3, question=question1, status='approved', text='10.499999999999999999999')
 
-        resp = self.client.get(f'/questions/question{question1.id}/', {'answer_display_question': '1', 'answer_display_region': 'lon'}, follow=True)
+        resp = self.client.get(f'/questions/question/{question1.id}/', {'answer_display_question': '1', 'answer_display_region': 'lon'}, follow=True)
 
-        # purposely wrong 
-        self.assertEqual(99, Count(Answer.objects.get()))
+        self.assertEqual(3, Answer.objects.filter().count())
+
+

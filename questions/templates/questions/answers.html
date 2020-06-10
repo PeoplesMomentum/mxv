@@ -10,13 +10,21 @@
 {% endblock %}
 
 {% block content %}
-  {% if allow_answer %}
-  <h1>Answer this question</h1>
-    {% endif %}
+<div class="row justify-content-center">
 
+  <div class="col-sm-12">
+    <a href="{% url 'questions:index' %}"><p class="body-sm-1">↶ Return to all questions</p></a>
+  </div>
+  <div class="col-sm-12 col-md-8">
+    <h2>“{{ question.text }}”</h2>
     <p>Posted by {{ question.author.name }} in {{question.category.title}}</p>
-    <h2>{{ question.text }}</h2>
+  </div>
+</div>
 
+    {% if allow_answer %}
+      <hr/>
+      <p>You can submit an answer to this question</p>
+    {% endif %}
     {% if pending_answer %}
             {% for answer in pending_answer %}
               <div class="row">
@@ -24,7 +32,7 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="card-row-body">
-                        <h2>Posted by {{ answer.candidate.member.name }}</h2>
+                        <p>Posted by {{ answer.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
                         <p>{{ answer.candidate.get_position_display }}</p>
                         <p class="mt-4">{{ answer.text }}</p>
                       </div>
@@ -43,7 +51,7 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="card-row-body">
-                        <h2>Posted by {{ reject.candidate.member.name }}</h2>
+                        <p>Posted by {{ reject.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
                         <p>{{ reject.candidate.get_position_display }}</p>
                         <p class="mt-4">{{ reject.text }}</p>
                       </div>
@@ -63,8 +71,10 @@
   </div>
 
   <div class="container-full grey-backing-strict">
-    <div class="row">
-      <div class="col-sm-12">
+
+    <div class="row justify-content-center">
+      
+      <div class="col-sm-12 col-md-8">
         <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
           {% csrf_token %}
           <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
@@ -75,33 +85,37 @@
             {% for region in region_list %}
               <option value="{{region.code}}">{{ region.readable }}</option>
             {% endfor %}
+
           </select>
         </form>
-      </div>
-    </div>
 
-
-        
-
-    <h1>{{ answers|length }} Answers</h1>
-    {% for answer in answers %}
-      <div class="card">
-        <div class="card-body">
-          <table class="small">
-            <tr><td><b>Answered by</b></td><td><a href="{{answer.url}}">{{ answer.candidate.member.name }}</a></td></tr>
-            <tr><td><b>Position</b></td><td>{{ answer.candidate.get_position_display }}</td></tr>
-            <tr><td><b>Answered at</b></td><td>{{ answer.created_at }}</td></tr>
-          </table>
-          <hr>
-          <p class="card-text">{{ answer.text }}</p>
+        {% if not answers %}
         </div>
+        <div class="col-sm-12">
+          <h2 style="text-align: center;">This question has no candidate answers from {{ current_region_readable }}</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+        {% else %}
+        <h2>{{ answers|length }} Answer{% if answers|length > 1 %}s{% endif %}</h2>
+        {% endif %}
+
+
+
+      </div>
+    {% for answer in answers %}
+          <div class="col-sm-8">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-row-body p-4">
+                <h2 class="mt-0">{{ answer.candidate.member.name }}</h2>
+                <p class="label-1 secondary">{{ answer.candidate.get_position_display }}</p>
+                <a class="body-sm-1" target="_blank" href="https://vote.peoplesmomentum.com/{{answer.candidate.candidate_code}}">More about this candidate</a>
+                <hr>
+                <p class="mt-4">{{ answer.text }}</p>
+              </div>
+          </div>
       </div>
     {% endfor %}
-    {% if not answers %}
-    <div class="col-sm-12">
-      <h1>This question has no candidate answers</h1>
-    </div>
-    {% endif %}
   </div>
   
   

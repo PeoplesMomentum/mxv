@@ -14,10 +14,10 @@
 <h2>Questions for Candidates</h2>
 <!-- IF HAS QUESTION -->
 
+<h3>Ask a candidate a question</h3>
+<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
 {% if not has_question %}
-    <h3>Ask a candidate a question</h3>
-    <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="#">Find out more</a></p>
-    <a class="btn btn-outline-primary btn-block" href="#ask-a-question">ASK A QUESTION</a>
+<a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
 {% endif %}
 
 <!-- IF APPROVED OR PENDING QUESTION -->
@@ -29,9 +29,8 @@
     <div class="card">
       <div class="card-body">
         <div class="card-row-body">
-          <p class="label-2">Posted by {{ pending_question.author.name }} in <br>{{ pending_question.category.title }} at
-            {{ pending_question.created_at }} </p>
-            <p class="label-4 mb-0">{{ pending_question.text }}</p>
+          <p class="label-2">Posted by {{ pending_question.author.name }} in {{ pending_question.category.title }}</p>
+            <p class="mb-0">{{ pending_question.text }}</p>
             <hr class="my-2" />
           </div>
           <div class="card-row-body">
@@ -56,7 +55,7 @@
               <p class="label-2">Posted by {{ reject.author.name }} in <br>{{ reject.category.title }}
                 at
                 {{ reject.created_at }} </p>
-              <p class="label-4 mb-0">{{ reject.text }}</p>
+              <p class="mb-0">{{ reject.text }}</p>
               <hr class="my-2" />
             </div>
             <div class="card-row-body">
@@ -80,7 +79,7 @@
 <h1>{{ current_category_title }}</h1>
 
   <div class="container-full grey-backing-strict">
-    <div class="row justify-content-center">
+    <div class="row">
       <div class="col-sm-12 col-lg-6">
         <h2>Questions asked</h2>
       </div>
@@ -110,17 +109,28 @@
     </div>
   
 
+    {% if num_questions == 0 %}
+        <div class="row justify-content-center">
+        
+          <div class="col-sm-12 col-md-6">
+          
+            <h3 align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
+
+          </div>
+        </div>
+            {% else %}
     <div class="row">
       {% for question in questions %}
       {% if current_category == question.category.number or current_category == 0 %}
       
       <div class="col-sm-12 col-md-6">
-        <div class="card">
+        <div class="card mb-4">
           <div class="card-body">
             <div class="card-row-body">
-              <p class="label-2">Posted by {{ question.author.name }} in <br>{{ question.category.title }} at
-                {{ question.created_at }} </p>
-                <a class="label-4 mb-0" href="{% url 'questions:answers' question.pk %}" class="btn btn-success">{{question.text}}</a>
+              <p class="label-2">Posted by {{ question.author.name }} in {{ question.category.title }}</p>
+
+                <h3 class="mb-0"><a href="{% url 'questions:answers' question.pk %}">
+{{question.text}}</a></h3>
                 <hr class="my-2" />
               </div>
               <div class="card-row-body">
@@ -154,6 +164,7 @@
         {% endif %}
         {% endfor %}
       </div>
+      {% endif %}
     </div>
   </div>
   <!-- <pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre> -->
@@ -165,7 +176,7 @@
   <div class="row">
     <div id="#ask-a-question" class="col-sm-12">
     <h2>Ask your question</h2>
-    <p>Please do not duplicate existing questions. <a href="#">Read more about question rules and see examples</a></p>
+    <p>Please do not duplicate existing questions. <a href="info">Read more about question rules and see examples</a></p>
 
     <form method="post" novalidate>
       {% csrf_token %}
@@ -178,9 +189,16 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-body">
-              <h2>Are you ready to submit your question?</h2>
-              <p>Once a question has been submitted it cannot be edited and will be reviewed for meeting the question rules by a
-              moderator before appearing in the list</p>
+            <h2>Please check your question</h2>
+            <p>
+              To make sure your question is approved, please check that it is:
+              <ul>
+                <li>New and not repeating a question asked by another member.</li>
+                <li>Addressed to all candidates and not targetting or biased towards any individual candidate.</li>
+                <li>In line witih Momentum’s code of ethics.</li>
+                <li>If not, please go back and edit your question. Once submitted, your question cannot be edited.</li>
+              </ul>
+            </p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-secondary btn-block" data-dismiss="modal">Go back</button>

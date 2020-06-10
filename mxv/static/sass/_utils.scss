@@ -31,6 +31,8 @@
 }
 
 .pseudocontainer {
+
+  padding: 0px 15px;
   // Mobile devices
   @media (min-width: 576px) { 
     @include pseudoContainer(540px);
