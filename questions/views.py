@@ -165,6 +165,7 @@ def show_answers(request, question, form=None, current_region=None):
         'question': question,
         'reject': reject,
         'region_list': region_list,
+        'vote_url': NCG_VOTING_URL,
     })
 
 def handle_answer_submission(request, question):
