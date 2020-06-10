@@ -12,8 +12,6 @@
     
 
 <h2>Questions for Candidates</h2>
-<!-- IF HAS QUESTION -->
-
 {% if not is_candidate %}
   <h3>Ask a candidate a question</h3>
   <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
@@ -26,12 +24,12 @@
 
 {% if pending_question %}
   {% for pending_question in pending_question %}
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-sm-12">
     <div class="card">
       <div class="card-body">
         <div class="card-row-body">
-          <p class="label-2">Posted by {{ pending_question.author.name }} in {{ pending_question.category.title }}</p>
+          <p class="label-2"><span class="primary">Your question</span> in {{ pending_question.category.title }}</p>
             <p class="mb-0">{{ pending_question.text }}</p>
             <hr class="my-2" />
           </div>
@@ -80,7 +78,7 @@
 
 <h1>{{ current_category_title }}</h1>
 
-  <div class="container-full grey-backing-strict">
+  <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
     <div class="row">
       <div class="col-sm-12 col-lg-6">
         <h2>Questions asked</h2>
@@ -137,7 +135,7 @@
               </div>
               <div class="card-row-body">
                 <a {%if not is_candidate %} href="{% url 'questions:vote' question.pk %}" {% endif %}><button href="{% url 'questions:vote' question.pk %}"
-                class="btn btn-sm {% if question.voted or is_candidate%}btn-outline-secondary active  {% else %} btn-outline-primary{% endif %}"  {%if is_candidate %} style="cursor: default !important; color: white !important;"  disabled {% endif %}>
+                class="btn btn-sm {% if is_candidate%}btn-outline-secondary {% else %} btn-outline-primary{% endif %}{% if question.voted %} active{% endif %}"  {%if is_candidate %} style="cursor: default !important; color: white !important;"  disabled {% endif %}>
                 {% if question.voted %}
                 <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
