@@ -12,71 +12,41 @@
     
 
 <h2>Questions for Candidates</h2>
-{% if not is_candidate %}
-  <h3>Ask a candidate a question</h3>
-  <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
+{% if is_candidate %}
+<h3>Your answers</h3>
+<p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
+top 5 questions in each topic.</p>
+<a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
+{% else %}
+<h3>Ask a candidate a question</h3>
+<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
   {% if not has_question %}
-  <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+    <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
   {% endif %}
 {% endif %}
 
-<!-- IF APPROVED OR PENDING QUESTION -->
 
 {% if pending_question %}
-  {% for pending_question in pending_question %}
+  {% for question in pending_question %}
   <div class="row mb-4">
     <div class="col-sm-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="card-row-body">
-          <p class="label-2"><span class="primary">Your question</span> in {{ pending_question.category.title }}</p>
-            <p class="mb-0">{{ pending_question.text }}</p>
-            <hr class="my-2" />
-          </div>
-          <div class="card-row-body">
-            <span class="badge badge-secondary">This question is pending moderation</span>
-          </div>
-        </div>
-      </div>
+      {% include './question_card.html' with question=question badge_text="This question is pending moderation"  %}
     </div>
   </div>
   {% endfor %}
 {% endif %}
 
-<!-- ELSE SHOW MOST RECENT REJECT -->
-
 {% if reject and not pending_question and not has_question %}
-    <!-- TODO: SHOW ONLY MOST RECENT -->
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-row-body">
-              <p class="label-2">Posted by {{ reject.author.name }} in <br>{{ reject.category.title }}
-                at
-                {{ reject.created_at }} </p>
-              <p class="mb-0">{{ reject.text }}</p>
-              <hr class="my-2" />
-            </div>
-            <div class="card-row-body">
-              <p><span class="badge badge-secondary">This question was declined in moderation</span></p>
-              <p>Reason for rejection: {{ reject.reject_reason }}</p>
-            </div>
-          </div>
-        </div>
+        {% include './question_card.html' with question=reject badge_text="This question was declined" statusline=reject.reject_reason  %}
       </div>
     </div>
 </div>
 {% endif %}
 
-<!-- DISPLAY QUESTIONS -->
 </div>
 
-<!-- select cats -->
-
-
-
-<h1>{{ current_category_title }}</h1>
 
   <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
     <div class="row">
@@ -111,55 +81,18 @@
 
     {% if num_questions == 0 %}
         <div class="row justify-content-center">
-        
           <div class="col-sm-12 col-md-6">
-          
-            <h3 align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
-
+            <h3 class="gray-600" align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
           </div>
         </div>
-            {% else %}
+    {% else %}
     <div class="row">
       {% for question in questions %}
       {% if current_category == question.category.number or current_category == 0 %}
       
       <div class="col-sm-12 col-md-6">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="card-row-body">
-              <p class="label-2">Posted by {{ question.author.name }} in {{ question.category.title }}</p>
 
-                <h3 class="mb-0"><a href="{% url 'questions:answers' question.pk %}">
-{{question.text}}</a></h3>
-                <hr class="my-2" />
-              </div>
-              <div class="card-row-body">
-                <a {%if not is_candidate %} href="{% url 'questions:vote' question.pk %}" {% endif %}><button href="{% url 'questions:vote' question.pk %}"
-                class="btn btn-sm {% if is_candidate%}btn-outline-secondary {% else %} btn-outline-primary{% endif %}{% if question.voted %} active{% endif %}"  {%if is_candidate %} style="cursor: default !important; color: white !important;"  disabled {% endif %}>
-                {% if question.voted %}
-                <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                d="M 8,1 8.35355,0.646447 8,0.292893 7.64645,0.646447 Z m 6,6 v 0.5 h 1.2071 L 14.3536,6.64645 Z M 10.5,7 V 6.5 H 10 V 7 Z m 0,6 v 0.5 H 11 V 13 Z m -5,0 H 5 v 0.5 h 0.5 z m 0,-6 H 14 L 8,1 5.5,6.5 Z M 2,7 1.64645,6.64645 0.792893,7.5 H 2 Z m 5.64645,-5.64645 5.99995,6 0.7072,-0.7071 L 8.35355,0.646447 Z M 14,6.5 h -3.5 v 1 H 14 Z M 10,7 v 6 h 1 V 7 Z m 0.5,5.5 h -5 v 1 h 5 z m 0,0.5 V 6.5 L 5,7 v 6 z M 8,1 2,6.5 v 1 h 3.5 z m -5.64645,6.35355 6,-6 -0.7071,-0.707103 -6,6.000003 z"
-                fill="#FF0F80" />
-              </svg>
-              {% else %}
-              <svg class="align-middle" width="16" height="14" viewBox="0 0 16 14" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-              d="M8 1L8.35355 0.646447L8 0.292893L7.64645 0.646447L8 1ZM14 7V7.5H15.2071L14.3536 6.64645L14 7ZM10.5 7V6.5H10V7H10.5ZM10.5 13V13.5H11V13H10.5ZM5.5 13H5V13.5H5.5V13ZM5.5 7H6V6.5H5.5V7ZM2 7L1.64645 6.64645L0.792893 7.5H2V7ZM7.64645 1.35355L13.6464 7.35355L14.3536 6.64645L8.35355 0.646447L7.64645 1.35355ZM14 6.5H10.5V7.5H14V6.5ZM10 7V13H11V7H10ZM10.5 12.5H5.5V13.5H10.5V12.5ZM6 13V7H5V13H6ZM5.5 6.5H2V7.5H5.5V6.5ZM2.35355 7.35355L8.35355 1.35355L7.64645 0.646447L1.64645 6.64645L2.35355 7.35355Z"
-              fill="#FF0F80" />
-            </svg>
-                  {% endif %}
-                  {{ question.num_votes }}
-                </button></a>
-                <span class="align-top">
-                  <span class="badge-primary badge-pill body-sm-1">{{ question.num_answers }}</span> <span
-                  class="label-1 secondary">answers</span>
-                </span>
-              </div>
-            </div>
-          </div>
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
         </div>
         {% endif %}
         {% endfor %}
@@ -181,7 +114,7 @@
     <form method="post" novalidate>
       {% csrf_token %}
       {% include 'mxv/includes/form.html' %}
-      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#submitModal">
+      <button type="button" class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#submitModal">
         SUBMIT
       </button>
       <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
@@ -190,12 +123,11 @@
           <div class="modal-content">
             <div class="modal-body">
             <h2>Please check your question</h2>
-            <p>
-              To make sure your question is approved, please check that it is:
+            <p>To make sure your question is approved, please check that it is:
               <ul>
                 <li>New and not repeating a question asked by another member.</li>
-                <li>Addressed to all candidates and not targetting or biased towards any individual candidate.</li>
-                <li>In line witih Momentum’s code of ethics.</li>
+                <li>Addressed to all candidates and not targeting or biased towards any individual candidate.</li>
+                <li>In line with Momentum’s code of ethics.</li>
                 <li>If not, please go back and edit your question. Once submitted, your question cannot be edited.</li>
               </ul>
             </p>

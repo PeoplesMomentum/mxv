@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-row-body">
+      <p class="label-2">Posted by {{ question.author.name }} in {{ question.category.title }}</p>
+      <h4 class="mb-0">{{ question.text }}</h4>
+        {% if votable %}
+          <h4 class="label-1s"><a href="{% url 'questions:answers' question.pk %}">Read candidates' answers ↷</a></h4>
+        {% endif %}
+      <hr class="my-2" />
+    </div>
+  <div class="card-row-body">
+
+    {% if badge_text %}
+      {% if badge_status %}
+      <span class="badge badge-{{badge_status}}">
+      {% else %}
+      <span class="badge badge-light bg-gray-500" style="color: #ffffff;">
+      {% endif %}
+      {{ badge_text }}
+      </span>
+    {% endif %}
+    <p>
+      {{statusline}}
+    </p>
+    {% if votable %}
+      {% include './question_card_status.html' with question=question is_candidate=is_candidate %}
+    {% endif %}
+  </div>
+</div>

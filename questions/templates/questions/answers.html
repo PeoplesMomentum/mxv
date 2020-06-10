@@ -13,14 +13,14 @@
   <div class="row justify-content-center">
 
     <div class="col-sm-12">
-      <a href="{% url 'questions:index' %}"><p class="body-sm-1">↶ Return to all questions</p></a>
+      <a href="{% url 'questions:index' %}"><h4>↶ Return to all questions</h4></a>
     </div>
     
     <div class="col-sm-12 col-lg-8">
 
       {% if pending_answer %}
 
-      <span class="badge badge-secondary body-label-1">Your answer is pending moderation</span>
+      <span class="badge badge-light bg-gray-500" style="color: #ffffff;">Your answer is pending moderation</span>
 
       {% elif has_answered%}
 
@@ -28,7 +28,7 @@
 
       {% endif %}
 
-      <h2>“{{ question.text }}”</h2>
+      <h4 class="my-3">“{{ question.text }}”</h4>
       <p class="label-1 gray-500">Posted by <span class="secondary">{{ question.author.name }}</span> in <span class="secondary">{{question.category.title}}</span></p>
 
       {% if allow_answer %}
@@ -46,31 +46,30 @@
 <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
 
   <div class="row justify-content-center">
-
-    <div class="col-sm-12 col-lg-8">
-      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
-        {% csrf_token %}
-        <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
-        <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
-          <option disabled selected style="display: none;">
-            <p>{{current_region_readable}}</p>
-          </option>
-          {% for region in region_list %}
-            <option value="{{region.code}}">{{ region.readable }}</option>
-          {% endfor %}
-        </select>        
-      </form>
-    </div>
-    
-    
+  
+  {% if not answers and current_region_readable == "All regions" %}
+  {% else %}
+  <div class="col-sm-12 col-lg-8">
+    <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
+      {% csrf_token %}
+      <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
+      <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
+        <option disabled selected style="display: none;">
+          <p>{{current_region_readable}}</p>
+        </option>
+        {% for region in region_list %}
+        <option value="{{region.code}}">{{ region.readable }}</option>
+        {% endfor %}
+      </select>
+    </form>
   </div>
+  {%endif%}
 
-  <div class="row justify-content-center">
-    
+
     {% if not answers %}
 
     <div class="col-sm-12">
-      <h2 style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h2>
+      <h3 class="gray-600" style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h3>
     </div>
     
     {% else %}
@@ -88,16 +87,7 @@
     {% for answer in answers %}
 
     <div class="col-sm-8">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-row-body p-4">
-            <h2 class="mt-0">{{ answer.candidate.member.name }}</h2>
-            <p class="label-1 secondary">{{ answer.candidate.get_position_display }}</p>
-            <a class="body-sm-1" target="_blank" href="https://vote.peoplesmomentum.com/{{answer.candidate.candidate_code}}">More about this candidate</a>
-            <p class="mt-4">{{ answer.text }}</p>
-          </div>
-        </div>
-      </div>
+      {% include './answer_card.html' with answer=answer %}
     </div>
     {% endfor %}
 
@@ -108,7 +98,13 @@
 <div class="container mt-0 p-4 pb-0" > 
   
   <div class="row justify-content-center" >
-  
+
+    {% if reject %}
+    <div class="col-sm-12 col-lg-8">
+      {% include './answer_card.html' with answer=reject badge_text="Declined by moderator" statusline=reject.reject_reason %}
+    </div>
+    {% endif %}
+
     <div class="col-sm-12 col-lg-8">
       <h2>{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
       <p>Rules about answering</p>
@@ -116,6 +112,7 @@
   
   </div>
   <div class="row justify-content-center">
+
 
   {% if allow_answer %}
   
@@ -150,56 +147,19 @@
   {% else %}  
 
   
-    {% if pending_answer %}
-
-      {% for answer in pending_answer %}
-
-
-        <div class="col-sm-12 col-lg-8">
-          <div class="card">
-            <div class="card-body">
-              <div class="card-row-body">
-                <p>Posted by {{ answer.candidate.member.name }}</p>
-                <p>{{ answer.candidate.get_position_display }}</p>
-                <p class="mt-4">{{ answer.text }}</p>
-              </div>
-              <div class="card-row-body">
-                <span class="badge badge-secondary">This answer is pending moderation</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      {% endfor %}
-
-    {% endif %}
-
-    {% if reject and not pending_answer and not has_answered %}
-
-
-      <div class="col-sm-12 col-lg-8">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-row-body">
-              <p>Posted by {{ reject.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
-              <p>{{ reject.candidate.get_position_display }}</p>
-              <p class="mt-4">{{ reject.text }}</p>
-            </div>
-            <div class="card-row-body">
-              <span class="badge badge-secondary">Declined by moderator</span>
-              <p>{{reject.reject_reason}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    {% endif %}
-
-    {% if has_answered %}
     <div class="col-sm-12 col-lg-8">
-      <span class="body-1 success">✓</span><span class="badge badge-success body-label-1">You've answered</span>
-    </div>
+    {% if pending_answer %}
+      {% for answer in pending_answer %}
+        {% include './answer_card.html' with answer=answer badge_text="This answer is pending moderation" %}
+      {% endfor %}
     {% endif %}
+    
+    {% if has_answered %}
+      {% for answer in has_answered %}
+        {% include './answer_card.html' with answer=answer badge_status="success" badge_text="✓ You've answered" %}
+      {% endfor %}  
+    {% endif %}
+    </div>
 
   {% endif %}
   
