@@ -128,7 +128,7 @@ def show_answers(request, question, form=None, current_region=None):
     is_candidate = check_candidate(request)
     candidate_answers = Answer.objects.filter(question__id=question.id, candidate__member__id=request.user.id)
     allow_answer = is_candidate and not candidate_answers.exclude(status='rejected').exists()
-    has_answered = is_candidate and candidate_answers.filter(status='approved').exists()    
+    has_answered = is_candidate and candidate_answers.filter(status='approved')    
     answers = Answer.objects \
         .filter(question__id=question.id, status='approved') \
         .annotate(url=Concat(Value(f'{NCG_VOTING_URL}/nominate/status/'), 'candidate__candidate_code')) \
@@ -182,4 +182,4 @@ def handle_answer_submission(request, question):
     answer.candidate = candidate
     answer.question = question
     answer.save()
-    return redirect('questions:index')
+    return redirect('questions:answers', pk=question.id)

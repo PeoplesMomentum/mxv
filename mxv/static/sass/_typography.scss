@@ -24,6 +24,12 @@
   line-height: 128%;
 }
 
+.hed-4 {
+  @include font-normal(500);
+  font-size: 14px;
+  line-height: 18px;
+}
+
 .hed-5 {
   // used for .card h5
   @include font-normal(500);

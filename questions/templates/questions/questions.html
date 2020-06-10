@@ -12,71 +12,41 @@
     
 
 <h2>Questions for Candidates</h2>
-{% if not is_candidate %}
-  <h3>Ask a candidate a question</h3>
-  <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
+{% if is_candidate %}
+<h3>Your answers</h3>
+<p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
+top 5 questions in each topic.</p>
+<a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
+{% else %}
+<h3>Ask a candidate a question</h3>
+<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
   {% if not has_question %}
-  <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+    <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
   {% endif %}
 {% endif %}
 
-<!-- IF APPROVED OR PENDING QUESTION -->
 
 {% if pending_question %}
-  {% for pending_question in pending_question %}
+  {% for question in pending_question %}
   <div class="row mb-4">
     <div class="col-sm-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="card-row-body">
-          <p class="label-2"><span class="primary">Your question</span> in {{ pending_question.category.title }}</p>
-            <p class="mb-0">{{ pending_question.text }}</p>
-            <hr class="my-2" />
-          </div>
-          <div class="card-row-body">
-            <span class="badge badge-secondary">This question is pending moderation</span>
-          </div>
-        </div>
-      </div>
+      {% include './question_card.html' with question=question badge_text="This question is pending moderation"  %}
     </div>
   </div>
   {% endfor %}
 {% endif %}
 
-<!-- ELSE SHOW MOST RECENT REJECT -->
-
 {% if reject and not pending_question and not has_question %}
-    <!-- TODO: SHOW ONLY MOST RECENT -->
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-row-body">
-              <p class="label-2">Posted by {{ reject.author.name }} in <br>{{ reject.category.title }}
-                at
-                {{ reject.created_at }} </p>
-              <p class="mb-0">{{ reject.text }}</p>
-              <hr class="my-2" />
-            </div>
-            <div class="card-row-body">
-              <p><span class="badge badge-secondary">This question was declined in moderation</span></p>
-              <p>Reason for rejection: {{ reject.reject_reason }}</p>
-            </div>
-          </div>
-        </div>
+        {% include './question_card.html' with question=reject badge_text="This question was declined" statusline=reject.reject_reason  %}
       </div>
     </div>
 </div>
 {% endif %}
 
-<!-- DISPLAY QUESTIONS -->
 </div>
 
-<!-- select cats -->
-
-
-
-<h1>{{ current_category_title }}</h1>
 
   <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
     <div class="row">
@@ -111,32 +81,18 @@
 
     {% if num_questions == 0 %}
         <div class="row justify-content-center">
-        
           <div class="col-sm-12 col-md-6">
-          
-            <h3 align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
-
+            <h3 class="gray-600" align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
           </div>
         </div>
-            {% else %}
+    {% else %}
     <div class="row">
       {% for question in questions %}
       {% if current_category == question.category.number or current_category == 0 %}
       
       <div class="col-sm-12 col-md-6">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="card-row-body">
-              <p class="label-2">Posted by {{ question.author.name }} in {{ question.category.title }}</p>
 
-                <h3 class="mb-0"><a href="{% url 'questions:answers' question.pk %}">{{question.text}}</a></h3>
-                <hr class="my-2" />
-              </div>
-              <div class="card-row-body">
-              {% include './question_card_status.html' with question=question is_candidate=is_candidate %}
-              </div>
-            </div>
-          </div>
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
         </div>
         {% endif %}
         {% endfor %}
@@ -158,7 +114,7 @@
     <form method="post" novalidate>
       {% csrf_token %}
       {% include 'mxv/includes/form.html' %}
-      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#submitModal">
+      <button type="button" class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#submitModal">
         SUBMIT
       </button>
       <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
@@ -167,12 +123,11 @@
           <div class="modal-content">
             <div class="modal-body">
             <h2>Please check your question</h2>
-            <p>
-              To make sure your question is approved, please check that it is:
+            <p>To make sure your question is approved, please check that it is:
               <ul>
                 <li>New and not repeating a question asked by another member.</li>
-                <li>Addressed to all candidates and not targetting or biased towards any individual candidate.</li>
-                <li>In line witih Momentum’s code of ethics.</li>
+                <li>Addressed to all candidates and not targeting or biased towards any individual candidate.</li>
+                <li>In line with Momentum’s code of ethics.</li>
                 <li>If not, please go back and edit your question. Once submitted, your question cannot be edited.</li>
               </ul>
             </p>
