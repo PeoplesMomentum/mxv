@@ -10,148 +10,203 @@
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
+  <div class="row justify-content-center">
 
-  <div class="col-sm-12">
-    <a href="{% url 'questions:index' %}"><p class="body-sm-1">↶ Return to all questions</p></a>
+    <div class="col-sm-12">
+      <a href="{% url 'questions:index' %}"><p class="body-sm-1">↶ Return to all questions</p></a>
+    </div>
+    
+    <div class="col-sm-12 col-lg-8">
+
+      {% if pending_answer %}
+
+      <span class="badge badge-secondary body-label-1">Your answer is pending moderation</span>
+
+      {% elif has_answered%}
+
+      <span class="body-1 success">✓</span><span class="badge badge-success body-label-1">You've answered</span>
+
+      {% endif %}
+
+      <h2>“{{ question.text }}”</h2>
+      <p class="label-1 gray-500">Posted by <span class="secondary">{{ question.author.name }}</span> in <span class="secondary">{{question.category.title}}</span></p>
+
+      {% if allow_answer %}
+
+      <a href="#" class="btn btn-outline-primary btn-block">Write your answer</a>
+
+      {% endif %}
+
+    </div>
+  
   </div>
-  <div class="col-sm-12 col-md-8">
-    <h2>“{{ question.text }}”</h2>
-    <p>Posted by {{ question.author.name }} in {{question.category.title}}</p>
+
+</div>
+
+<div class="container-full grey-backing-strict">
+
+  <div class="row justify-content-center">
+
+    <div class="col-sm-12 col-lg-8">
+      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
+        {% csrf_token %}
+        <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
+        <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
+          <option disabled selected style="display: none;">
+            <p>{{current_region_readable}}</p>
+          </option>
+          {% for region in region_list %}
+            <option value="{{region.code}}">{{ region.readable }}</option>
+          {% endfor %}
+        </select>        
+      </form>
+    </div>
+    
+    
+  </div>
+
+  <div class="row justify-content-center">
+    
+    {% if not answers %}
+
+    <div class="col-sm-12">
+      <h2 style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h2>
+    </div>
+    
+    {% else %}
+
+    <div class="col-sm-12">
+      <h2>{{ answers|length }} Answer{% if answers|length > 1 %}s{% endif %}</h2>
+    </div>
+    
+    {% endif %}
+
+  </div>
+
+  <div class="row justify-content-center">
+
+    {% for answer in answers %}
+
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-row-body p-4">
+            <h2 class="mt-0">{{ answer.candidate.member.name }}</h2>
+            <p class="label-1 secondary">{{ answer.candidate.get_position_display }}</p>
+            <a class="body-sm-1" target="_blank" href="https://vote.peoplesmomentum.com/{{answer.candidate.candidate_code}}">More about this candidate</a>
+            <p class="mt-4">{{ answer.text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
   </div>
 </div>
 
-    {% if allow_answer %}
-      <hr/>
-      <p>You can submit an answer to this question</p>
-    {% endif %}
-    {% if pending_answer %}
-            {% for answer in pending_answer %}
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="card-row-body">
-                        <p>Posted by {{ answer.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
-                        <p>{{ answer.candidate.get_position_display }}</p>
-                        <p class="mt-4">{{ answer.text }}</p>
-                      </div>
-                      <div class="card-row-body">
-                        <span class="badge badge-secondary">This answer is pending moderation</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
-    {% endif %}
-    {% if reject and not pending_answer and not has_answered %}
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="card-row-body">
-                        <p>Posted by {{ reject.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
-                        <p>{{ reject.candidate.get_position_display }}</p>
-                        <p class="mt-4">{{ reject.text }}</p>
-                      </div>
-                      <div class="card-row-body">
-                        <span class="badge badge-secondary">This answer was rejected</span>
-                        <p>{{reject.reject_reason}}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-    {% endif %}
-
-    {% if allow_answer %}
-      <a href="#" class="btn btn-outline-primary btn-block">Write your answer</a>
-    {% endif %}
-  </div>
-
-  <div class="container-full grey-backing-strict">
-
-    <div class="row justify-content-center">
-      
-      <div class="col-sm-12 col-md-8">
-        <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
-          {% csrf_token %}
-          <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
-          <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
-            <option disabled selected style="display: none;">
-              <p>{{current_region_readable}}</p>
-            </option>
-            {% for region in region_list %}
-              <option value="{{region.code}}">{{ region.readable }}</option>
-            {% endfor %}
-
-          </select>
-        </form>
-
-        {% if not answers %}
-        </div>
-        <div class="col-sm-12">
-          <h2 style="text-align: center;">This question has no candidate answers from {{ current_region_readable }}</h2>
-        </div>
-        <div class="col-sm-12 col-md-6">
-        {% else %}
-        <h2>{{ answers|length }} Answer{% if answers|length > 1 %}s{% endif %}</h2>
-        {% endif %}
-
-
-
-      </div>
-    {% for answer in answers %}
-          <div class="col-sm-8">
-          <div class="card">
-            <div class="card-body">
-              <div class="card-row-body p-4">
-                <h2 class="mt-0">{{ answer.candidate.member.name }}</h2>
-                <p class="label-1 secondary">{{ answer.candidate.get_position_display }}</p>
-                <a class="body-sm-1" target="_blank" href="https://vote.peoplesmomentum.com/{{answer.candidate.candidate_code}}">More about this candidate</a>
-                <hr>
-                <p class="mt-4">{{ answer.text }}</p>
-              </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
+{% if allow_answer or reject or pending_answer or has_answered %}
+<div class="container mt-0 p-4 pb-0" style="border-top: 1px solid #E5E5E5"> 
   
+  <div class="row">
   
-  <!-- <pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre> -->
-
+    <div class="col-sm-12 col-lg-8">
+      <h2>{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
+      <p>Rules about answering</p>
+    </div>
+  
+  </div>
+  <div class="row justify-content-center">
 
   {% if allow_answer %}
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <h1>Write your answer</h1>
-          <p>Rules about answering</p>
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {# TODO some way of limiting question to 200 words #}
-            {% include 'mxv/includes/form.html' %}
-      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#submitModal">
-        SUBMIT
-      </button>
-      <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
+  
+    <div class="col-sm-12 col-lg-8">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {# TODO some way of limiting question to 200 words #}
+        {% include 'mxv/includes/form.html' %}
+        <button type="button" class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#submitModal">SUBMIT</button>
+        
+        <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-              <h2>Are you ready to submit your question?</h2>
-              <p>Answers cannot be edited once submitted and will be reviewed by a moderator before appearing in answer list. Please click submit to confirm your answer is ready to be submitted.</p>
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                <h2>Please check your answer</h2>
+                <p>If you haven’t already, please check your answer<br>Once submitted, answers <strong>cannot</strong>
+                be edited or deleted.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-block" data-dismiss="modal">Go back</button>
+                <button type="submit" class="btn btn-outline-primary btn-block">SUBMIT</button>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary btn-block" data-dismiss="modal">Go back</button>
-              <button type="submit" class="btn btn-outline-primary btn-block">SUBMIT</button>
+          </div>
+        </div>  
+
+      </form>   
+
+    </div>
+
+  {% else %}  
+
+  
+    {% if pending_answer %}
+
+      {% for answer in pending_answer %}
+
+
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-row-body">
+                <p>Posted by {{ answer.candidate.member.name }}</p>
+                <p>{{ answer.candidate.get_position_display }}</p>
+                <p class="mt-4">{{ answer.text }}</p>
+              </div>
+              <div class="card-row-body">
+                <span class="badge badge-secondary">This answer is pending moderation</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>        
-    </form>      
+
+      {% endfor %}
+
+    {% endif %}
+
+    {% if reject and not pending_answer and not has_answered %}
+
+
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-row-body">
+              <p>Posted by {{ reject.candidate.member.name }} <span class="badge badge-primary body-sm-1">You</span></p>
+              <p>{{ reject.candidate.get_position_display }}</p>
+              <p class="mt-4">{{ reject.text }}</p>
+            </div>
+            <div class="card-row-body">
+              <span class="badge badge-secondary">Declined by moderator</span>
+              <p>{{reject.reject_reason}}</p>
+            </div>
+          </div>
         </div>
       </div>
-    {% endif %}    
+
+    {% endif %}
+
+    {% if has_answered %}
+    <div class="col-sm-12">
+      <span class="body-1 success">✓</span><span class="badge badge-success body-label-1">You've answered</span>
+    </div>
+    {% endif %}
+
+  {% endif %}
+  
+  </div>
+
+</div>  
+
+{% endif %}
+
 {% endblock %}
