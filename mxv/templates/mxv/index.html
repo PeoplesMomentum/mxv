@@ -10,6 +10,26 @@
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-sm-12 col-lg-6">
+            <div class="card" id="membership-card">
+                <div class="container-full p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <h2>{{ user.name }}</h2>
+                            <p>{{user.address}}</p>
+                            <p><span>e:</span> {{user.email}}</p>
+                            <p><span>T:</span> {{user.phone}}</p>
+                        </div>
+                        <div class="col-4">
+                            <p>Membership no.</p>
+                            <p>{{user.membershipNumber}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-lg-6">
             <h2>Welcome to My Momentum, the digital platform that enables members to learn, organise and make decisions together.</h2>
             <hr class="hr-primary mb-1"/>
             <h3 class="red">What's on</h3>
@@ -45,7 +65,7 @@
                             <h2>Questions for candidates</h2>
                         </div>
                         <div class="card-row-body">
-                            <p class="body-sm-1">Questions and answers for NCG Candidates</p>
+                            <p class="body-sm-1">Your chance to ask the NCG candidates about their plans for the movement</p>
                         </div>
                     </div>
                     <div class="card-button-wrapper">

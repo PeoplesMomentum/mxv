@@ -12,7 +12,7 @@
 
 <div class="row mb-4 justify-content-center">
 
-  <div class="col-sm-12 col-lg-8">
+  <div class="col-sm-12 col-md-6">
 
 
 
@@ -68,12 +68,12 @@
 
   <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
     <div class="row justify-content-center">
-      <div class="col-sm-12 col-lg-8">
+      <div class="col-sm-12 col-md-6">
         <h2>Questions asked</h2>
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-sm-12 col-lg-8">
+      <div class="col-sm-12 col-md-6">
       <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
         {% csrf_token %}
         <select id="id_category_select" name="category_select" onchange="this.form.submit()">
@@ -104,17 +104,19 @@
           </div>
         </div>
     {% else %}
-    <div class="row">
-      {% for question in questions %}
-      {% if current_category == question.category.number or current_category == 0 %}
-      
-      <div class="col-sm-12 col-md-6">
+    {% for question in questions %}
+    {% if current_category == question.category.number or current_category == 0 %}
+    
+    <div class="row justify-content-center">
 
+      <div class="col-sm-12 col-md-6">
         {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
-        </div>
+      </div>
+
+    </div>
+
         {% endif %}
         {% endfor %}
-      </div>
       {% endif %}
     </div>
   </div>

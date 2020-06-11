@@ -17,7 +17,7 @@
     <body>
         {% include "mxv/navbar.html" %}
         {% include "mxv/messages.html" %}        
-        <div class="container-full m-0 bg-light">
+        <div class="container-full m-0 bg-light py-2" style="border-bottom: thin solid#E5E5E5;">
             <div class="pseudocontainer">
                 <div class="row">
                     <div class="col-12 col-lg-6">
@@ -25,7 +25,6 @@
                     </div>
                 </div>
             </div>
-            <hr class="mt-2"/>
         </div>
         <div class="container">
             {% block content %}{% endblock %}
