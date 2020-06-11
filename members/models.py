@@ -124,10 +124,12 @@ def populate_from_nb(nb, email, nb_person):
 
 def ensure_nationbuilder_person(nb, member):
     if hasattr(member, 'nation_builder_person'):
-        # Case 1: everything's ok
         if member.nation_builder_person.nation_builder_id:
-            return
-        # Case 2: there's an attached NB record, but it's missing the NB ID
+            if nb.PersonFieldsAndValues(member.nation_builder_person.nation_builder_id):
+                # Case 1: everything's ok
+                return
+            # Case 2: the nationbuilder id isn't actually in the real NB
+        # Case 3: there's an attached NB record, but it's missing the NB ID
         populate_from_nb(nb, member.email, member.nation_builder_person)
         return
     nb_filter = NationBuilderPerson.objects.filter(email=member.email)
