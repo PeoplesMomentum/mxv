@@ -9,22 +9,39 @@
 {% endblock %}
 
 {% block content %}
-    
 
-<h2>Questions for Candidates</h2>
-{% if is_candidate %}
-<h3>Your answers</h3>
-<p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
-top 5 questions in each topic.</p>
-<a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
-{% else %}
-<h3>Ask a candidate a question</h3>
-<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
-  {% if not has_question %}
-    <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
-  {% endif %}
-{% endif %}
+<div class="row mb-4 justify-content-center">
 
+  <div class="col-sm-12 col-md-6">
+
+
+
+    {% if is_candidate %}
+    <h2>Answers for members</h2>
+    <!-- dashboard -->
+    <h3 class="mt-4">Your answers</h3>
+    <p class="mt-4"><span class="badge-pill bg-gray-500" style="color: #ffffff;">{{user_answers_pending_count}}</span> answers pending</p>
+    <p><span class="badge-pill badge-success">{{user_answers_approved_count}}</span> answers approved </p>
+    <hr>
+
+
+    <p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
+    top 5 questions in each topic.</p>
+    <a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
+
+    {% else %}
+    <h2>Questions for Candidates</h2>
+
+    <h3>Ask a candidate a question</h3>
+    <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
+
+      {% if not has_question %}
+      <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+      {% endif %}
+
+    {% endif %}
+  </div>
+</div>
 
 {% if pending_question %}
   {% for question in pending_question %}
@@ -49,29 +66,29 @@ top 5 questions in each topic.</p>
 
 
   <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
-    <div class="row">
-      <div class="col-sm-12 col-lg-6">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-6">
         <h2>Questions asked</h2>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-6">
       <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
         {% csrf_token %}
         <select id="id_category_select" name="category_select" onchange="this.form.submit()">
           <option disabled selected style="display: none;">
             {% for category in categories %}
-            {% if current_category == category.number%}
-            {{ category.title }}
+            {% if current_category == category.number %}
+            {{ category.number }} {{ category.title }}
             {% endif %}
             {% endfor %}
             {% if current_category == 0 %}
-            All topics
+            0 All topics
             {% endif %}
           </option>
-          <option value="0">All topics</option>
+          <option value="0">0 All topics</option>
           {% for category in categories %}
-          <option value="{{ category.number }}">{{ category.title }}</option>
+          <option value="{{ category.number }}">{{ category.number }} {{ category.title }}</option>
           {% endfor %}
         </select>
       </form>
@@ -86,17 +103,19 @@ top 5 questions in each topic.</p>
           </div>
         </div>
     {% else %}
-    <div class="row">
-      {% for question in questions %}
-      {% if current_category == question.category.number or current_category == 0 %}
-      
-      <div class="col-sm-12 col-md-6">
+    {% for question in questions %}
+    {% if current_category == question.category.number or current_category == 0 %}
+    
+    <div class="row justify-content-center">
 
+      <div class="col-sm-12 col-md-6">
         {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
-        </div>
+      </div>
+
+    </div>
+
         {% endif %}
         {% endfor %}
-      </div>
       {% endif %}
     </div>
   </div>

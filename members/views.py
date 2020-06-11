@@ -210,11 +210,7 @@ def request_activation_email(request):
                     except:
                         pass
 
-            # always notify that an activation email might have been sent
-            messages.info(
-                request, 'If you’re a member but haven’t activated your account yet then you’ve been sent an activation email (so check your email inbox and spam folders)')
-
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/members/confirm_activation_email/')
         else:
             # show errors
             messages.error(request, 'Please correct the errors below.')
@@ -223,6 +219,9 @@ def request_activation_email(request):
 
     return render(request, 'members/request_activation_email.html', {
         'form': form})
+
+def confirm_activation_email(request):
+    return render(request, 'members/confirm_activation_email.html')
 
 # returns a mailto link that creates an error email for the member to send
 

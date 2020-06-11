@@ -3,13 +3,9 @@
 
 {% block title %}Update details{% endblock %}
 
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Update details</li>
-{% endblock %}
-
 {% block content %}
-    <div class="row">
-        <div class="col-sm">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
             {% if not user_in_nation_builder %}
                 <p>Can't look up details, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a></p>
             {% elif nation_builder_busy %}
@@ -36,7 +32,7 @@
                         <p>{{ fields_page_footer|safe }}</p>
                     {% endif %}
                     
-                    <button type="submit" class="btn btn-success">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
+                    <button type="submit" class="btn btn-outline-success btn-block">{% if page == 1 %}Next{% else %}Update your details{% endif%}</button>
                 </form>
             {% endif %}
         </div>

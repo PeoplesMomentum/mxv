@@ -2,19 +2,15 @@
 
 {% block title %}Verify login email{% endblock %}
 
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Verify login email</li>
-{% endblock %}
-
 {% block content %}
-    <div class="row">
-        <div class="col-sm">
+    <div class="row justify-content-center ">
+        <div class="col-sm-12 col-md-6">
             {% if verification_key_found %}
                 <p>Enter your password to verify your login email.</p>
                 <form method="post" novalidate>
                     {% csrf_token %}
                     {% include 'mxv/includes/form.html' %}
-                    <button type="submit" class="btn btn-primary">Verify new login email</button>
+                    <button type="submit" class="btn btn-outline-primary btn-block">Verify new login email</button>
                 </form>
             {% else %}
                 <p>Verification link not recognised - did you already verify your new login email?</p>

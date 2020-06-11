@@ -130,7 +130,10 @@ footer {
     @extend .label-2;
   }
   .breadcrumb-item>a {
-    color: $mtm-neutral-375;
+    color: $primary;
+  }
+  .breadcrumb-item.active {
+    color: $primary-lighter;
   }
   .breadcrumb-item + .breadcrumb-item::before {
     content: ">";

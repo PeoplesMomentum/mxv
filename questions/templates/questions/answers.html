@@ -12,11 +12,13 @@
 {% block content %}
   <div class="row justify-content-center">
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-md-6">
       <a href="{% url 'questions:index' %}"><h4>↶ Return to all questions</h4></a>
     </div>
     
-    <div class="col-sm-12 col-lg-8">
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-12 col-md-6">
 
       {% if pending_answer %}
 
@@ -45,36 +47,40 @@
 
 <div class="container-full grey-backing-strict" style="border-bottom: 1px solid #E5E5E5;">
 
-  <div class="row justify-content-center">
-  
   {% if not answers and current_region_readable == "All regions" %}
   {% else %}
-  <div class="col-sm-12 col-lg-8">
-    <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
-      {% csrf_token %}
-      <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
-      <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
-        <option disabled selected style="display: none;">
-          <p>{{current_region_readable}}</p>
-        </option>
-        {% for region in region_list %}
-        <option value="{{region.code}}">{{ region.readable }}</option>
-        {% endfor %}
-      </select>
-    </form>
+
+  <div class="row justify-content-center">
+
+    <div class="col-sm-12 col-md-6">
+      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
+        {% csrf_token %}
+        <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
+        <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
+          <option disabled selected style="display: none;">
+            <p>{{current_region_readable}}</p>
+          </option>
+          {% for region in region_list %}
+          <option value="{{region.code}}">{{ region.readable }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+
   </div>
   {%endif%}
 
+  <div class="row justify-content-center">
 
     {% if not answers %}
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-md-6">
       <h3 class="gray-600" style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h3>
     </div>
     
     {% else %}
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-md-6">
       <h2>{{ answers|length }} Answer{% if answers|length > 1 %}s{% endif %}</h2>
     </div>
     
@@ -82,16 +88,16 @@
 
   </div>
 
+  
+  {% for answer in answers %}
+  
   <div class="row justify-content-center">
-
-    {% for answer in answers %}
-
-    <div class="col-sm-8">
+    <div class="col-sm-12 col-md-6">
       {% include './answer_card.html' with answer=answer %}
     </div>
-    {% endfor %}
-
   </div>
+  {% endfor %}
+
 </div>
 
 {% if allow_answer or reject or pending_answer or has_answered %}
@@ -100,12 +106,12 @@
   <div class="row justify-content-center" >
 
     {% if reject %}
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12 col-md-6">
       {% include './answer_card.html' with answer=reject badge_text="Declined by moderator" statusline=reject.reject_reason %}
     </div>
     {% endif %}
 
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12 col-md-6">
       <h2>{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
       <p>Rules about answering</p>
     </div>
@@ -116,7 +122,7 @@
 
   {% if allow_answer %}
   
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12 col-md-6">
       <form method="post" novalidate>
         {% csrf_token %}
         {# TODO some way of limiting question to 200 words #}
@@ -147,7 +153,7 @@
   {% else %}  
 
   
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12 col-md-6">
     {% if pending_answer %}
       {% for answer in pending_answer %}
         {% include './answer_card.html' with answer=answer badge_text="This answer is pending moderation" %}

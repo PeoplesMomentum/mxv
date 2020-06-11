@@ -1,29 +1,15 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: thin solid #E5E5E5;">
     <div class="container">
-    <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static "mxv/images/logo.png" %}" alt="Logo" style="width: 20rem;"/></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'review:index' %}">Democracy Review</a></li>  
-            <li class="dropdown">
-                <a href="#" class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{% url 'review:help' %}">Help</a></li>
-                    <li><a class="nav-link" href="{% url 'review:faq' %}">Platform FAQ</a></li>
-                    <li><a class="nav-link" href="{% url 'review:guide' %}">Guide to Making a Proposal</a></li>
-                    <li><a class="nav-link" href="{% url 'review:moderation' %}">Moderation Policy</a></li>
-                    <li><a class="nav-link" href="{% url 'review:rules' %}">How to use our platform</a></li>
-                </ul>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            {% if user.is_authenticated %}
+        <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static "mxv/images/logo.png" %}" alt="Logo" style="max-width: 300px;"/></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
                 <li class="dropdown">
-                    <a href="#" class="nav-item active nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name }} <span class="caret"></span></a>
+                    <a href="#" class="nav-item active nav-link dropdown-toggle primary" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         {% if profiles_visible_to_non_staff or user.is_superuser %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'members:profile' %}">Profile</a></li>
@@ -32,12 +18,13 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
-            {% else %}
+                <li class="nav-item"><a class="nav-link" href="/questions/info">Info</a></li>
+                {% else %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ join_url }}">Sign up</a></li>
-            {% endif %}
-        </ul>
-    </div>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>
