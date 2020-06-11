@@ -12,7 +12,8 @@
 {% block content %}
   <div class="row justify-content-center">
 
-    <div class="col-sm-12 col-md-6">
+
+    <div class="col-sm-12">
       <a href="{% url 'questions:index' %}"><h4>↶ Return to all questions</h4></a>
     </div>
     
@@ -52,29 +53,29 @@
 
   <div class="row justify-content-center">
 
-    <div class="col-sm-12 col-md-6">
-      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
-        {% csrf_token %}
-        <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
-        <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
-          <option disabled selected style="display: none;">
-            <p>{{current_region_readable}}</p>
-          </option>
-          {% for region in region_list %}
-          <option value="{{region.code}}">{{ region.readable }}</option>
-          {% endfor %}
-        </select>
-      </form>
-    </div>
-
+  
+  {% if not answers and current_region_readable == "All regions" %}
+  {% else %}
+  <div class="col-sm-12 col-lg-8">
+    <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="answer_display_data">
+      {% csrf_token %}
+      <input type="hidden" id="id_answer_display_question" name="answer_display_question" value="{{question.id}}">
+      <select id="id_answer_display_region" name="answer_display_region" onchange="this.form.submit()">
+        <option disabled selected style="display: none;">
+          <p>{{current_region_readable}}</p>
+        </option>
+        {% for region in region_list %}
+        <option value="{{region.code}}">{{ region.readable }}</option>
+        {% endfor %}
+      </select>
+    </form>
   </div>
   {%endif%}
 
-  <div class="row justify-content-center">
 
     {% if not answers %}
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12">
       <h3 class="gray-600" style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h3>
     </div>
     
@@ -92,7 +93,11 @@
   {% for answer in answers %}
   
   <div class="row justify-content-center">
-    <div class="col-sm-12 col-md-6">
+
+
+    {% for answer in answers %}
+
+    <div class="col-sm-8">
       {% include './answer_card.html' with answer=answer %}
     </div>
   </div>
@@ -106,12 +111,14 @@
   <div class="row justify-content-center" >
 
     {% if reject %}
-    <div class="col-sm-12 col-md-6">
+
+    <div class="col-sm-12 col-lg-8">
       {% include './answer_card.html' with answer=reject badge_text="Declined by moderator" statusline=reject.reject_reason %}
     </div>
     {% endif %}
 
-    <div class="col-sm-12 col-md-6">
+
+    <div class="col-sm-12 col-lg-8">
       <h2>{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
       <p>Rules about answering</p>
     </div>
@@ -153,7 +160,8 @@
   {% else %}  
 
   
-    <div class="col-sm-12 col-md-6">
+
+    <div class="col-sm-12 col-lg-8">
     {% if pending_answer %}
       {% for answer in pending_answer %}
         {% include './answer_card.html' with answer=answer badge_text="This answer is pending moderation" %}

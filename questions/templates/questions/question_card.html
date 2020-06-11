@@ -1,10 +1,8 @@
-<div class="card" {% if question.author.email == user.email %}style="border: 2px solid #e20316"{% endif%}>
+
+<div class="card">
   <div class="card-body">
     <div class="card-row-body">
-      <p class="label-2">Posted by 
-        <span {% if question.author.email == user.email %} class="label-2 badge badge-warning">you{% else %}>{{ question.author.name }}{% endif%}</span>
-        in {{ question.category.title }}
-      </p>
+      <p class="label-2">Posted by {{ question.author.name }} in {{ question.category.title }}</p>
       <h4 class="mb-0">{{ question.text }}</h4>
         {% if votable %}
           <h4 class="label-1s"><a href="{% url 'questions:answers' question.pk %}">Read candidates' answers ↷</a></h4>

@@ -10,38 +10,20 @@
 
 {% block content %}
 
-<div class="row mb-4 justify-content-center">
 
-  <div class="col-sm-12 col-md-6">
-
-
-
-    {% if is_candidate %}
-    <h2>Answers for members</h2>
-    <!-- dashboard -->
-    <h3 class="mt-4">Your answers</h3>
-    <p class="mt-4"><span class="badge-pill bg-gray-500" style="color: #ffffff;">{{user_answers_pending_count}}</span> answers pending</p>
-    <p><span class="badge-pill badge-success">{{user_answers_approved_count}}</span> answers approved </p>
-    <hr>
-
-
-    <p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
-    top 5 questions in each topic.</p>
-    <a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
-
-    {% else %}
-    <h2>Questions for Candidates</h2>
-
-    <h3>Ask a candidate a question</h3>
-    <p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
-
-      {% if not has_question %}
-      <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
-      {% endif %}
-
-    {% endif %}
-  </div>
-</div>
+<h2>Questions for Candidates</h2>
+{% if is_candidate %}
+<h3>Your answers</h3>
+<p>You can submit 1 answer to as many member's questions as you want, there are 6 topics, we recommend you prioritise the
+top 5 questions in each topic.</p>
+<a class="btn btn-outline-primary btn-block" href="/questions/info">Find out more</a>
+{% else %}
+<h3>Ask a candidate a question</h3>
+<p class="body-sm-1">You can ask candidates 1 question. There are 6 question topics to choose from. <a href="info">Find out more</a></p>
+  {% if not has_question %}
+    <a class="btn btn-outline-primary btn-block" href="{% url 'questions:index' %}#ask-a-question">ASK A QUESTION</a>
+  {% endif %}
+{% endif %}
 
 
 {% if pending_question %}
@@ -104,17 +86,15 @@
           </div>
         </div>
     {% else %}
-    {% for question in questions %}
-    {% if current_category == question.category.number or current_category == 0 %}
-    
-    <div class="row justify-content-center">
 
+    <div class="row">
+      {% for question in questions %}
+      {% if current_category == question.category.number or current_category == 0 %}
+      
       <div class="col-sm-12 col-md-6">
+
         {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
-      </div>
-
-    </div>
-
+        </div>
         {% endif %}
         {% endfor %}
       {% endif %}
