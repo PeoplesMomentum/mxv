@@ -1,6 +1,5 @@
 from django.test import TestCase
 from members.models import *
-from members.views import *
 from unittest.mock import MagicMock
 from mxv.nation_builder import NationBuilder
 

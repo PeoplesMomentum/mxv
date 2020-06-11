@@ -14,6 +14,7 @@ from django.urls.base import reverse
 from django.contrib.auth.decorators import login_required
 from mxv.nation_builder import NationBuilder
 from mxv.simple_encryption import SimpleEncryption
+from members.models import ensure_nationbuilder_person
 
 # landing page
 @login_required
@@ -126,14 +127,7 @@ def ncg_election(request):
         
         # get the member's NationBuilder id
         member = request.user
-        if not member.nation_builder_person.nation_builder_id:
-            nb = NationBuilder()
-            member.nation_builder_person.nation_builder_id = nb.GetFromEmail(member.email)['id']
-            member.nation_builder_person.save()
-        
-        # redirect to profile if no NationBuilder id as that page has help for this situation
-        if member.nation_builder_person.nation_builder_id == None:
-            return redirect('members:profile')
+        ensure_nationbuilder_person(member)
     
         # encrypt the NationBuilder id    
         cypher = SimpleEncryption(NCG_VOTING_IV, NCG_VOTING_KEY)
