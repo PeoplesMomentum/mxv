@@ -73,6 +73,19 @@ def show_questions(request, form=None, current_category=0):
 
     is_candidate = check_candidate(request)
     pending_answers = their_answers.filter(status='pending').count()
+    if is_candidate:
+        # ok so this is maybe how we do it. we find the user through the models and the many to many connections
+        # and then return them, matching against the email of the user in the request
+        user_answers_approved = Answer.objects \
+            .filter(candidate__member__email=request.user.email) \
+            .filter(status='approved') 
+        user_answers_approved_count = user_answers_approved.count()
+        user_answers_pending = Answer.objects \
+            .filter(candidate__member__email=request.user.email) \
+            .filter(status='pending')
+        user_answers_pending_count = user_answers_pending.count()
+
+    print(user_answers_approved.query)
     if not form:
         form = QuestionForm() 
     
@@ -87,6 +100,10 @@ def show_questions(request, form=None, current_category=0):
         'num_questions': num_questions,
         'questions': questions,
         'reject': reject,
+        'user_answers_approved': user_answers_approved,
+        'user_answers_approved_count': user_answers_approved_count,
+        'user_answers_pending': user_answers_pending,
+        'user_answers_pending_count': user_answers_pending_count,
     }
     return render(request, 'questions/questions.html', context)
 

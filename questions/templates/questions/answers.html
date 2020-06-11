@@ -12,7 +12,7 @@
 {% block content %}
   <div class="row justify-content-center">
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-lg-8">
       <a href="{% url 'questions:index' %}"><h4>↶ Return to all questions</h4></a>
     </div>
     
@@ -68,13 +68,13 @@
 
     {% if not answers %}
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-lg-8">
       <h3 class="gray-600" style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h3>
     </div>
     
     {% else %}
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-lg-8">
       <h2>{{ answers|length }} Answer{% if answers|length > 1 %}s{% endif %}</h2>
     </div>
     
@@ -82,16 +82,16 @@
 
   </div>
 
+  
+  {% for answer in answers %}
+  
   <div class="row justify-content-center">
-
-    {% for answer in answers %}
-
-    <div class="col-sm-8">
+    <div class="col-sm-12 col-md-8">
       {% include './answer_card.html' with answer=answer %}
     </div>
+  </div>
     {% endfor %}
 
-  </div>
 </div>
 
 {% if allow_answer or reject or pending_answer or has_answered %}
