@@ -11,6 +11,7 @@ urlpatterns = [
     
     # activation
     url(r'^request_activation_email/$', views.request_activation_email, name='request_activation_email'), 
+    url(r'^confirm_activation_email/$', views.confirm_activation_email, name='confirm_activation_email'), 
     url(r'^activate/(?P<activation_key>[a-zA-Z0-9]+)/$', views.activate, name='activate'),  
     
     # profile

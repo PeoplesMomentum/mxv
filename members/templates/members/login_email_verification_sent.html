@@ -2,15 +2,12 @@
 
 {% block title %}Login email verification sent{% endblock %}
 
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Login email verification sent</li>
-{% endblock %}
-
 {% block content %}
-    <div class="row">
-        <div class="col-sm">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
              <p>A verification email has been sent to <strong>{{ new_login_email }}</strong> and you will have to click the link in it before you can use this new login email.</p>
              <p>Don't forget to check your spam folder if you can't find the email.</p>
+             <a href="{% url 'login' %}">Go to login</a>
         </div>
     </div>
 {% endblock %}

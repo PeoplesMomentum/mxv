@@ -79,17 +79,17 @@
         <select id="id_category_select" name="category_select" onchange="this.form.submit()">
           <option disabled selected style="display: none;">
             {% for category in categories %}
-            {% if current_category == category.number%}
-            {{ category.title }}
+            {% if current_category == category.number %}
+            {{ category.number }} {{ category.title }}
             {% endif %}
             {% endfor %}
             {% if current_category == 0 %}
-            All topics
+            0 All topics
             {% endif %}
           </option>
-          <option value="0">All topics</option>
+          <option value="0">0 All topics</option>
           {% for category in categories %}
-          <option value="{{ category.number }}">{{ category.title }}</option>
+          <option value="{{ category.number }}">{{ category.number }} {{ category.title }}</option>
           {% endfor %}
         </select>
       </form>

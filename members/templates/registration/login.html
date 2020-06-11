@@ -3,22 +3,18 @@
 
 {% block title %}Login{% endblock %}
 
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Login</li>
-{% endblock %}
-
 {% block content %}
-    <p>If you’re a member of Momentum but haven't activated your account yet, check your email. You should have an activation link from <a href="mailto:mymomentum@peoplesmomentum.com">mymomentum@peoplesmomentum.com</a>.</p>
-    <p>Or <a href="{% url 'members:request_activation_email' %}">request a new account activation email</a>.</p>
-    <p>Not a member of Momentum yet? <a href="https://join.peoplesmomentum.com/">Sign up today</a> and join the discussion.</p>
-    <br/>
-    <div class="row">
-        <div class="col-sm">
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-6">
+            <p>If you’re a member of Momentum but haven't activated your account yet, check your email. You should have an activation link from <a href="mailto:mymomentum@peoplesmomentum.com">mymomentum@peoplesmomentum.com</a>.</p>
+            <p>Or <a href="{% url 'members:request_activation_email' %}">request a new account activation email</a>.</p>
+            <p>Not a member of Momentum yet? <a href="https://join.peoplesmomentum.com/">Sign up today</a> and join the discussion.</p>
+            <br/>
             <form method="post" novalidate>
                 {% csrf_token %}
                 {% include 'mxv/includes/form.html' %}
                 <input type="hidden" name="next" value="{{ next }}" />
-                 <button type="submit" class="btn btn-primary">Login</button>
+                 <button type="submit" class="btn btn-outline-primary btn-block">Login</button>
             </form>
             <br/>
             <p>Forgot your password? <a href="{% url 'password_reset' %}">Reset it here</a></p>

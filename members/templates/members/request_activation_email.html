@@ -3,19 +3,16 @@
 
 {% block title %}Request activation email{% endblock %}
 
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Request activation email</li>
-{% endblock %}
-
 {% block content %}
-    <p>If you’re a member of Momentum but haven't activated your account yet, use this form to request a new account activation email.</p>
-    <br/>
-    <div class="row">
-        <div class="col-sm">
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-6">
+        <h4><a href="{% url 'login' %}">↶ Return to login</a></h4>
+        <p>If you’re a member of Momentum but haven't activated your account yet, use this form to request a new account activation email.</p>
+            <br/>
             <form method="post" novalidate>
                 {% csrf_token %}
                 {% include 'mxv/includes/form.html' %}
-                 <button type="submit" class="btn btn-primary">Request activation email</button>
+                 <button type="submit" class="btn btn-outline-primary btn-block">Request activation email</button>
             </form>
         </div>
     </div>

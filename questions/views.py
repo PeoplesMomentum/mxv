@@ -20,7 +20,7 @@ def index(request):
     if request.method == 'POST':
         if request.POST.get('category_select'):
             # TODO use a proper form
-            current_category = request.POST.get('category_select')
+            current_category = int(request.POST.get('category_select'))
             return show_questions(request, None, current_category)
         elif request.POST.get('answer_display_region'):
             # TODO also use a form, and move to the answers backend
@@ -44,6 +44,7 @@ def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
 def show_questions(request, form=None, current_category=0):
+    print(current_category)
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
@@ -59,7 +60,7 @@ def show_questions(request, form=None, current_category=0):
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \
         .order_by('-num_votes','category__number')
-    if current_category == 0:
+    if current_category != 0:        
         questions = questions.filter(category__id=current_category)
     num_questions = questions.count()
     categories = Category.objects.all()
