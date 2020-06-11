@@ -44,7 +44,6 @@ def check_candidate(request):
     return Candidate.objects.filter(member__id=request.user.id).exists()
 
 def show_questions(request, form=None, current_category=0):
-    print(current_category)
     their_answers = Answer.objects \
         .filter(candidate__member__id=request.user.id) \
         .exclude(status='rejected')
