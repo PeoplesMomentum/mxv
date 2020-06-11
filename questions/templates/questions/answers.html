@@ -13,6 +13,7 @@
   <div class="row justify-content-center">
 
     <div class="col-sm-12 col-lg-8">
+
       <a href="{% url 'questions:index' %}"><h4>↶ Return to all questions</h4></a>
     </div>
     
@@ -69,6 +70,7 @@
     {% if not answers %}
 
     <div class="col-sm-12 col-lg-8">
+
       <h3 class="gray-600" style="text-align: center;">This question hasn’t been answered by any candidates{% if  current_region_readable != "All regions" %} from {{ current_region_readable }} {% endif %} yet. </h3>
     </div>
     
@@ -87,6 +89,9 @@
   
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-8">
+
+    {% for answer in answers %}
+
       {% include './answer_card.html' with answer=answer %}
     </div>
   </div>
