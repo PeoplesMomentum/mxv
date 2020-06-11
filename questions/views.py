@@ -83,13 +83,10 @@ def show_questions(request, form=None, current_category=0):
         # ok so this is maybe how we do it. we find the user through the models and the many to many connections
         # and then return them, matching against the email of the user in the request
         # the two querysets COULD be used to make a list of answers from a given candidate. but... nah 
-        user_answers_approved = Answer.objects \
-            .filter(candidate__member__email=request.user.email) \
-            .filter(status='approved') 
+        user_answers = Answers.objects.filter(candidate__member=request.user)
+        user_answers_approved = user_answers.filter(status='approved')
+        user_answers_pending = user_answers.filter(status='pending')
         user_answers_approved_count = user_answers_approved.count()
-        user_answers_pending = Answer.objects \
-            .filter(candidate__member__email=request.user.email) \
-            .filter(status='pending')
         user_answers_pending_count = user_answers_pending.count()
 
     if not form:
