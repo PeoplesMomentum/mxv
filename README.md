@@ -43,8 +43,22 @@ Do you have development skills (see below for the technologies we've used)?  The
 9. `yarn develop` to run the application locally.
 	- Site accessible at [http://localhost:8000](http://localhost:8000).
 	- Admin site accessible at [http://localhost:8000/admin](http://localhost:8000/admin).
-10. `yarn test` to run unit tests, of which there are only a few.
+10. `yarn test` to run unit tests, of which there are only a few. You'll need to create extension citext as outlined below.
 
 ### Bookmarks
 
 - [GitHub repository](https://github.com/PeoplesMomentum/mxv)
+
+### To pull data from prod
+
+`yarn dbpull` will create a new database in your local server with prod data.
+
+For this to work you'll need to have run 
+
+```
+yarn psql
+\c template1
+create extension citext
+```
+
+at least once first.
