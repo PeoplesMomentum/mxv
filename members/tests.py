@@ -1,6 +1,5 @@
 from django.test import TestCase
 from members.models import *
-from members.views import *
 from unittest.mock import MagicMock
 from mxv.nation_builder import NationBuilder
 
@@ -21,12 +20,25 @@ class TestEnsureNationBuilderPerson(TestCase):
     def test_attached(self):
         c = Member.objects.create(email='m@jill.com', name='Correct record')
         NationBuilderPerson.objects.create(nation_builder_id=111, member=c, email=c.email)
+        self.nb.PersonFieldsAndValues.return_value = [("email", "m@jill.com")]
         e = Member.objects.get(email='m@jill.com')
         ensure_nationbuilder_person(self.nb, e)
         m = Member.objects.get(email='m@jill.com')
         self.assertEqual(111, m.nation_builder_person.nation_builder_id)
         self.assertEqual(m.nation_builder_person.email, m.email)
         self.nb.GetFromEmail.assert_not_called()
+        self.nb.PersonFieldsAndValues.assert_called()
+
+    def test_attached_wrong_id(self):
+        c = Member.objects.create(email='nye@bevan.com', name='Bad ID')
+        NationBuilderPerson.objects.create(member=c, email=c.email, nation_builder_id=0)
+        self.nb.PersonFieldsAndValues.return_value = None
+        e = Member.objects.get(email='nye@bevan.com')
+        ensure_nationbuilder_person(self.nb, e)
+        m = Member.objects.get(email='nye@bevan.com')
+        self.assertEqual(999, m.nation_builder_person.nation_builder_id)
+        self.assertEqual('haha@gmail.com', m.nation_builder_person.email)
+        self.assertEqual('aaa', m.nation_builder_person.unique_token)
 
     def test_attached_missing_id(self):
         c = Member.objects.create(email='nye@bevan.com', name='Missing ID')

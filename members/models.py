@@ -113,6 +113,42 @@ class NationBuilderPerson(models.Model):
     def __str__(self):
         return '%s - %s (%s, %s)' % ('Member' if self.member else 'Supporter', self.email, self.unique_token, str(self.nation_builder_id) if self.nation_builder_id else '')
 
+def populate_from_nb(nb, email, nb_person):
+    nb_record = nb.GetFromEmail(email)
+    nb_person.nation_builder_id = nb_record['id']
+    nb_person.email = nb_record['email']
+    if nb_record['my_momentum_unique_token']:
+       nb_person.unique_token = nb_record['my_momentum_unique_token']
+    nb_person.save()
+
+
+def ensure_nationbuilder_person(nb, member):
+    if hasattr(member, 'nation_builder_person'):
+        if member.nation_builder_person.nation_builder_id:
+            if nb.PersonFieldsAndValues(member.nation_builder_person.nation_builder_id):
+                # Case 1: everything's ok
+                return
+            # Case 2: the nationbuilder id isn't actually in the real NB
+        # Case 3: there's an attached NB record, but it's missing the NB ID
+        populate_from_nb(nb, member.email, member.nation_builder_person)
+        return
+    nb_filter = NationBuilderPerson.objects.filter(email=member.email)
+    if nb_filter.count():
+        nb_person = nb_filter[0]
+        if not nb_person.nation_builder_id:
+            # Case 4: detached record has no ID
+            populate_from_nb(nb, member.email, nb_person)
+        # Case 4, and 5: detached record has ID
+        nb_person.member = member
+        nb_person.save()
+        return
+    # Case 6: there is no NB record
+    nb_record = nb.GetFromEmail(member.email)
+    member.nation_builder_person = NationBuilderPerson(
+        member=member, email=nb_record['email'], nation_builder_id=nb_record['id'])
+    member.nation_builder_person.save()
+    member.save()
+
 # UI choices for profile fields
 class ProfileFieldType(Enum):
     Char = "Single line text"

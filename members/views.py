@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseBadRequest
-from members.models import Member, ProfileField, activation_key_default, UpdateDetailsCampaign, NationBuilderPerson
+from members.models import *
 from voting_intentions.models import Intention
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
@@ -228,40 +228,6 @@ def confirm_activation_email(request):
 
 def profile_error_mailto(name):
     return 'mailto:membership@peoplesmomentum.com?subject=Profile%20error&body=Hi.%0A%0A%20%20I%20tried%20to%20access%20my%20profile%20page%20on%20My%20Momentum%20but%20got%20an%20error%3A%20%22Can%27t%20look%20up%20profile.%22%0A%0A%20%20Can%20you%20help%20please%3F%0A%0AThanks%2C%0A%0A' + name + '.'
-
-def populate_from_nb(nb, email, nb_person):
-    nb_record = nb.GetFromEmail(email)
-    nb_person.nation_builder_id = nb_record['id']
-    nb_person.email = nb_record['email']
-    if nb_record['my_momentum_unique_token']:
-       nb_person.unique_token = nb_record['my_momentum_unique_token']
-    nb_person.save()
-
-
-def ensure_nationbuilder_person(nb, member):
-    if hasattr(member, 'nation_builder_person'):
-        # Case 1: everything's ok
-        if member.nation_builder_person.nation_builder_id:
-            return
-        # Case 2: there's an attached NB record, but it's missing the NB ID
-        populate_from_nb(nb, member.email, member.nation_builder_person)
-        return
-    nb_filter = NationBuilderPerson.objects.filter(email=member.email)
-    if nb_filter.count():
-        nb_person = nb_filter[0]
-        if not nb_person.nation_builder_id:
-            # Case 4: detached record has no ID
-            populate_from_nb(nb, member.email, nb_person)
-        # Case 4, and 5: detached record has ID
-        nb_person.member = member
-        nb_person.save()
-        return
-    # Case 6: there is no NB record
-    nb_record = nb.GetFromEmail(member.email)
-    member.nation_builder_person = NationBuilderPerson(
-        member=member, email=nb_record['email'], nation_builder_id=nb_record['id'])
-    member.nation_builder_person.save()
-    member.save()
 
 # displays the member's profile page
 @login_required

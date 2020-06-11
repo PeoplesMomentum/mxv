@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from members.models import Member, ProfileField, UpdateDetailsCampaign, CampaignField, UrlParameter, CampaignTagGroup, CampaignTag
+from members.models import *
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import Group
 from mxv.models import EmailSettings
@@ -147,9 +147,7 @@ class ProfileFieldAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileFieldAdminForm, self).__init__(*args, **kwargs)
         nb = NationBuilder()
-        if not self.current_user.nation_builder_person.nation_builder_id:
-            self.current_user.nation_builder_person.nation_builder_id = nb.GetFromEmail(self.current_user.email)['id']
-            self.current_user.save()
+        ensure_nationbuilder_person(nb, self.current_user)
         self.fields['field_path'].choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(self.current_user.nation_builder_person.nation_builder_id)]
         self.fields['field_path'].help_text = 'Example field values are from your NationBuilder record (id = %d)' % self.current_user.nation_builder_person.nation_builder_id
     
@@ -198,9 +196,7 @@ class CampaignFieldInline(nested.NestedTabularInline):
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == 'field_path':
             nb = NationBuilder()
-            if not request.user.nation_builder_person.nation_builder_id:
-                request.user.nation_builder_person.nation_builder_id = nb.GetFromEmail(request.user.email)['id']
-                request.user.save()
+            ensure_nationbuilder_person(nb, request.user)
             db_field.choices = [(field[0], field[2]) for field in nb.PersonFieldsAndValues(request.user.nation_builder_person.nation_builder_id)]
             db_field.help_text = 'Example field values are from your NationBuilder record (id = %d)' % request.user.nation_builder_person.nation_builder_id
         return super(CampaignFieldInline, self).formfield_for_dbfield(db_field, request, **kwargs)
