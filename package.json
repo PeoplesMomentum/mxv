@@ -14,7 +14,8 @@
     "psql": "yarn python manage.py dbshell",
     "python": "pipenv run python",
     "test": "yarn python manage.py test --no-input",
-    "shell": "pipenv shell"
+    "shell": "pipenv shell",
+    "dbpull": "./dbPull.sh"
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
