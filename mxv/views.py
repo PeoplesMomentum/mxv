@@ -3,7 +3,7 @@ from django.template import loader
 from django.contrib.auth.views import PasswordResetView
 from .settings import SITE_NAME_SHORT, SITE_NAME_LONG, ALLOW_ERROR_URL
 from django.http import Http404
-from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF, CONSULTATIONS_VISIBLE_TO_NON_STAFF, QUESTIONS_VISIBLE_TO_NON_STAFF, NCG_VOTING_VISIBLE_TO_NON_STAFF, NCG_VOTING_URL, NCG_VOTING_IV, NCG_VOTING_KEY
+from mxv.settings import TRACK3_VOTING_VISIBLE_TO_NON_STAFF, CONSULTATIONS_VISIBLE_TO_NON_STAFF, QUESTIONS_VISIBLE_TO_NON_STAFF, NCG_VOTING_VISIBLE_TO_NON_STAFF, NCG_VOTING_URL, NCG_VOTING_IV, NCG_VOTING_KEY, MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF
 from review.models import TrackVoting
 from django.shortcuts import render, redirect
 from mxv.models import Reconsent
@@ -24,6 +24,7 @@ def index(request):
         'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track3_voting': TrackVoting.objects.filter(pk=3).first(),
         'show_consultations': CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'show_members_card': MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF,
         'member_logged_in': request.user.is_authenticated,
         'show_ncg_voting': NCG_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'show_questions': QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
