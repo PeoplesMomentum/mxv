@@ -8,8 +8,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
+            <h4><a href="/">↶ Back</a></h4>
             {% if not member_in_nation_builder %}
                 <p>Can't look up profile, please contact Momentum and let them know: <a href="{{ error_mailto }}">membership@peoplesmomentum.com</a></p>
             {% elif nation_builder_busy %}
@@ -26,8 +27,12 @@
                     {% include 'mxv/includes/form_field.html' with field=form.email|attr:"readonly:True" %}
                     {% if not hide_other_email %}
                         {% include 'mxv/includes/form_field.html' with field=form.person__email|attr:"readonly:True" %}
-                        <input type="radio" name="other_email" value="replace_other_with_login" class="mb-2 mr-2" id="other_email_replace"><label for="other_email_replace">Replace this other email with the login email</label><br>
-                        <input type="radio" name="other_email" value="use_other_as_login" class="mb-4 mr-2" id="other_email_use"><label for="other_email_use">Use this other email as the login email instead</label><br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="other_email" value="replace_other_with_login" class="mb-2 mr-2" id="other_email_replace"><label for="other_email_replace">Replace this other email with the login email</label><br>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="other_email" value="use_other_as_login" class="mb-4 mr-2" id="other_email_use"><label for="other_email_use">Use this other email as the login email instead</label><br>
+                        </div>
                         <button type="submit" class="btn btn-outline-primary btn-block">Save changes</button>
                     {% else %}
                         <input type="hidden" name="hide_other_email">

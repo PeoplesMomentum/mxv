@@ -1,6 +1,7 @@
 {% load form_tags widget_tweaks %}
 
 <!-- renders the field using widget tweaks -->
+{% if field.field.widget.input_type != 'checkbox' %}
 <div class="form-group">
 
     <!-- label -->
@@ -23,3 +24,25 @@
         </small>
     {% endif %}
 </div>
+{% else %}
+<div class="form-check">
+    <!-- field -->
+    {% render_field field class="form-check-input" %}
+    
+    <!-- label -->
+    {{ field.label_tag }}
+    <!-- field-level errors -->
+    {% for error in field.errors %}
+    <div class="invalid-feedback">
+        {{ error }}
+    </div>
+    {% endfor %}
+    
+    <!-- help text -->
+    {% if field.help_text %}
+    <p class="body-sm-1">
+        {{ field.help_text|safe }}
+    </p>
+    {% endif %}
+</div>
+{% endif %}
