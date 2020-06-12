@@ -240,3 +240,14 @@ admin.site.register(Member, MemberAdmin)
 admin.site.register(ProfileField, ProfileFieldAdmin)
 admin.site.register(UpdateDetailsCampaign, UpdateDetailsCampaignAdmin)
 
+@admin.register(NationBuilderPerson)
+class NationBuilderPersonAdmin(admin.ModelAdmin):
+    list_display = ('nation_builder_id', 'email', 'member')
+    search_fields = ('member__name', 'email', 'nation_builder_id')
+    autocomplete_fields = ('member',)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.member:
+            return ["member"]
+        else:
+            return []
