@@ -106,7 +106,7 @@
     {% for question in questions %}
     {% if current_category == question.category.number or current_category == 0 %}
     
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-3">
 
       <div class="col-sm-12 col-md-6">
         {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
