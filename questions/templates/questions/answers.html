@@ -99,13 +99,17 @@
 {% if allow_answer or reject or pending_answer or has_answered %}
 <div class="container mt-0 p-4 pb-0" > 
   
-  <div class="row justify-content-center" >
+  {% if reject %}
+  <div class="row justify-content-center">
 
-    {% if reject %}
     <div class="col-sm-12 col-md-6">
       {% include './answer_card.html' with answer=reject badge_text="Declined by moderator" statusline=reject.reject_reason %}
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="row justify-content-center" >
+
 
     <div class="col-sm-12 col-md-6">
       <h2 id="answer" name="answer">{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>

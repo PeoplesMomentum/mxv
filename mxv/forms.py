@@ -27,10 +27,6 @@ def SendActivationEmailToInactiveMember(request, email):
                 activation_email.send_to(request, [inactive_member.email])
             except:
                 pass
- 
-    # always notify that an activation email might have been sent
-    messages.info(request, 'If you’re a member but haven’t activated your account yet then you’ve been sent an activation email (so check your email inbox and spam folders)')
-
 class ActivationEmailAuthenticationForm(AuthenticationForm):
     
     # gets the request
