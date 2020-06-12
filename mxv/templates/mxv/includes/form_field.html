@@ -27,7 +27,7 @@
 {% else %}
 <div class="form-check">
     <!-- field -->
-    {% render_field field class=field|input_class %}
+    {% render_field field class="form-check-input" %}
     
     <!-- label -->
     {{ field.label_tag }}
@@ -40,9 +40,9 @@
     
     <!-- help text -->
     {% if field.help_text %}
-    <small class="form-text text-muted">
+    <p class="body-sm-1">
         {{ field.help_text|safe }}
-    </small>
+    </p>
     {% endif %}
 </div>
 {% endif %}
