@@ -33,11 +33,7 @@
       <h4 class="my-3">“{{ question.text }}”</h4>
       <p class="label-1 gray-500">Posted by <span class="secondary">{{ question.author.name }}</span> in <span class="secondary">{{question.category.title}}</span></p>
 
-      {% if allow_answer %}
-
-      <a href="#" class="btn btn-outline-primary btn-block">Write your answer</a>
-
-      {% endif %}
+      <a href="#answer" class="btn btn-outline-primary btn-block">{% if allow_answer %}Write your answer{% else %}Your answer{% endif %}</a>
 
     </div>
   
@@ -112,8 +108,12 @@
     {% endif %}
 
     <div class="col-sm-12 col-md-6">
-      <h2>{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
-      <p>Rules about answering</p>
+      <h2 id="answer" name="answer">{% if allow_answer %}Write your answer{% else %}You've answered{% endif %}</h2>
+      <p>Candidates can answer any questions they want, in any order. All answers will be moderated to ensure they comply with
+        our <a
+          href="https://peoplesmomentum.com/wp-content/uploads/2020/05/2020-05-27-CodeOfConduct.pdf?_ga=2.68239449.910429016.1591784033-1575617572.1584972237">candidate
+          code of conduct</a> and <a href="https://peoplesmomentum.com/code-of-ethics/">code of ethics</a>. The decisions of
+        the moderators are final</p>
     </div>
   
   </div>
