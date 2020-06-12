@@ -1,4 +1,4 @@
-<div class="card" {% if answer.candidate.member.email == user.email%}style="border: 2px solid{% if badge_status == 'success' or answer.status = 'approved' %}#04B14A{% elif answer.status = 'rejected' %}#adb5bd{% else %}#E20613{% endif %}"{% endif %}>
+<div class="card" {% if answer.candidate.member.email == user.email%}style="border: 2px solid{% if badge_status == 'success' or answer.status == 'approved' %}#04B14A{% elif answer.status = 'rejected' %}#adb5bd{% else %}#E20613{% endif %}"{% endif %}>
   <div class="card-body">
     {% if badge_text %}
     <div class="card-row-body p-2">
