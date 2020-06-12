@@ -46,7 +46,7 @@
                 <p>Momentum’s leadership is directly elected by its members every two years. From political education to supporting trade
                 union struggles and training a new generation of socialist leaders, there is so much Momentum could do. Now is your
                 chance to get involved and help shape the future of our movement.</p>
-                <a href="{% url 'ncg_election' %}" class="btn btn-outline-secondary btn-block">Read More</a>
+                <a target="_blank" href="http://vote.peoplesmomentum.com/info" class="btn btn-outline-secondary btn-block">Read More</a>
             </div>
         </div>
         {% endif %}
@@ -77,12 +77,32 @@
             </div>
 
         </div>
+
+        <div class="row justify-content-center">
+        
+            <div class="col-sm-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-row-title">
+                            <h2>See the candidates</h2>
+                        </div>
+                        <div class="card-row-body">
+                            <p class="body-sm-1">Read more about the candidates who are running for election in your region.</p>
+                        </div>
+                    </div>
+                    <div class="card-button-wrapper">
+                        <a target="_blank" href="http://vote.peoplesmomentum.com/nominate/list/all/all" class="btn btn-outline-secondary btn-block">See the candidates</a>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
         {% endif %}
         
         {% if show_consultations %}
         <div class="row justify-content-center">
 
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-lg-6 mb-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-row-title">

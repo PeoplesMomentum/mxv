@@ -5,7 +5,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                 <li class="dropdown">
@@ -18,7 +18,9 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="/questions/info">Q&A Info</a></li>
+                <li class="nav-item"><a class="nav-link" target="_blank" href="http://vote.peoplesmomentum.com/info">Election Info</a></li>
+                <li class="nav-item"><a class="nav-link" target="_blank" href="http://vote.peoplesmomentum.com/nominate/list/all/all">Candidates</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'questions:index' %}">Q&A</a></li>
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a></li>
