@@ -73,26 +73,26 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-sm-12 col-md-6">
-      <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
-        {% csrf_token %}
-        <select id="id_category_select" name="category_select" onchange="this.form.submit()">
-          <option disabled selected style="display: none;">
+        <form class="form-group" action="{% url 'questions:index' %}" method="POST" id="category_select">
+          {% csrf_token %}
+          <select id="id_category_select" name="category_select" onchange="this.form.submit()">
+            <option disabled selected style="display: none;">
+              {% for category in categories %}
+              {% if current_category == category.number %}
+              {{ category.number }} {{ category.title }}
+              {% endif %}
+              {% endfor %}
+              {% if current_category == 0 %}
+              0 All topics
+              {% endif %}
+            </option>
+            <option value="0">0 All topics</option>
             {% for category in categories %}
-            {% if current_category == category.number %}
-            {{ category.number }} {{ category.title }}
-            {% endif %}
+            <option value="{{ category.number }}">{{ category.number }} {{ category.title }}</option>
             {% endfor %}
-            {% if current_category == 0 %}
-            0 All topics
-            {% endif %}
-          </option>
-          <option value="0">0 All topics</option>
-          {% for category in categories %}
-          <option value="{{ category.number }}">{{ category.number }} {{ category.title }}</option>
-          {% endfor %}
-        </select>
-      </form>
-    </div>
+          </select>
+        </form>
+      </div>
     </div>
   
 
@@ -125,8 +125,8 @@
   {% if not is_candidate %}
 {% if not has_question %}
 <div class="container">
-  <div class="row">
-    <div id="#ask-a-question" class="col-sm-12">
+  <div class="row justify-content-center">
+    <div id="#ask-a-question" class="col-sm-12 col-md-6">
     <h2>Ask your question</h2>
     <p>Please do not duplicate existing questions. <a href="info">Read more about question rules and see examples</a></p>
 
