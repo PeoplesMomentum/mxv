@@ -66,6 +66,20 @@ class TestQuestions(test.TestCase):
         self.assertEqual('What is the meaning of life?', questions[0].text)
         self.assertEqual(0, resp.context['current_category'])
 
+    def test_questions_appear(self):
+        question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
+        self.client.force_login(self.candidate.member)
+
+        resp = self.client.get('/questions/')
+        
+        self.assertIsNotNone(resp)
+        self.assertIsNotNone(resp.context)
+        self.assertFalse(resp.context['is_candidate'])
+        questions = resp.context['questions']
+        self.assertEqual(1, len(questions))
+        self.assertEqual('What is the meaning of life?', questions[0].text)
+        self.assertEqual(0, resp.context['current_category'])
+        
     def test_questions_by_category(self):
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
         question2 = Question.objects.create(category=self.category2, author=self.voter, status='approved', text='If not now, when?')

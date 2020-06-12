@@ -99,7 +99,7 @@
     {% if num_questions == 0 %}
         <div class="row justify-content-center">
           <div class="col-sm-12 col-md-6">
-            <h3 class="gray-600" align="center">No-one's asked a question in this category yet. {% if not has_question %} You can be the first! {% endif %}</h3>
+            <h3 class="gray-600" align="center">No-one's asked a question in this category yet. {% if not has_question and not is_candidate %} You can be the first! {% endif %}</h3>
           </div>
         </div>
     {% else %}
