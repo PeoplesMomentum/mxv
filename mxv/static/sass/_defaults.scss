@@ -54,7 +54,7 @@ hr {
     border: 1px solid $primary;
     background-color: $primary;
     color: $mtm-neutral-000;
-    text-transform: uppercase;
+    text-transform: none !important; 
     letter-spacing: 0.02em;
     white-space: nowrap;
 
