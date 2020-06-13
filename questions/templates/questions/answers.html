@@ -24,7 +24,7 @@
 
       <span class="badge badge-light bg-gray-500" style="color: #ffffff;">Your answer is pending moderation</span>
 
-      {% elif has_answered%}
+      {% elif has_answered %}
 
       <span class="body-1 success">✓</span><span class="badge badge-success body-label-1">You've answered</span>
 
@@ -33,8 +33,11 @@
       <h4 class="my-3">“{{ question.text }}”</h4>
       <p class="label-1 gray-500">Posted by <span class="secondary">{{ question.author.name }}</span> in <span class="secondary">{{question.category.title}}</span></p>
 
+      {% if is_candidate %}
+
       <a href="#answer" class="btn btn-outline-primary btn-block">{% if allow_answer %}Write your answer{% else %}Your answer{% endif %}</a>
 
+      {% endif %}
     </div>
   
   </div>

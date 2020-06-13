@@ -109,7 +109,15 @@
     <div class="row justify-content-center mb-3">
 
       <div class="col-sm-12 col-md-6">
-        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate%}
+        {% if question.answer_approved %}
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate badge_text="You've answered" badge_status="success" %}
+        {% elif question.answer_pending %}
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate badge_text="Pending answer" %}
+        {% elif question.author.email == user.email %}
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate badge_text="Your question" badge_status="primary" %}
+        {% else %}
+        {% include './question_card.html' with question=question votable=True is_candidate=is_candidate %}
+        {% endif %}
       </div>
 
     </div>

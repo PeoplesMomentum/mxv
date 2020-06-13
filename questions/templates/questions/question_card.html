@@ -1,10 +1,20 @@
-<div class="card" {% if question.author.email == user.email %}style="border: 2px solid #e20316"{% endif%}>
+<div class="card" 
+  {% if badge_text %}
+    {% if badge_status == "primary" %}
+    style="border: 2px solid #FF0F80;"
+    {% elif badge_status == "success" %}
+    style="border: 2px solid #04B14A;"
+    {% else %}
+    style="border: 2px solid #adb5bd;"
+    {% endif %}
+  {% endif %}
+>
   
   <div class="card-body">
 
     <div class="card-row-body">
       <p class="label-2">Posted by 
-        <span {% if question.author.email == user.email %} class="label-2 badge badge-warning">you{% else %}>{{ question.author.name }}{% endif%}</span>
+        <span>{{ question.author.name }}</span>
         in {{ question.category.title }}
       </p>
       <h4 class="mb-0">{{ question.text }}</h4>

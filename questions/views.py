@@ -65,7 +65,8 @@ def show_questions(request, form=None, current_category=0):
             ) \
         ) \
         .annotate(num_votes=Count('votes')) \
-        .annotate(answered=Exists(their_answers_for_question)) \
+        .annotate(answer_approved=Exists(their_answers_for_question.filter(status='approved'))) \
+        .annotate(answer_pending=Exists(their_answers_for_question.filter(status='pending'))) \
         .annotate(voted=Exists(their_votes_for_question)) \
         .order_by('-num_votes','category__number')
     if current_category != 0:        
