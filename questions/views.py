@@ -54,7 +54,16 @@ def show_questions(request, form=None, current_category=0):
         .filter(question=OuterRef('pk'))
     questions = Question.objects \
         .filter(status='approved') \
-        .annotate(num_answers=Count('answers')) \
+        .annotate(
+            num_answers=Subquery(
+                Answer.objects \
+                    .filter(question=OuterRef('pk')) \
+                    .filter(status='approved') \
+                    .values('question') \
+                    .annotate(count=Count('pk')) \
+                    .values('count') 
+            ) \
+        ) \
         .annotate(num_votes=Count('votes')) \
         .annotate(answered=Exists(their_answers_for_question)) \
         .annotate(voted=Exists(their_votes_for_question)) \

@@ -25,7 +25,13 @@
 
 {% endif%}
 
-<span class="badge badge-pill align-middle {%if question.num_votes == 0%}badge-secondary{% else %}badge-danger{%endif%}">{{question.num_votes}}</span>
-<span class="label-1 align-middle">answer{%if question.num_votes != 1%}s{%endif%}</span>
+<span class="badge badge-pill align-middle {%if question.num_answers == 0%}badge-secondary{% else %}badge-danger{%endif%}">
+  {% if question.num_answers == None %}
+  0
+  {% else %}
+  {{question.num_answers}}
+  {% endif %}
+</span>
+<span class="label-1 align-middle">answer{%if question.num_answers != 1%}s{%endif%}</span>
 
 
