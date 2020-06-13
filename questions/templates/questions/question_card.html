@@ -13,10 +13,9 @@
   <div class="card-body">
 
     <div class="card-row-body">
-      <p class="label-2">Posted by 
-        <span>{{ question.author.name }}</span>
-        in {{ question.category.title }}
-      </p>
+      <p class="label-2 gray-500">Posted by <span class="secondary">{{ question.author.name }}</span> in <span
+          class="secondary">{{question.category.title}}</span></p>
+
       <h4 class="mb-0">{{ question.text }}</h4>
       {% if votable %}
       <h4 class="label-1s"><a href="{% url 'questions:answers' question.pk %}">Read candidates' answers ↷</a></h4>
