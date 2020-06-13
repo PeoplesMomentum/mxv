@@ -24,7 +24,7 @@
     <div class="card-row-body p-2">
       <h2 class="mt-0 py-0 my-0 ">{{ answer.candidate.member.name }}</h2>
       <p class="label-1 secondary py-0 my-0">{{ answer.candidate.get_position_display }}</p>
-      <a class="body-sm-1 py-0 my-0" target="_blank" href="https://vote.peoplesmomentum.com/{{answer.candidate.candidate_code}}">More about this candidate</a>
+      <a class="body-sm-1 py-0 my-0" target="_blank" href="https://vote.peoplesmomentum.com/nominate/status/{{answer.candidate.candidate_code}}">More about this candidate</a>
       <p class="mt-4">{{ answer.text }}</p>
     </div>
     {% if statusline %}
