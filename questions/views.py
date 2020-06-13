@@ -131,6 +131,12 @@ def vote(request, pk):
         vote.save()
     return redirect('questions:index')
 
+@login_required
+def unvote(request, pk):
+    if not check_candidate(request):
+        question = Question.objects.get(id=pk)
+        Vote.objects.filter(member__id=request.user.id, question__category=question.category).delete() 
+    return redirect('questions:index')
 
 @login_required
 def answers(request, pk):

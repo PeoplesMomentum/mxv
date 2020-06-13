@@ -1,33 +1,20 @@
 {% if not is_candidate %}
 
   {% if question.voted %}
-
-  <button class="btn btn-outline-primary active m-0" style="min-height: auto; cursor: default;">
-    {% include './filledArrow.html' with fill='white'%}
-    <span class="white label-1 align-middle">{{question.num_votes}}</span>
-  </button>
-
+  <a href="{% url 'questions:unvote' question.pk %}" style="text-decoration: none;">
+    <button  class="btn btn-outline-primary active m-0" style="min-height: auto;">
+      {% include './filledArrow.html' with fill='white'%}
+      <span class="white label-1 align-middle">{{question.num_votes}}</span>
+    </button>
+  </a>
   {% else %}
-
-  <button class="btn btn-outline-primary m-0" type="button" style="min-height: auto;" data-toggle="modal" data-target="#voteModal">
+  
+  <a href="{% url 'questions:vote' question.pk %}" style="text-decoration: none;">
+  <button class="btn btn-outline-primary m-0" type="button" style="min-height: auto;" >
     {% include './emptyArrow.html' %}
     <span class="label-1 align-middle" >{{question.num_votes}}</span>
   </button>
-
-  <div class="modal fade" id="voteModal" tabindex="-1" role="dialog" aria-labelledby="voteModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <p>You can only upvote one question, one time. All upvotes are final and cannot be changed. Are you sure you want to upvote this question?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary btn-block" data-dismiss="modal">No, I’ll carry on looking</button>
-          <a href="{% url 'questions:vote' question.pk %}" class="btn btn-outline-primary btn-block">Yes, I want to upvote this question</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  </a>
 
   {% endif %}  
 
