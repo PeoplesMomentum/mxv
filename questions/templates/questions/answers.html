@@ -102,7 +102,7 @@
 {% if allow_answer or reject or pending_answer or has_answered %}
 <div class="container mt-0 p-4 pb-0" > 
   
-  {% if reject %}
+  {% if reject and not has_answered %}
   <div class="row justify-content-center">
 
     <div class="col-sm-12 col-md-6">
