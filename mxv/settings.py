@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_rq',
     'polymorphic',
+    'django_countries',
 ]
 
 MIDDLEWARE = [
@@ -272,3 +273,5 @@ NCG_VOTING_URL = os.environ.get('MXV_NCG_VOTING_URL', '')
 NCG_VOTING_IV = os.environ.get('MXV_NCG_VOTING_IV', '')
 NCG_VOTING_KEY = os.environ.get('MXV_NCG_VOTING_KEY', '')
 
+# django-countries settings 
+COUNTRIES_FIRST=['UK']
