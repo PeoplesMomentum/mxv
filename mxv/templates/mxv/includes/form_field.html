@@ -1,29 +1,81 @@
 {% load form_tags widget_tweaks %}
+{% load countries %}
 
 <!-- renders the field using widget tweaks -->
 {% if field.field.widget.input_type != 'checkbox' %}
-<div class="form-group">
 
-    <!-- label -->
-    {{ field.label_tag }}
-    
-    <!-- field -->
-    {% render_field field class=field|input_class %}
-    
-    <!-- field-level errors -->
-    {% for error in field.errors %}
+    {% if field.id_for_label == "id_person__home_address__country_code" %}
+
+    <div class="form-group">
+
+        <!-- label -->
+        {{ field.label_tag }}
+
+        <!-- field -->
+        {% get_countries as countries %}
+        <select id="id_person__home_address__country_code" name="person__home_address__country_code">
+            <option selected disabled>
+            {% for country in countries %}
+            {% if field.value == country.code %}
+                {{country.name}}
+                {% endif %}
+            {% endfor %}
+            </option>
+            <option disabled>----------</option>
+            {% for country in countries %}
+            <option value="{{ country.code }}">{{ country.name }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- field-level errors -->
+        {% for error in field.errors %}
         <div class="invalid-feedback">
             {{ error }}
         </div>
-    {% endfor %}
-    
-    <!-- help text -->
-    {% if field.help_text %}
+        {% endfor %}
+        
+        <!-- help text -->
+        {% if field.help_text %}
         <small class="form-text text-muted">
             {{ field.help_text|safe }}
         </small>
+        {% endif %}
+    </div>
+
+
+    {% else %}
+
+
+
+    <div class="form-group">
+
+        <!-- label -->
+        {{ field.label_tag }}
+
+        <!-- field -->
+        {% render_field field class=field|input_class %}
+
+
+        <!-- field-level errors -->
+        {% for error in field.errors %}
+        <div class="invalid-feedback">
+            {{ error }}
+        </div>
+        {% endfor %}
+
+        <!-- help text -->
+        {% if field.help_text %}
+        <small class="form-text text-muted">
+            {{ field.help_text|safe }}
+        </small>
+        {% endif %}
+
+    </div>
+
     {% endif %}
-</div>
+
+
+
 {% else %}
 <div class="form-check">
     <!-- field -->

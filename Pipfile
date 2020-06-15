@@ -34,6 +34,7 @@ python-dotenv = "*"
 pycryptodome = "*"
 postmarker = "==0.14.1"
 django-livereload = "*"
+django-countries = "*"
 
 [dev-packages]
 

@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "css": "node-sass --watch --error-bell --output-style compressed 'mxv/static/sass' -o 'mxv/static/css'; node-sass --watch --error-bell --output-style compressed 'mxv/static/sass' -o 'mxv/staticfiles/css'; ",
-    "develop": "yarn python manage.py runserver & yarn css",
+    "develop": "yarn python manage.py livereload & yarn python manage.py runserver & yarn css",
     "migrate": "yarn python manage.py makemigrations questions && yarn python manage.py migrate",
     "psql": "yarn python manage.py dbshell",
     "python": "pipenv run python",
