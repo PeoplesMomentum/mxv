@@ -68,7 +68,7 @@ class TestQuestions(test.TestCase):
 
     def test_questions_appear(self):
         question1 = Question.objects.create(category=self.category1, author=self.voter, status='approved', text='What is the meaning of life?')
-        self.client.force_login(self.candidate.member)
+        self.client.force_login(self.voter)
 
         resp = self.client.get('/questions/')
         
@@ -235,7 +235,6 @@ class TestQuestions(test.TestCase):
         question3 = Question.objects.create(category=self.category2, author=self.voter2, status='approved', text='No questions here mate')
 
         resp = self.client.post(f'/questions/', {'category_select': '1'}, follow=True)
-        logging.getLogger().info(resp.render())        
         self.assertEqual(3, Question.objects.filter().count())
     
     def test_answers_returned(self):
