@@ -243,8 +243,8 @@ DEFAULT_REDIRECT_PAGE_URL = 'https://peoplesmomentum.com'
 CONSULTATIONS_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_CONSULTATIONS_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
 
 # whether to show membership cards on the index or not
-
-MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF = True if os.environ.get('MXV_MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF', 'False') == 'True' else False
+# TODO fix me
+MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF = True
 
 # task queueing
 RQ_SHOW_ADMIN_LINK = True

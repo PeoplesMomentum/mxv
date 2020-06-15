@@ -20,11 +20,39 @@ from members.models import ensure_nationbuilder_person
 @login_required
 def index(request):
     template = loader.get_template('mxv/index.html')
+    
+    # return NB person
+    person = ""
+    if MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF == True:
+        nb = NationBuilder()
+        member = request.user
+        ensure_nationbuilder_person(nb, member)
+        nb_person = nb.PersonFieldsAndValues(request.user.nation_builder_person.nation_builder_id)
+        nb_person = dict((key,value) for key, value, ignore in nb_person)
+        nb_memno = nb_person['person.momentum_membership_number']
+        nb_fullname = nb_person['person.full_name']
+        nb_email = nb_person['person.email']
+        nb_phone = nb_person['person.phone']
+        nb_address1 = nb_person['person.home_address.address1']
+        nb_address2 = nb_person['person.home_address.address2']
+        nb_address3 = nb_person['person.home_address.address3']
+        nb_addressCity = nb_person['person.home_address.city']
+        nb_addressZip = nb_person['person.home_address.zip']
+
     context = {
+        'nb_memno': nb_memno,
+        'nb_fullname': nb_fullname,
+        'nb_email': nb_email,
+        'nb_phone': nb_phone,
+        'nb_address1': nb_address1,
+        'nb_address2': nb_address2,
+        'nb_address3': nb_address3,
+        'nb_addressCity': nb_addressCity,
+        'nb_addressZip': nb_addressZip,
         'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'track3_voting': TrackVoting.objects.filter(pk=3).first(),
         'show_consultations': CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-        'show_members_card': MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF,
+        'show_members_card': MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'member_logged_in': request.user.is_authenticated,
         'show_ncg_voting': NCG_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
         'show_questions': QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,

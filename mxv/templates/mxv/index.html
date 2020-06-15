@@ -11,28 +11,33 @@
     {% if show_members_card %}
     <div class="row justify-content-center">
         <div class="col-sm-12 col-lg-6">
+            <h2>Welcome to My Momentum, the digital platform that enables members to learn, organise and make decisions
+                together.</h2>
+        </div>    
+    </div>
+
+    <div class="row justify-content-center mb-0">
+        <div class="col-sm-12 col-lg-6">
+            <h3 class="red">Your details</h3>  
             <div class="card" id="membership-card">
-                <div class="container-full p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <h2>{{ user.name }}</h2>
-                            <p>{{user.address}}</p>
-                            <p><span>e:</span> {{user.email}}</p>
-                            <p><span>T:</span> {{user.phone}}</p>
-                        </div>
-                        <div class="col-4">
-                            <p>Membership no.</p>
-                            <p>{{user.membershipNumber}}</p>
-                        </div>
-                    </div>
-                </div>
+                <h2 class="p-0" id="mc_fullname">{{ nb_fullname }}</h2>
+                <p class=" m-0 p-0 mc_address">{{ nb_address1 }}<br/>
+                    {% if nb_address2 %}{{ nb_address2 }}<br/>{% endif %}
+                    {% if nb_address3 %}{{ nb_address3 }}<br/>{% endif %}
+                    {{ nb_addressCity }}, {{ nb_addressZip }}
+                </p>
+                <p class=" m-0 p-0" id="mc_contact">
+                    <span class="primary-lighter-30">Email:</span> {{ nb_email }}<br/>
+                    <span class="primary-lighter-30">Tel:</span> {{ nb_phone }}
+                </p>
+                <p class=" m-0 p-0" id="mc_memno"><span class="primary-lighter-30 m-0 p-0 label-1">Membership no.:</span><br>{{ nb_memno }}</p>
             </div>
+            <h4 class="my-2"><a href="{% url 'members:profile' %}">Update details ↷</a></h4>
         </div>
     </div>
     {% endif %}
-    <div class="row justify-content-center">
-        <div class="col-sm-12 col-lg-6">
-            <h2>Welcome to My Momentum, the digital platform that enables members to learn, organise and make decisions together.</h2>
+    <div class="row justify-content-center mt-0">
+        <div class="col-sm-12 col-lg-6 ">
             <hr class="hr-primary mb-1"/>
             <h3 class="red">What's on</h3>
         </div>
@@ -46,7 +51,7 @@
                 <p>Momentum’s leadership is directly elected by its members every two years. From political education to supporting trade
                 union struggles and training a new generation of socialist leaders, there is so much Momentum could do. Now is your
                 chance to get involved and help shape the future of our movement.</p>
-                <a target="_blank" href="http://vote.peoplesmomentum.com/info" class="btn btn-outline-secondary btn-block">Read More</a>
+                <a target="_blank" href="http://vote.peoplesmomentum.com/info" class="btn mtm-btn-outline-secondary btn-block">Read More</a>
             </div>
         </div>
         {% endif %}
@@ -91,7 +96,7 @@
                         </div>
                     </div>
                     <div class="card-button-wrapper">
-                        <a target="_blank" href="http://vote.peoplesmomentum.com/nominate/list/all/all" class="btn btn-outline-secondary btn-block">See the candidates</a>
+                        <a target="_blank" href="http://vote.peoplesmomentum.com/nominate/list/all/all" class="btn mtm-btn-outline-secondary btn-block">See the candidates</a>
                     </div>
                 </div>
             </div>

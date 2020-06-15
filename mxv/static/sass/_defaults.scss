@@ -26,7 +26,7 @@ a {
   color: $primary; 
   transition: color 0.1s ease-in-out;
   &:hover {
-    color: $mtm-pink-lighter;
+    color: $primary-lighter-10;
   }
 }
 
@@ -133,7 +133,7 @@ footer {
     color: $primary;
   }
   .breadcrumb-item.active {
-    color: $primary-lighter;
+    color: $primary-lighter-10;
   }
   .breadcrumb-item + .breadcrumb-item::before {
     content: ">";

@@ -9,8 +9,6 @@ $fontstack-text: neue-haas-grotesk-text, sans-serif;
 
 // Momentum colors
 
-$mtm-red: #e20613;
-$mtm-pink: #FF0F80;
 $mtm-neutral-000: #ffffff;
 $mtm-neutral-100: #F8F8F8;
 $mtm-neutral-200: #f4eff0;
@@ -18,7 +16,6 @@ $mtm-neutral-300: #E5E5E5;
 $mtm-neutral-375: #00000038;
 $mtm-neutral-400: #81777bcc;
 $mtm-neutral-500: #646575;
-$mtm-pink-lighter: lighten($mtm-pink, 10%);
 
 // Color system
 
@@ -54,8 +51,8 @@ $grays: map-merge(
 $blue:    #007bff !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     $mtm-red !default;
+$pink:    #FF0F80 !default; // roses
+$red:     #e20613 !default; // rflag
 $orange:  #fd7e14 !default;
 $yellow:  #ffc107 !default;
 $green:   #04B14A !default;
@@ -83,13 +80,14 @@ $colors: map-merge(
   $colors
 );
 
-$primary:       $mtm-pink !default;
-$primary-lighter: lighten($primary, 10%);
+$primary:       $pink !default;
+$primary-lighter-10: lighten($primary, 10%);
+$primary-lighter-30: lighten($primary, 30%);
 $secondary:     $gray-600 !default;
 $success:       $green !default;
 $info:          $cyan !default;
-$warning:       $mtm-red !default;
-$danger:        $mtm-red !default;
+$warning:       $red !default;
+$danger:        $red !default;
 $light:         $gray-200 !default;
 $dark:          $gray-800 !default;
 
