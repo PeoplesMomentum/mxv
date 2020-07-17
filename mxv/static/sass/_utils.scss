@@ -53,9 +53,9 @@
   }
 }
 
-@mixin buttonOutliner($color: $mtm-neutral-500) {
+@mixin buttonOutliner($color: $mtm-neutral-500, $bg-color: $mtm-neutral-000) {
   border: thin solid $color;
-  background-color: $mtm-neutral-000;
+  background-color: $bg-color;
   $color-lighter: lighten($color, 10%);
   color: $primary;
   transition: color .3s, background-color .3s, border-color .3s, box-shadow .3s;
@@ -65,9 +65,9 @@
   &:hover {
     background-color: $color;
     border-color: $color;
-    color: $mtm-neutral-000;
+    color: $bg-color;
     svg>path{
-      fill: $mtm-neutral-000;
+      fill: $bg-color;
     }
   }
   &:focus {
@@ -77,7 +77,7 @@
     background-color: $color !important;
     border-color: $color !important;
     svg>path{
-      fill: $mtm-neutral-000;
+      fill: $bg-color;
     }
     &:focus {
       box-shadow: 0 0 0 .2rem $color-lighter !important;
@@ -129,4 +129,8 @@
 
 .bg-black{
   background: $black;
+}
+
+.bg-primary{
+  background: $primary;
 }
