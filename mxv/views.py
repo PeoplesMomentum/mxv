@@ -21,6 +21,16 @@ from members.models import ensure_nationbuilder_person
 def index(request):
     template = loader.get_template('mxv/index.html')
     
+    context = {
+        'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'track3_voting': TrackVoting.objects.filter(pk=3).first(),
+        'show_consultations': CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'show_members_card': MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'member_logged_in': request.user.is_authenticated,
+        'show_ncg_voting': NCG_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+        'show_questions': QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
+    }
+
     # return NB person
     person = ""
     if MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF == True:
@@ -38,25 +48,19 @@ def index(request):
         nb_address3 = nb_person['person.home_address.address3']
         nb_addressCity = nb_person['person.home_address.city']
         nb_addressZip = nb_person['person.home_address.zip']
+        nb_context = {
+            'nb_memno': nb_memno,
+            'nb_fullname': nb_fullname,
+            'nb_email': nb_email,
+            'nb_phone': nb_phone,
+            'nb_address1': nb_address1,
+            'nb_address2': nb_address2,
+            'nb_address3': nb_address3,
+            'nb_addressCity': nb_addressCity,
+            'nb_addressZip': nb_addressZip,
+        }
+        context.update(nb_context)
 
-    context = {
-        'nb_memno': nb_memno,
-        'nb_fullname': nb_fullname,
-        'nb_email': nb_email,
-        'nb_phone': nb_phone,
-        'nb_address1': nb_address1,
-        'nb_address2': nb_address2,
-        'nb_address3': nb_address3,
-        'nb_addressCity': nb_addressCity,
-        'nb_addressZip': nb_addressZip,
-        'show_track3_voting': TRACK3_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-        'track3_voting': TrackVoting.objects.filter(pk=3).first(),
-        'show_consultations': CONSULTATIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-        'show_members_card': MEMBERSHIP_CARD_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-        'member_logged_in': request.user.is_authenticated,
-        'show_ncg_voting': NCG_VOTING_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-        'show_questions': QUESTIONS_VISIBLE_TO_NON_STAFF or request.user.is_staff,
-    }
     return HttpResponse(template.render(context, request))
 
 # pass the site names to the password reset context
