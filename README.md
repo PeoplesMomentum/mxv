@@ -1,3 +1,7 @@
+# MOVED
+
+This repository has been moved to [GitLab](https://gitlab.com/momentum-tech-collective/mxv). Further development will take place there.
+
 # MxV - Momentum's digital democracy platform
 
 ## What's this?
